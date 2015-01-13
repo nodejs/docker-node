@@ -12,7 +12,7 @@ versions=( */ )
 versions=( "${versions[@]%/}" )
 url='git://github.com/joyent/docker-node'
 
-echo '# maintainer: Joyent Image Team <soln@joyent.com> (@joyent)'
+echo '# maintainer: Joyent Image Team <image-team@joyent.com> (@joyent)'
 
 for version in "${versions[@]}"; do
 	commit="$(git log -1 --format='format:%H' -- "$version")"

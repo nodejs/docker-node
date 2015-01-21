@@ -1,8 +1,4 @@
-FROM buildpack-deps
-
-RUN apt-get update && apt-get install -y \
-		ca-certificates \
-		curl
+FROM buildpack-deps:jessie
 
 # verify gpg and sha256: http://nodejs.org/dist/v0.10.30/SHASUMS256.txt.asc
 # gpg: aka "Timothy J Fontaine (Work) <tj.fontaine@joyent.com>"

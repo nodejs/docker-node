@@ -6,3 +6,5 @@ regarding contributing and issues.
 
 The full readme is generated over in [docker-library/docs](https://github.com/docker-library/docs),
 specificially in [docker-library/docs/node](https://github.com/docker-library/docs/tree/master/node).
+
+The previous (deprecated) repo can be found at https://github.com/docker-library/node

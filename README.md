@@ -2,7 +2,7 @@
 
 [![dockeri.co](http://dockeri.co/image/_/node)](https://registry.hub.docker.com/_/node/)
 
-[![issues](https://img.shields.io/github/issues/joyent/docker-node.svg) ![starts](https://img.shields.io/github/stars/joyent/docker-node.svg)](https://github.com/joyent/docker-node)
+[![issues](https://img.shields.io/github/issues/joyent/docker-node.svg) ![stars](https://img.shields.io/github/stars/joyent/docker-node.svg)](https://github.com/joyent/docker-node)
 
 ## What is Node.js?
 

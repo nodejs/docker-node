@@ -1,7 +1,9 @@
 #!/bin/bash
 set -e
 
-cd "$(dirname "$(readlink -f "$BASH_SOURCE")")"
+hash npm 2>/dev/null || { echo >&2 "npm not found, exiting."; }
+
+cd $(cd ${0%/*} && pwd -P);
 
 versions=( "$@" )
 if [ ${#versions[@]} -eq 0 ]; then
@@ -9,15 +11,18 @@ if [ ${#versions[@]} -eq 0 ]; then
 fi
 versions=( "${versions[@]%/}" )
 
-npmVersion="$(docker run --rm node npm show npm version)"
+npmVersion="$(npm show npm version 2>/dev/null)"
 for version in "${versions[@]}"; do
-	fullVersion="$(curl -sSL --compressed 'http://nodejs.org/dist' | grep '<a href="v'"$version." | sed -r 's!.*<a href="v([^"/]+)/?".*!\1!' | sort -V | tail -1)"
+	fullVersion="$(curl -sSL --compressed 'http://nodejs.org/dist' | grep '<a href="v'"$version." | sed -E 's!.*<a href="v([^"/]+)/?".*!\1!' | cut -f 3 -d . | sort -n | tail -1)"
 	(
-		set -x
-		sed -ri '
-			s/^(ENV NODE_VERSION) .*/\1 '"$fullVersion"'/;
+		sed -E -i.bak '
+			s/^(ENV NODE_VERSION) .*/\1 '"$version.$fullVersion"'/;
 			s/^(ENV NPM_VERSION) .*/\1 '"$npmVersion"'/;
-		' "$version/Dockerfile" "$version/slim/Dockerfile"
-		sed -ri 's/^(FROM node):.*/\1:'"$fullVersion"'/' "$version/onbuild/Dockerfile"
+		' "$version/Dockerfile" "$version/slim/Dockerfile" "$version/wheezy/Dockerfile"
+		rm $version/Dockerfile.bak $version/slim/Dockerfile.bak $version/wheezy/Dockerfile.bak
+
+		sed -E -i.bak 's/^(FROM node):.*/\1:'"$version.$fullVersion"'/' "$version/onbuild/Dockerfile"
+		rm $version/onbuild/Dockerfile.bak
+
 	)
 done

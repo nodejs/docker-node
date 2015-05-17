@@ -5,8 +5,6 @@
 set -uo pipefail
 IFS=$'\n\t'
 
-DOCKERFILES=$(find . -name Dockerfile)
-
 info() {
   printf "%s\n" "$@"
 }

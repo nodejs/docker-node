@@ -9,9 +9,9 @@ cd $(cd ${0%/*} && pwd -P);
 
 versions=( */ )
 versions=( "${versions[@]%/}" )
-url='git://github.com/joyent/docker-node'
+url='git://github.com/nodejs/docker-node'
 
-echo '# maintainer: Joyent Image Team <image-team@joyent.com> (@joyent)'
+echo '# maintainer: Node.js Docker Team <https://github.com/nodejs/docker-node> (@nodejs)'
 
 for version in "${versions[@]}"; do
 	eval stub=$(echo "$version" | awk -F. '{ print "$array_" $1 "_" $2 }');

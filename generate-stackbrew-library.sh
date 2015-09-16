@@ -3,7 +3,8 @@ set -e
 
 hash git 2>/dev/null || { echo >&2 "git not found, exiting."; }
 
-array_4_0='0 latest';
+array_0_12='0';
+array_4_0='4 latest';
 
 cd $(cd ${0%/*} && pwd -P);
 

@@ -9,17 +9,12 @@ The official Node.js docker image, made with love by the node community.
 
 ## What is Node.js?
 
-*from [node.org/faq.html](https://node.org/faq.html)*
+Node.js is a platform built on Chrome's JavaScript runtime for easily building
+fast, scalable network applications. Node.js uses an event-driven, non-blocking
+I/O model that makes it lightweight and efficient, perfect for data-intensive
+real-time applications that run across distributed devices.
 
-Node.js is a JavaScript platform built on Chrome's V8 runtime. This project
-began as a fork of Joyent's Node.js™ and is compatible with the npm ecosystem.
-
-Why? Node.js aims to provide faster and predictable release cycles. It currently
-merges in the latest language, API and performance improvements to V8 while also
-updating libuv and other base libraries.
-
-This project aims to continue development of Node.js under an "open governance
-model" as opposed to corporate stewardship.
+See: http://nodejs.org
 
 ## Usage
 

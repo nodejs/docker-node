@@ -33,7 +33,7 @@ EXPOSE 8080
 Then simply run:
 
 ```
-$ docker build -t node-app
+$ docker build -t node-app .
 ...
 $ docker run --rm -it node-app
 ```

@@ -4,7 +4,8 @@ set -e
 hash git 2>/dev/null || { echo >&2 "git not found, exiting."; }
 
 array_0_12='0';
-array_4_1='4 latest';
+array_4_2='4 argon';
+array_5_0='5 latest';
 
 cd $(cd ${0%/*} && pwd -P);
 
@@ -21,7 +22,7 @@ for version in "${versions[@]}"; do
 
 	versionAliases=( $fullVersion $version ${stub} )
 
-	echo	
+	echo
 	for va in "${versionAliases[@]}"; do
 		echo "$va: ${url}@${commit} $version"
 	done

@@ -14,7 +14,6 @@ RUN set -ex \
   done
 
 ENV NODE_VERSION 0.12.8
-ENV NPM_VERSION 3.4.1
 
 RUN buildDeps='curl ca-certificates' \
 	&& set -x \
@@ -26,8 +25,6 @@ RUN buildDeps='curl ca-certificates' \
 	&& grep " node-v$NODE_VERSION-linux-x64.tar.gz\$" SHASUMS256.txt.asc | sha256sum -c - \
 	&& tar -xzf "node-v$NODE_VERSION-linux-x64.tar.gz" -C /usr/local --strip-components=1 \
 	&& rm "node-v$NODE_VERSION-linux-x64.tar.gz" SHASUMS256.txt.asc \
-	&& apt-get purge -y --auto-remove $buildDeps \
-	&& npm install -g npm@"$NPM_VERSION" \
-	&& npm cache clear
+	&& apt-get purge -y --auto-remove $buildDeps
 
 CMD [ "node" ]

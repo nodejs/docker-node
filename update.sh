@@ -1,8 +1,6 @@
 #!/bin/bash
 set -e
 
-hash npm 2>/dev/null || { echo >&2 "npm not found, exiting."; }
-
 cd $(cd ${0%/*} && pwd -P);
 
 versions=( "$@" )

@@ -20,30 +20,37 @@ See: http://nodejs.org
 
 # How to use this image
 
-If you want to distribute your application on the docker registry, create a
-`Dockerfile` in the root of application directory:
+## Create a `Dockerfile` in your Node.js app project
 
-```Dockerfile
-FROM node:onbuild
-
-# Expose the ports that your app uses. For example:
-EXPOSE 8080
+```dockerfile
+FROM node:4-onbuild
+# replace this with your application's default port
+EXPOSE 8888
 ```
 
-Then simply run:
+You can then build and run the Docker image:
 
-```
-$ docker build -t node-app .
-...
-$ docker run --rm -it node-app
+```console
+$ docker build -t my-nodejs-app .
+$ docker run -it --rm --name my-running-app my-nodejs-app
 ```
 
-To run a single script, you can mount it in a volume under `/usr/src/app`. From
-the root of your application directory (assuming your script is named
-`index.js`):
+### Notes
 
-```
-$ docker run -v ${PWD}:/usr/src/app -w /usr/src/app -it --rm node node index.js
+The image assumes that your application has a file named
+[`package.json`](https://docs.npmjs.com/files/package.json) listing its
+dependencies and defining its [start
+script](https://docs.npmjs.com/misc/scripts#default-values).
+
+## Run a single Node.js script
+
+For many simple, single file projects, you may find it inconvenient to write a
+complete `Dockerfile`. In such cases, you can run a Node.js script by using the
+Node.js Docker image directly:
+
+```console
+$ docker run -it --rm --name my-running-script -v "$PWD":/usr/src/app -w
+/usr/src/app node:4 node your-daemon-or-script.js
 ```
 
 # Image Variants
@@ -68,6 +75,23 @@ This image makes building derivative images easier. For most use cases, creating
 a `Dockerfile` in the base of your project directory with the line `FROM
 node:onbuild` will be enough to create a stand-alone image for your project.
 
+While the `onbuild` variant is really useful for "getting off the ground
+running" (zero to Dockerized in a short period of time), it's not recommended
+for long-term usage within a project due to the lack of control over *when* the
+`ONBUILD` triggers fire (see also
+[`docker/docker#5714`](https://github.com/docker/docker/issues/5714),
+[`docker/docker#8240`](https://github.com/docker/docker/issues/8240),
+[`docker/docker#11917`](https://github.com/docker/docker/issues/11917)).
+
+Once you've got a handle on how your project functions within Docker, you'll
+probably want to adjust your `Dockerfile` to inherit from a non-`onbuild`
+variant and copy the commands from the `onbuild` variant `Dockerfile` (moving
+the `ONBUILD` lines to the end and removing the `ONBUILD` keywords) into your
+own file so that you have tighter control over them and more transparency for
+yourself and others looking at your `Dockerfile` as to what it does. This also
+makes it easier to add additional requirements as time goes on (such as
+installing more packages before performing the previously-`ONBUILD` steps).
+
 ## `node:slim`
 
 This image does not contain the common packages contained in the default tag and
@@ -85,9 +109,13 @@ Node.js Docker project.
 
 # Supported Docker versions
 
-This image is officially supported on Docker version 1.8.3.
+This image is officially supported on Docker version 1.9.1.
 
-Support for older versions (down to 1.0) is provided on a best-effort basis.
+Support for older versions (down to 1.6) is provided on a best-effort basis.
+
+Please see [the Docker installation
+documentation](https://docs.docker.com/installation/) for details on how to
+upgrade your Docker daemon.
 
 # People
 

@@ -92,6 +92,11 @@ yourself and others looking at your `Dockerfile` as to what it does. This also
 makes it easier to add additional requirements as time goes on (such as
 installing more packages before performing the previously-`ONBUILD` steps).
 
+This `onbuild` variant will only install npm packages according to the
+`package.json` and *does not* adhere to the `npm-shrinkwrap.json` (see full
+discussion in
+[`nodejs/docker-node#65`](https://github.com/nodejs/docker-node/issues/65).
+
 ## `node:slim`
 
 This image does not contain the common packages contained in the default tag and

@@ -17,7 +17,7 @@ for version in "${versions[@]}"; do
 	(
 		sed -E -i.bak '
 			s/^(ENV NPM_VERSION) .*/\1 '"$npmVersion"'/;
-		' "$version/Dockerfile" "$version/slim/Dockerfile" "$version/wheezy/Dockerfile"
-		rm $version/Dockerfile.bak $version/slim/Dockerfile.bak $version/wheezy/Dockerfile.bak
+		' "$version/Dockerfile" "$version/slim/Dockerfile" "$version/wheezy/Dockerfile"  "$version/alpine/Dockerfile"
+		rm $version/Dockerfile.bak $version/slim/Dockerfile.bak $version/wheezy/Dockerfile.bak $version/alpine/Dockerfile.bak
 	)
 done

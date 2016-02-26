@@ -3,13 +3,11 @@ FROM alpine:edge
 ENV NPM_CONFIG_LOGLEVEL info
 ENV NODE_VERSION=4.3.1
 
-RUN apk update --upgrade \
-    && apk add icu libintl libuv \
+RUN apk upgrade --update-cache \
     && apk add --virtual .build-deps \
         gcc \
-        libgcc \
         g++ \
-        libstdc++ \
+        libc-dev \
         make \
         python \
         linux-headers \
@@ -21,6 +19,7 @@ RUN apk update --upgrade \
         curl \
         icu-dev \
         openssl-dev \
+        pax-utils \
     && for key in \
         9554F04D7259F04124DE6B476D5A82AC7E37093B \
         94AE36675C464D64BAFA68DD7434390BDBE9B9C5 \
@@ -48,6 +47,13 @@ RUN apk update --upgrade \
     && make install \
     && paxctl -cm /usr/bin/node \
     && cd / \
+    && runDeps="$( \
+        scanelf --needed --nobanner --recursive /usr/bin/node /usr/lib/node* \
+            | awk '{ gsub(/,/, "\nso:", $2); print "so:" $2 }' \
+            | sort -u \
+            | xargs -r apk info --installed \
+            | sort -u )" \
+    && apk add --virtual .node-rundeps $runDeps \
     && apk del --virtual .build-deps \
     && rm -rf \
         /usr/src/* \

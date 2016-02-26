@@ -14,8 +14,8 @@ for version in "${versions[@]}"; do
 	(
 		sed -E -i.bak '
 			s/^(ENV NODE_VERSION) .*/\1 '"$version.$fullVersion"'/;
-		' "$version/Dockerfile" "$version/slim/Dockerfile" "$version/wheezy/Dockerfile"
-		rm $version/Dockerfile.bak $version/slim/Dockerfile.bak $version/wheezy/Dockerfile.bak
+		' "$version/Dockerfile" "$version/slim/Dockerfile" "$version/wheezy/Dockerfile" "$version/alpine/Dockerfile"
+		rm $version/Dockerfile.bak $version/slim/Dockerfile.bak $version/wheezy/Dockerfile.bak $version/alpine/Dockerfile.bak
 
 		sed -E -i.bak 's/^(FROM node):.*/\1:'"$version.$fullVersion"'/' "$version/onbuild/Dockerfile"
 		rm $version/onbuild/Dockerfile.bak

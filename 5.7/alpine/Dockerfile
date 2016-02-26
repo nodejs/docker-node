@@ -1,12 +1,11 @@
-FROM alpine:latest
+FROM alpine:edge
 
 ENV NPM_CONFIG_LOGLEVEL info
 ENV NODE_VERSION=5.7.0
 
-RUN apk --no-cache update \
-    && apk --no-cache upgrade \
-    && apk add --no-cache icu libintl libuv \
-    && apk add --no-cache --virtual .build-deps \
+RUN apk update --upgrade \
+    && apk add icu libintl libuv \
+    && apk add --virtual .build-deps \
         gcc \
         libgcc \
         g++ \

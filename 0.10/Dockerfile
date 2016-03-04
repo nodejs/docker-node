@@ -15,7 +15,7 @@ RUN set -ex \
     gpg --keyserver ha.pool.sks-keyservers.net --recv-keys "$key"; \
   done
 
-ENV NODE_VERSION 0.10.42
+ENV NODE_VERSION 0.10.43
 ENV NPM_VERSION 2.14.1
 
 RUN curl -SLO "https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION-linux-x64.tar.xz" \

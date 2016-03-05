@@ -16,7 +16,7 @@ RUN set -ex \
   done
 
 ENV NODE_VERSION 0.10.43
-ENV NPM_VERSION 2.14.1
+ENV NPM_VERSION 2.14.21
 
 RUN buildDeps='curl ca-certificates xz-utils' \
 	&& set -x \

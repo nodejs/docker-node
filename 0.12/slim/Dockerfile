@@ -15,7 +15,7 @@ RUN set -ex \
     gpg --keyserver ha.pool.sks-keyservers.net --recv-keys "$key"; \
   done
 
-ENV NODE_VERSION 0.12.11
+ENV NODE_VERSION 0.12.12
 
 RUN buildDeps='curl ca-certificates xz-utils' \
 	&& set -x \

@@ -42,6 +42,8 @@ The image assumes that your application has a file named
 dependencies and defining its [start
 script](https://docs.npmjs.com/misc/scripts#default-values).
 
+We have assembled a [Best Practices Guide](./docs/BestPractices.md) for those using these images on a daily basis.
+
 ## Run a single Node.js script
 
 For many simple, single file projects, you may find it inconvenient to write a

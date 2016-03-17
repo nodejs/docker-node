@@ -25,6 +25,9 @@ fi
 versions=( "${versions[@]%/}" )
 
 for version in "${versions[@]}"; do
+  if [[ "$version" == "docs" ]]; then
+    continue
+  fi
   
   tag=$(cat $version/Dockerfile | grep "ENV NODE_VERSION" | cut -d' ' -f3)
   

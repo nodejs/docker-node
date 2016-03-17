@@ -16,6 +16,9 @@ url='git://github.com/nodejs/docker-node'
 echo '# maintainer: Node.js Docker Team <https://github.com/nodejs/docker-node> (@nodejs)'
 
 for version in "${versions[@]}"; do
+	if [[ "$version" == "docs" ]]; then
+		continue
+	fi
 	eval stub=$(echo "$version" | awk -F. '{ print "$array_" $1 "_" $2 }');
 	commit="$(git log -1 --format='format:%H' -- "$version")"
 	fullVersion="$(grep -m1 'ENV NODE_VERSION ' "$version/Dockerfile" | cut -d' ' -f3)"

@@ -17,7 +17,6 @@ RUN set -ex \
 
 ENV NODE_VERSION 0.10.44
 
-
 RUN buildDeps='curl ca-certificates xz-utils' \
 	&& set -x \
 	&& apt-get update && apt-get install -y $buildDeps --no-install-recommends \

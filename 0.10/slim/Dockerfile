@@ -15,8 +15,7 @@ RUN set -ex \
     gpg --keyserver ha.pool.sks-keyservers.net --recv-keys "$key"; \
   done
 
-ENV NODE_VERSION 0.10.43
-ENV NPM_VERSION 2.14.1
+ENV NODE_VERSION 0.10.44
 
 RUN buildDeps='curl ca-certificates xz-utils' \
 	&& set -x \
@@ -28,8 +27,6 @@ RUN buildDeps='curl ca-certificates xz-utils' \
 	&& grep " node-v$NODE_VERSION-linux-x64.tar.xz\$" SHASUMS256.txt | sha256sum -c - \
 	&& tar -xJf "node-v$NODE_VERSION-linux-x64.tar.xz" -C /usr/local --strip-components=1 \
 	&& rm "node-v$NODE_VERSION-linux-x64.tar.xz" SHASUMS256.txt.asc SHASUMS256.txt \
-	&& apt-get purge -y --auto-remove $buildDeps \
-	&& npm install -g npm@"$NPM_VERSION" \
-	&& npm cache clear
+	&& apt-get purge -y --auto-remove $buildDeps
 
 CMD [ "node" ]

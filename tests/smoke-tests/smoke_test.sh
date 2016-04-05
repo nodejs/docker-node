@@ -8,9 +8,6 @@
 #
 # =============================================================================
 
-# Exit on failure
-set -e
-
 # Define a set of tuples that are used to clone npm projects for testing
 # Note: Bash doesn't suppor tuples, so we have 4 arrays.
 REPOS=(
@@ -73,12 +70,17 @@ for i in `seq 3 $(expr ${#REPOS[@]} - 1)`; do
   git clone --recursive --depth 1 --branch $BRANCH $REPO $DIR
   cd $DIR
   echo "--> Setting up $DIR"
-  npm install
+  install_log=$(npm install 2>&1)
+  if [ $? -ne 0 ]; then
+    echo -e "$install_log"
+    exit 1
+  fi
   echo "--> Testing $DIR"
   # Only log error if tests fail
-  log=$(npm run "$TEST" 2>&1)
+  run_log=$(npm run "$TEST" 2>&1)
   if [ $? -ne 0 ]; then
-    echo -e "$log"
+    echo -e "$run_log"
+    exit 1
   fi
   cd $CWD
 done

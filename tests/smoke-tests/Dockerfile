@@ -2,6 +2,7 @@ RUN apt-get update \
  && apt-get install -y --force-yes --no-install-recommends\
       git \
       ca-certificates \
+      build-essential \
       ssh-client \
  && rm -rf /var/lib/apt/lists/*;
 

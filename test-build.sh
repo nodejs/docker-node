@@ -20,7 +20,7 @@ cd $(cd ${0%/*} && pwd -P);
 
 versions=( "$@" )
 if [ ${#versions[@]} -eq 0 ]; then
-	versions=( */ )
+  versions=( */ )
 fi
 versions=( "${versions[@]%/}" )
 
@@ -28,32 +28,46 @@ for version in "${versions[@]}"; do
   if [[ "$version" == "docs" ]]; then
     continue
   fi
-  
+
   tag=$(cat $version/Dockerfile | grep "ENV NODE_VERSION" | cut -d' ' -f3)
-  
+
   info "Building $tag..."
   docker build -q -t node:$tag $version
-  
+
   if [[ $? -gt 0 ]]; then
     fatal "Build of $tag failed!"
   else
     info "Build of $tag succeeded."
   fi
-  
+
+  OUTPUT=$(docker run --rm -it node:$tag node -e "process.stdout.write(process.versions.node)")
+  if [ "$OUTPUT" != "$tag" ]; then
+    fatal "Test of $tag failed!"
+  else
+    info "Test of $tag succeeded."
+  fi
+
   variants=( onbuild slim wheezy )
-  
+
   for variant in "${variants[@]}"; do
     info "Building $tag-$variant variant..."
     docker build -q -t node:$tag-$variant $version/$variant
-    
+
     if [[ $? -gt 0 ]]; then
       fatal "Build of $tag-$variant failed!"
     else
       info "Build of $tag-$variant succeeded."
     fi
-    
+
+    OUTPUT=$(docker run --rm -it node:$tag-$variant node -e "process.stdout.write(process.versions.node)")
+    if [ "$OUTPUT" != "$tag" ]; then
+      fatal "Test of $tag-$variant failed!"
+    else
+      info "Test of $tag-$variant succeeded."
+    fi
+
   done
-  
+
 done
 
 info "All builds successful!"

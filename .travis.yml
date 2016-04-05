@@ -8,4 +8,4 @@ before_install:
     - sudo chmod +x /usr/bin/dante
 
 script:
-    - dante test
+    - dante test -j 4

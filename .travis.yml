@@ -4,7 +4,7 @@ services:
     - docker
     
 before_install:
-    - wget -o /usr/bin/dante https://github.com/retrohacker/dante/releases/download/2.1.0/dante-linux-amd64
+    - sudo wget -o /usr/bin/dante https://github.com/retrohacker/dante/releases/download/2.1.0/dante-linux-amd64
   
 script:
     - dante test

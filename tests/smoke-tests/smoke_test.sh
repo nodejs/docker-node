@@ -75,6 +75,10 @@ for i in `seq 3 $(expr ${#REPOS[@]} - 1)`; do
   echo "--> Setting up $DIR"
   npm install
   echo "--> Testing $DIR"
-  npm run $TEST
+  # Only log error if tests fail
+  log=$(npm run "$TEST" 2>&1)
+  if [ $? -ne 0 ]; then
+    echo -e "$log"
+  fi
   cd $CWD
 done

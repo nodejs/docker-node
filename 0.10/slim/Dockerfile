@@ -1,4 +1,4 @@
-FROM debian:jessie
+FROM buildpack-deps:jessie-curl
 
 # gpg keys listed at https://github.com/nodejs/node
 RUN set -ex \
@@ -17,7 +17,7 @@ RUN set -ex \
 
 ENV NODE_VERSION 0.10.44
 
-RUN buildDeps='curl ca-certificates xz-utils' \
+RUN buildDeps='xz-utils' \
 	&& set -x \
 	&& apt-get update && apt-get install -y $buildDeps --no-install-recommends \
 	&& rm -rf /var/lib/apt/lists/* \

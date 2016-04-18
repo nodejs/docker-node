@@ -28,6 +28,12 @@ for version in "${versions[@]}"; do
 			cp $template $dockerfile
 			sed -E -i.bak 's/^(ENV NODE_VERSION |FROM node:).*/\1'"$version.$fullVersion"'/' "$dockerfile"
 			rm "$dockerfile.bak"
+			
+			# Don't set npm log level in 0.10 and 0.12.
+			if [[ "$version" == "0.10" || "$version" == "0.12" ]]; then
+				sed -E -i.bak '/^ENV NPM_CONFIG_LOGLEVEL info/d' "$dockerfile"
+				rm "$dockerfile.bak"
+			fi
 
 		)
 	done

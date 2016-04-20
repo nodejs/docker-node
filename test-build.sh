@@ -47,9 +47,9 @@ for version in "${versions[@]}"; do
     info "Test of $tag succeeded."
   fi
 
-  variants=( onbuild slim wheezy )
+  variants=$(ls -d $version/*/ | awk -F"/" '{print $2}')
 
-  for variant in "${variants[@]}"; do
+  for variant in $variants; do
     info "Building $tag-$variant variant..."
     docker build -q -t node:$tag-$variant $version/$variant
 

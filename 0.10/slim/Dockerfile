@@ -1,5 +1,7 @@
 FROM buildpack-deps:jessie-curl
 
+ENV NODE_VERSION 0.10.44
+
 # gpg keys listed at https://github.com/nodejs/node
 RUN set -ex \
   && for key in \
@@ -14,8 +16,6 @@ RUN set -ex \
   ; do \
     gpg --keyserver ha.pool.sks-keyservers.net --recv-keys "$key"; \
   done
-
-ENV NODE_VERSION 0.10.44
 
 RUN buildDeps='xz-utils' \
     && set -x \

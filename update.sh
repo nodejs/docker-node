@@ -14,7 +14,9 @@ for version in "${versions[@]}"; do
 		continue
 	fi
 
-	for variant in default onbuild slim wheezy; do
+	variants=$(ls -d $version/*/ | awk -F"/" '{print $2}')
+
+	for variant in $variants; do
 		template="Dockerfile-$variant.template"
 		dockerfile="$version/$variant/Dockerfile"
 
@@ -28,7 +30,7 @@ for version in "${versions[@]}"; do
 			cp $template $dockerfile
 			sed -E -i.bak 's/^(ENV NODE_VERSION |FROM node:).*/\1'"$version.$fullVersion"'/' "$dockerfile"
 			rm "$dockerfile.bak"
-			
+
 			# Don't set npm log level in 0.10 and 0.12.
 			if [[ "$version" == "0.10" || "$version" == "0.12" ]]; then
 				sed -E -i.bak '/^ENV NPM_CONFIG_LOGLEVEL info/d' "$dockerfile"

@@ -1,7 +1,5 @@
 FROM buildpack-deps:jessie
 
-ENV NODE_VERSION 0.12.13
-
 # gpg keys listed at https://github.com/nodejs/node
 RUN set -ex \
   && for key in \
@@ -16,6 +14,8 @@ RUN set -ex \
   ; do \
     gpg --keyserver ha.pool.sks-keyservers.net --recv-keys "$key"; \
   done
+
+ENV NODE_VERSION 0.12.13
 
 RUN curl -SLO "https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION-linux-x64.tar.xz" \
   && curl -SLO "https://nodejs.org/dist/v$NODE_VERSION/SHASUMS256.txt.asc" \

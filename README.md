@@ -124,13 +124,22 @@ Please see [the Docker installation
 documentation](https://docs.docker.com/installation/) for details on how to
 upgrade your Docker daemon.
 
-# People
+# Governance and Current Members
 
-Current Project Team Members:
+The Node.js Docker Image is governed by the Docker Working Group. See
+[GOVERNANCE.md](https://github.com/nodejs/docker-node/blob/master/GOVERNANCE.md)
+to learn more about the group's structure and [CONTRIBUTING.md](#) for guidance
+about the expectations for all contributors to this project.
 
- * [@chorrell](https://github.com/chorrell)
- * [@hmalphettes](https://www.github.com/hmalphettes)
- * [@jlmitch5](https://www.github.com/jlmitch5)
- * [@pesho](https://www.github.com/pesho)
- * [@Starefossen](https://www.github.com/starefossen)
- * [@wblankenship](https://www.github.com/wblankenship)
+## Docker Working Group Members
+
+ * Christopher Horrell ([chorrell](https://github.com/chorrell))
+ * Hans Kristian Flaatten ([starefossen](https://github.com/starefossen))
+ * Hugues Malphettes ([hmalphettes](https://github.com/hmalphettes))
+ * John Mitchell ([jlmitch5](https://github.com/jlmitch5))
+ * Peter Petrov ([pesho](https://github/pesho))
+ * William Blankenship ([retrohacker](https://github.com/retrohacker))
+
+## Docker Working Group Collaborators
+
+ * Mikeal Rogers ([mikeal](https://github.com/mikeal))

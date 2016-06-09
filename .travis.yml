@@ -7,5 +7,9 @@ before_install:
     - sudo wget -O /usr/bin/dante https://github.com/retrohacker/dante/releases/download/2.1.0/dante-linux-amd64
     - sudo chmod +x /usr/bin/dante
 
+before_script:
+    - ./generate-inventory.sh
+    - cat inventory.yml
+
 script:
     - dante test -j 4

@@ -137,7 +137,7 @@ about the expectations for all contributors to this project.
  * Hans Kristian Flaatten ([starefossen](https://github.com/starefossen))
  * Hugues Malphettes ([hmalphettes](https://github.com/hmalphettes))
  * John Mitchell ([jlmitch5](https://github.com/jlmitch5))
- * Peter Petrov ([pesho](https://github/pesho))
+ * Peter Petrov ([pesho](https://github.com/pesho))
  * William Blankenship ([retrohacker](https://github.com/retrohacker))
 
 ## Docker Working Group Collaborators

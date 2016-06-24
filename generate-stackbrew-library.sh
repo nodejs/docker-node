@@ -5,7 +5,7 @@ hash git 2>/dev/null || { echo >&2 "git not found, exiting."; }
 
 array_0_12='0';
 array_4_4='4 argon';
-array_5_11='5';
+array_5_12='5';
 array_6_2='6 latest';
 
 cd $(cd ${0%/*} && pwd -P);

@@ -2,7 +2,7 @@
 
 ## Environment Variables
 
-Run with `NODE_ENV` set to `production`. This is the way you would pass inn secrets and other runtime configurations to your application as well.
+Run with `NODE_ENV` set to `production`. This is the way you would pass in secrets and other runtime configurations to your application as well.
 
 ```
 -e "NODE_ENV=production"
@@ -10,7 +10,7 @@ Run with `NODE_ENV` set to `production`. This is the way you would pass inn secr
 
 ## Non-root User
 
-By default Docker runs container as root which inside of the container can pose as a security issue. You would want to run the container as an unprivileged user wherever possible. This is however not supported out of the box with the `node` Docker image.
+By default, Docker runs container as root which inside of the container can pose as a security issue. You would want to run the container as an unprivileged user wherever possible. This is however not supported out of the box with the `node` Docker image.
 
 ```Dockerfile
 FROM node:4.1.2
@@ -26,7 +26,7 @@ This Docker Image can than be run with the `app` user in the following way:
 
 #### Memory
 
-By default any Docker Container may consume as much of the hardware such as CPU and RAM. If you are running multiple containers on the same host you should limit how much memory they can consume.     
+By default, any Docker Container may consume as much of the hardware such as CPU and RAM. If you are running multiple containers on the same host you should limit how much memory they can consume.     
 
 ```
 -m "300M" --memory-swap "1G"

@@ -1,5 +1,7 @@
 FROM node:0.0.0
 
+ARG NODE_ENV
+
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 

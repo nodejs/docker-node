@@ -150,6 +150,10 @@ This `onbuild` variant will only install npm packages according to the
 discussion in
 [`nodejs/docker-node#65`](https://github.com/nodejs/docker-node/issues/65).
 
+Note that npm installs devDependencies by default, which is undesirable if
+you're building a production image. To avoid this pass NODE_ENV as a build
+argument i.e. `docker build --build-arg NODE_ENV=production …`.
+
 ## `node:slim`
 
 This image does not contain the common packages contained in the default tag and

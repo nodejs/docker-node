@@ -1,6 +1,5 @@
 #!/bin/bash
 set -e
-set -x
 
 hash git 2>/dev/null || { echo >&2 "git not found, exiting."; }
 

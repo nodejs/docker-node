@@ -43,7 +43,7 @@ for version in "${versions[@]}"; do
 	echo "Directory: ${version}"
 	echo
 
-	variants=$(ls -d $version/*/ | awk -F"/" '{print $2}')
+	variants=$(echo $version/*/ | xargs basename)
 	for variant in $variants; do
 		commit="$(fileCommit "$version/$variant")"
 		tagVariants=$(printf "%s-${variant} " ${versionAliases[@]})

@@ -37,11 +37,11 @@ for version in "${versions[@]}"; do
 	fullVersion="$(grep -m1 'ENV NODE_VERSION ' "$version/Dockerfile" | cut -d' ' -f3)"
 
 	versionAliases=( $fullVersion $version ${stub} )
-    echo "Tags: ${versionAliases[@]}"
-    echo "GitCommit: ${commit}"
-    echo "Directory: ${version}"
+	echo "Tags: ${versionAliases[@]}"
+	echo "GitCommit: ${commit}"
+	echo "Directory: ${version}"
 	echo
-    
+
 	variants=$(ls -d $version/*/ | awk -F"/" '{print $2}')
 	for variant in $variants; do
 		commit="$(fileCommit "$version/$variant")"

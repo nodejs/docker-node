@@ -11,9 +11,11 @@ cd $(cd ${0%/*} && pwd -P);
 
 versions=( */ )
 versions=( "${versions[@]%/}" )
-url='git://github.com/nodejs/docker-node'
+url='https://github.com/nodejs/docker-node'
 
-echo '# maintainer: Node.js Docker Team <https://github.com/nodejs/docker-node> (@nodejs)'
+echo "Maintainers: The Node.js Docker Team <${url}> (@nodejs)"
+echo "GitRepo: ${url}.git"
+echo
 
 for version in "${versions[@]}"; do
 	if [[ "$version" == "docs" ]]; then
@@ -24,22 +26,18 @@ for version in "${versions[@]}"; do
 	fullVersion="$(grep -m1 'ENV NODE_VERSION ' "$version/Dockerfile" | cut -d' ' -f3)"
 
 	versionAliases=( $fullVersion $version ${stub} )
-
+    echo "Tags: ${versionAliases[@]}"
+    echo "GitCommit: ${commit}"
+    echo "Directory: ${version}"
 	echo
-	for va in "${versionAliases[@]}"; do
-		echo "$va: ${url}@${commit} $version"
-	done
-
-	for variant in onbuild slim wheezy; do
+    
+	variants=$(ls -d $version/*/ | awk -F"/" '{print $2}')
+	for variant in $variants; do
 		commit="$(git log -1 --format='format:%H' -- "$version/$variant")"
+		tagVariants=$(printf "%s-${variant} " ${versionAliases[@]})
+		echo "Tags: ${tagVariants}"
+		echo "GitCommit: ${commit}"
+		echo "Directory: ${version}/${variant}"
 		echo
-		for va in "${versionAliases[@]}"; do
-			if [ "$va" = 'latest' ]; then
-				va="$variant"
-			else
-				va="$va-$variant"
-			fi
-			echo "$va: ${url}@${commit} $version/$variant"
-		done
 	done
 done

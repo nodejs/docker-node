@@ -29,6 +29,13 @@ echo "Maintainers: The Node.js Docker Team <${url}> (@nodejs)"
 echo "GitRepo: ${url}.git"
 echo
 
+# prints "$2$1$3$1...$N"
+join() {
+	local sep="$1"; shift
+	local out; printf -v out "${sep//%/%%}%s" "$@"
+	echo "${out#$sep}"
+}
+
 for version in "${versions[@]}"; do
 	if [[ "$version" == "docs" ]]; then
 		continue
@@ -38,7 +45,8 @@ for version in "${versions[@]}"; do
 	fullVersion="$(grep -m1 'ENV NODE_VERSION ' "$version/Dockerfile" | cut -d' ' -f3)"
 
 	versionAliases=( $fullVersion $version ${stub} )
-	echo "Tags: ${versionAliases[@]}"
+	
+	echo "Tags: $(join ', ' "${versionAliases[@]}")"
 	echo "GitCommit: ${commit}"
 	echo "Directory: ${version}"
 	echo
@@ -46,8 +54,12 @@ for version in "${versions[@]}"; do
 	variants=$(echo $version/*/ | xargs basename)
 	for variant in $variants; do
 		commit="$(fileCommit "$version/$variant")"
-		tagVariants=$(printf "%s-${variant} " ${versionAliases[@]})
-		echo "Tags: ${tagVariants}"
+		
+		slash='/'
+		variantAliases=( "${versionAliases[@]/%/-${variant//$slash/-}}" )
+		variantAliases=( "${variantAliases[@]//latest-/}" )
+
+		echo "Tags: $(join ', ' "${variantAliases[@]}")"
 		echo "GitCommit: ${commit}"
 		echo "Directory: ${version}/${variant}"
 		echo

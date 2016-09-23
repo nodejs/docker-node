@@ -51,7 +51,7 @@ for version in "${versions[@]}"; do
 	echo "Directory: ${version}"
 	echo
 
-	variants=$(echo $version/*/ | xargs basename)
+	variants=$(echo $version/*/ | xargs -n1 basename)
 	for variant in $variants; do
 		# Skip non-docker directories
 		[ -f "$version/$variant/Dockerfile" ] || continue

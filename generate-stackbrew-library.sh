@@ -1,5 +1,6 @@
 #!/bin/bash
 set -e
+set -x
 
 hash git 2>/dev/null || { echo >&2 "git not found, exiting."; }
 
@@ -37,9 +38,9 @@ join() {
 }
 
 for version in "${versions[@]}"; do
-	if [[ "$version" == "docs" ]]; then
-		continue
-	fi
+	# Skip "docs" and other non-docker directories
+	[ -f "$version/Dockerfile" ] || continue
+	
 	eval stub=$(echo "$version" | awk -F. '{ print "$array_" $1 "_" $2 }');
 	commit="$(fileCommit "$version")"
 	fullVersion="$(grep -m1 'ENV NODE_VERSION ' "$version/Dockerfile" | cut -d' ' -f3)"
@@ -53,6 +54,9 @@ for version in "${versions[@]}"; do
 
 	variants=$(echo $version/*/ | xargs basename)
 	for variant in $variants; do
+		# Skip non-docker directories
+		[ -f "$version/$variant/Dockerfile" ] || continue
+		
 		commit="$(fileCommit "$version/$variant")"
 		
 		slash='/'

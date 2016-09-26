@@ -1,6 +1,5 @@
 #!/bin/bash
 set -e
-set -x
 
 cd $(cd ${0%/*} && pwd -P);
 
@@ -30,9 +29,8 @@ function update_node_version {
 }
 
 for version in "${versions[@]}"; do
-	if [[ "$version" == "docs" ]]; then
-		continue
-	fi
+	# Skip "docs" and other non-docker directories
+	[ -f "$version/Dockerfile" ] || continue
 
 	template="Dockerfile.template"
 	dockerfile="$version/Dockerfile"
@@ -42,6 +40,9 @@ for version in "${versions[@]}"; do
 	variants=$(echo $version/*/ | xargs -n1 basename)
 
 	for variant in $variants; do
+		# Skip non-docker directories
+		[ -f "$version/$variant/Dockerfile" ] || continue
+		
 		template="Dockerfile-$variant.template"
 		dockerfile="$version/$variant/Dockerfile"
 

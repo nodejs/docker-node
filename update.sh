@@ -1,5 +1,6 @@
 #!/bin/bash
 set -e
+set -x
 
 cd $(cd ${0%/*} && pwd -P);
 
@@ -38,7 +39,7 @@ for version in "${versions[@]}"; do
 
 	update_node_version
 
-	variants=$(ls -d $version/*/ | awk -F"/" '{print $2}')
+	variants=$(echo $version/*/ | xargs -n1 basename)
 
 	for variant in $variants; do
 		template="Dockerfile-$variant.template"

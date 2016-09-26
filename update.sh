@@ -29,18 +29,20 @@ function update_node_version {
 }
 
 for version in "${versions[@]}"; do
-	if [[ "$version" == "docs" ]]; then
-		continue
-	fi
+	# Skip "docs" and other non-docker directories
+	[ -f "$version/Dockerfile" ] || continue
 
 	template="Dockerfile.template"
 	dockerfile="$version/Dockerfile"
 
 	update_node_version
 
-	variants=$(ls -d $version/*/ | awk -F"/" '{print $2}')
+	variants=$(echo $version/*/ | xargs -n1 basename)
 
 	for variant in $variants; do
+		# Skip non-docker directories
+		[ -f "$version/$variant/Dockerfile" ] || continue
+		
 		template="Dockerfile-$variant.template"
 		dockerfile="$version/$variant/Dockerfile"
 

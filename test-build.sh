@@ -46,7 +46,7 @@ for version in "${versions[@]}"; do
     info "Test of $tag succeeded."
   fi
 
-  variants=$(ls -d $version/*/ | awk -F"/" '{print $2}')
+  variants=$(echo $version/*/ | xargs -n1 basename)
 
   for variant in $variants; do
     # Skip non-docker directories

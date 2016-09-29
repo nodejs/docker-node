@@ -25,9 +25,8 @@ fi
 versions=( "${versions[@]%/}" )
 
 for version in "${versions[@]}"; do
-  if [[ "$version" == "docs" ]]; then
-    continue
-  fi
+  # Skip "docs" and other non-docker directories
+  [ -f "$version/Dockerfile" ] || continue
 
   tag=$(cat $version/Dockerfile | grep "ENV NODE_VERSION" | cut -d' ' -f3)
 
@@ -47,9 +46,12 @@ for version in "${versions[@]}"; do
     info "Test of $tag succeeded."
   fi
 
-  variants=$(ls -d $version/*/ | awk -F"/" '{print $2}')
+  variants=$(echo $version/*/ | xargs -n1 basename)
 
   for variant in $variants; do
+    # Skip non-docker directories
+    [ -f "$version/$variant/Dockerfile" ] || continue
+    
     info "Building $tag-$variant variant..."
     docker build -t node:$tag-$variant $version/$variant
 

@@ -45,7 +45,7 @@ script](https://docs.npmjs.com/misc/scripts#default-values).
 It also assumes that you have a file named [`.dockerignore`](https://docs.docker.com/engine/reference/builder/#/dockerignore-file) otherwise it will copy your local npm modules:
 
 ```
-npm_modules
+node_modules
 ```
 
 We have assembled a [Best Practices Guide](./docs/BestPractices.md) for those using these images on a daily basis.

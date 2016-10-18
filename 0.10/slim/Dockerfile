@@ -15,7 +15,7 @@ RUN set -ex \
     gpg --keyserver ha.pool.sks-keyservers.net --recv-keys "$key"; \
   done
 
-ENV NODE_VERSION 0.10.47
+ENV NODE_VERSION 0.10.48
 
 RUN buildDeps='xz-utils' \
     && set -x \

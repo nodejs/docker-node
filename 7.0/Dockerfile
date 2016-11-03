@@ -1,5 +1,7 @@
 FROM buildpack-deps:jessie
 
+RUN groupadd -r node && useradd -r -g node node
+
 # gpg keys listed at https://github.com/nodejs/node
 RUN set -ex \
   && for key in \

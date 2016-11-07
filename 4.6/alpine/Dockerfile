@@ -3,7 +3,9 @@ FROM alpine:3.4
 ENV NPM_CONFIG_LOGLEVEL info
 ENV NODE_VERSION 4.6.2
 
-RUN apk add --no-cache \
+RUN addgroup -S node \
+    && adduser -D -S -h /var/cache/node -s /sbin/nologin -G node node \
+    && apk add --no-cache \
         libstdc++ \
     && apk add --no-cache --virtual .build-deps \
         binutils-gold \

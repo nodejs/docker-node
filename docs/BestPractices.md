@@ -10,18 +10,17 @@ Run with `NODE_ENV` set to `production`. This is the way you would pass in secre
 
 ## Non-root User
 
-By default, Docker runs container as root which inside of the container can pose as a security issue. You would want to run the container as an unprivileged user wherever possible. This is however not supported out of the box with the `node` Docker image.
+By default, Docker runs container as root which inside of the container can pose as a security issue. You would want to run the container as an unprivileged user wherever possible. The node images (with the exception of the `onbuild` variant) provide the `node` user for such purpose. The Docker Image can than be run with the `app` user in the following way:
+
+```
+-u "node"
+```
+When using the `onbuild` variant, add the user like so:
 
 ```Dockerfile
-FROM node:4.1.2
+FROM node:4.1.2-onbuild
 # Add our user and group first to make sure their IDs get assigned consistently
-RUN groupadd -r app && useradd -r -g app app 
-```
-
-This Docker Image can than be run with the `app` user in the following way: 
-
-```
--u "app"
+RUN groupadd -r node && useradd -r -g node node
 ```
 
 #### Memory
@@ -42,12 +41,12 @@ CMD ["node","index.js"]
 
 ## Docker Run
 
-Here is an example of how you would run a default Node.JS Docker Containerized application: 
+Here is an example of how you would run a default Node.JS Docker Containerized application:
 
 ```
 $ docker run \
   -e "NODE_ENV=production" \
-  -u "app" \
+  -u "node" \
   -m "300M" --memory-swap "1G" \
   -w "/usr/src/app" \
   --name "my-nodejs-app" \

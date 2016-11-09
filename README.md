@@ -198,3 +198,4 @@ about the expectations for all contributors to this project.
 ## Docker Working Group Collaborators
 
  * Mikeal Rogers ([mikeal](https://github.com/mikeal))
+ * Laurent Goderre ([LaurentGoderre](https://github.com/LaurentGoderre))

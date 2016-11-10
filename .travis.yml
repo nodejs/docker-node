@@ -4,4 +4,12 @@ services:
     - docker
   
 script:
-    - ./test-build.sh
+    - ./test-build.sh $NODE_VERSION
+
+env:
+    matrix :
+        - NODE_VERSION: '0.10'
+        - NODE_VERSION: '0.12'
+        - NODE_VERSION: '4.6'
+        - NODE_VERSION: '6.9'
+        - NODE_VERSION: '7.1'

@@ -10,7 +10,7 @@ Run with `NODE_ENV` set to `production`. This is the way you would pass in secre
 
 ## Non-root User
 
-By default, Docker runs container as root which inside of the container can pose as a security issue. You would want to run the container as an unprivileged user wherever possible. The node images (with the exception of the `onbuild` variant) provide the `node` user for such purpose. The Docker Image can than be run with the `app` user in the following way:
+By default, Docker runs container as root which inside of the container can pose as a security issue. You would want to run the container as an unprivileged user wherever possible. The node images (with the exception of the `onbuild` variant) provide the `node` user for such purpose. The Docker Image can than be run with the `node` user in the following way:
 
 ```
 -u "node"

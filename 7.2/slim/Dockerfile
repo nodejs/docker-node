@@ -1,6 +1,7 @@
 FROM buildpack-deps:jessie-curl
 
-RUN groupadd -r node && useradd -r -g node node
+RUN groupadd --gid 1000 node \
+  && useradd --uid 1000 --gid node --shell /bin/bash --create-home node
 
 # gpg keys listed at https://github.com/nodejs/node
 RUN set -ex \
@@ -18,7 +19,7 @@ RUN set -ex \
   done
 
 ENV NPM_CONFIG_LOGLEVEL info
-ENV NODE_VERSION 7.1.0
+ENV NODE_VERSION 7.2.0
 
 RUN buildDeps='xz-utils' \
     && set -x \

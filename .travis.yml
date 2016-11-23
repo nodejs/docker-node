@@ -11,4 +11,4 @@ env:
         - NODE_VERSION: '0.12'
         - NODE_VERSION: '4.6'
         - NODE_VERSION: '6.9'
-        - NODE_VERSION: '7.1'
+        - NODE_VERSION: '7.2'

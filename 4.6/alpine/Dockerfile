@@ -16,7 +16,6 @@ RUN adduser -D -u 1000 node \
         linux-headers \
         make \
         python \
-        tar \
   && for key in \
     9554F04D7259F04124DE6B476D5A82AC7E37093B \
     94AE36675C464D64BAFA68DD7434390BDBE9B9C5 \

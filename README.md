@@ -90,7 +90,7 @@ ENV NPM_CONFIG_LOGLEVEL warn
 
 ### Docker Run
 
-If you run the node image using `docker run˙ you can use the `-e` flag to
+If you run the node image using `docker run` you can use the `-e` flag to
 override `NPM_CONFIG_LOGLEVEL`.
 
 ```
@@ -130,7 +130,7 @@ This image is based on the popular
 much smaller than most distribution base images (~5MB), and thus leads to much
 slimmer images in general.
 
-This variant is highly recommended when final image size being as small as 
+This variant is highly recommended when final image size being as small as
 possible is desired. The main caveat to note is that it does use
 [musl libc](http://www.musl-libc.org) instead of
 [glibc and friends](http://www.etalabs.net/compare_libcs.html), so certain

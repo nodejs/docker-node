@@ -16,7 +16,6 @@ RUN adduser -D -u 1000 node \
         linux-headers \
         make \
         python \
-        tar \
   && for key in \
     9554F04D7259F04124DE6B476D5A82AC7E37093B \
     94AE36675C464D64BAFA68DD7434390BDBE9B9C5 \
@@ -29,11 +28,11 @@ RUN adduser -D -u 1000 node \
   ; do \
     gpg --keyserver ha.pool.sks-keyservers.net --recv-keys "$key"; \
   done \
-    && curl -SLO "https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION.tar.gz" \
+    && curl -SLO "https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION.tar.xz" \
     && curl -SLO "https://nodejs.org/dist/v$NODE_VERSION/SHASUMS256.txt.asc" \
     && gpg --batch --decrypt --output SHASUMS256.txt SHASUMS256.txt.asc \
-    && grep " node-v$NODE_VERSION.tar.gz\$" SHASUMS256.txt | sha256sum -c - \
-    && tar -xf "node-v$NODE_VERSION.tar.gz" \
+    && grep " node-v$NODE_VERSION.tar.xz\$" SHASUMS256.txt | sha256sum -c - \
+    && tar -xf "node-v$NODE_VERSION.tar.xz" \
     && cd "node-v$NODE_VERSION" \
     && ./configure \
     && make -j$(getconf _NPROCESSORS_ONLN) \
@@ -41,6 +40,6 @@ RUN adduser -D -u 1000 node \
     && apk del .build-deps \
     && cd .. \
     && rm -Rf "node-v$NODE_VERSION" \
-    && rm "node-v$NODE_VERSION.tar.gz" SHASUMS256.txt.asc SHASUMS256.txt
+    && rm "node-v$NODE_VERSION.tar.xz" SHASUMS256.txt.asc SHASUMS256.txt
 
 CMD [ "node" ]

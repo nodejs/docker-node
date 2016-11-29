@@ -2,6 +2,8 @@ FROM alpine:3.4
 
 ENV NPM_CONFIG_LOGLEVEL info
 ENV NODE_VERSION 4.7.0
+ENV CC=clang
+ENV CXX=clang++
 
 RUN adduser -D -u 1000 node \
     && apk add --no-cache \
@@ -9,6 +11,8 @@ RUN adduser -D -u 1000 node \
     && apk add --no-cache --virtual .build-deps \
         binutils-gold \
         curl \
+        clang \
+        clang-dev \
         g++ \
         gcc \
         gnupg \

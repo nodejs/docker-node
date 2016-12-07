@@ -1,7 +1,7 @@
 FROM alpine:3.4
 
 ENV NPM_CONFIG_LOGLEVEL info
-ENV NODE_VERSION 7.2.0
+ENV NODE_VERSION 7.2.1
 ENV USER node
 
 RUN adduser -D -h /$USER -u 1000 -s /sbin/nologin -D $USER \

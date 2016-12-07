@@ -1,7 +1,7 @@
 FROM alpine:3.4
 
 ENV NPM_CONFIG_LOGLEVEL info
-ENV NODE_VERSION 4.6.2
+ENV NODE_VERSION 4.7.0
 
 RUN adduser -D -u 1000 node \
     && apk add --no-cache \

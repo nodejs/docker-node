@@ -2,8 +2,10 @@ FROM alpine:3.4
 
 ENV NPM_CONFIG_LOGLEVEL info
 ENV NODE_VERSION 6.9.2
+ENV USER node
 
-RUN adduser -D -u 1000 node \
+RUN adduser -D -h /$USER -u 1000 -s /sbin/nologin -D $USER \
+    && apk update \
     && apk add --no-cache \
         libstdc++ \
     && apk add --no-cache --virtual .build-deps \
@@ -31,7 +33,7 @@ RUN adduser -D -u 1000 node \
     && curl -SLO "https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION.tar.xz" \
     && curl -SLO "https://nodejs.org/dist/v$NODE_VERSION/SHASUMS256.txt.asc" \
     && gpg --batch --decrypt --output SHASUMS256.txt SHASUMS256.txt.asc \
-    && grep " node-v$NODE_VERSION.tar.xz\$" SHASUMS256.txt | sha256sum -c - \
+    && grep "node-v$NODE_VERSION.tar.xz\$" SHASUMS256.txt | sha256sum -c - \
     && tar -xf "node-v$NODE_VERSION.tar.xz" \
     && cd "node-v$NODE_VERSION" \
     && ./configure \
@@ -41,5 +43,11 @@ RUN adduser -D -u 1000 node \
     && cd .. \
     && rm -Rf "node-v$NODE_VERSION" \
     && rm "node-v$NODE_VERSION.tar.xz" SHASUMS256.txt.asc SHASUMS256.txt
+
+USER $USER
+WORKDIR /$USER
+ENV NPM_GLOBAL "$USER/.npm"
+ENV PATH "$PATH:$NPM_GLOBAL/bin"
+RUN npm config set prefix $NPM_GLOBAL
 
 CMD [ "node" ]

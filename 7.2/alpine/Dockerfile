@@ -5,7 +5,6 @@ ENV NODE_VERSION 7.2.1
 ENV USER node
 
 RUN adduser -D -h /$USER -u 1000 -s /sbin/nologin -D $USER \
-    && apk update \
     && apk add --no-cache \
         libstdc++ \
     && apk add --no-cache --virtual .build-deps \

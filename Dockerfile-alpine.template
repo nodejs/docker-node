@@ -3,7 +3,14 @@ FROM alpine:3.4
 ENV NPM_CONFIG_LOGLEVEL info
 ENV NODE_VERSION 0.0.0
 
-RUN adduser -D -u 1000 node \
+ENV USER node
+ENV GROUP node
+ENV UID 1000
+ENV GID 1000
+ENV HOME /home/$USER
+
+RUN groupadd --gid $GID $GROUP \
+    && useradd --uid $UID --gid $GID --shell /bin/bash --create-home --home $HOME $USER \
     && apk add --no-cache \
         libstdc++ \
     && apk add --no-cache --virtual .build-deps \

@@ -1,7 +1,13 @@
 FROM buildpack-deps:wheezy
 
-RUN groupadd --gid 1000 node \
-  && useradd --uid 1000 --gid node --shell /bin/bash --create-home node
+ENV USER node
+ENV GROUP node
+ENV UID 1000
+ENV GID 1000
+ENV HOME /home/$USER
+
+RUN groupadd --gid $GID $GROUP \
+  && useradd --uid $UID --gid $GID --shell /bin/bash --create-home --home $HOME $USER
 
 # gpg keys listed at https://github.com/nodejs/node
 RUN set -ex \

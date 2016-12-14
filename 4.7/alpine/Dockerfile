@@ -4,13 +4,10 @@ ENV NPM_CONFIG_LOGLEVEL info
 ENV NODE_VERSION 4.7.0
 
 ENV USER node
-ENV GROUP node
 ENV UID 1000
-ENV GID 1000
 ENV HOME /home/$USER
 
-RUN groupadd --gid $GID $GROUP \
-    && useradd --uid $UID --gid $GID --shell /bin/bash --create-home --home $HOME $USER \
+RUN adduser -u $UID -s /bin/bash -D -h $HOME $USER \
     && apk add --no-cache \
         libstdc++ \
     && apk add --no-cache --virtual .build-deps \

@@ -1,4 +1,4 @@
-FROM alpine:3.4
+FROM alpine:3.5
 
 ENV NPM_CONFIG_LOGLEVEL info
 ENV NODE_VERSION 6.9.2

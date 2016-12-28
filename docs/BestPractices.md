@@ -27,7 +27,7 @@ When using the `alpine` variant, add the user like so:
 
 ```Dockerfile
 FROM node:7.3.0-alpine
-RUN addgroup -S app && adduser -S -g app app 
+RUN addgroup -S node && adduser -S -g node node 
 ```
 
 ## Memory

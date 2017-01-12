@@ -8,7 +8,6 @@ script:
 
 env:
     matrix :
-        - NODE_VERSION: '0.12'
         - NODE_VERSION: '4.7'
         - NODE_VERSION: '6.9'
-        - NODE_VERSION: '7.2'
+        - NODE_VERSION: '7.4'

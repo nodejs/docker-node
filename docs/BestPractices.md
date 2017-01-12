@@ -23,7 +23,14 @@ FROM node:4.1.2-onbuild
 RUN groupadd -r node && useradd -r -g node node
 ```
 
-#### Memory
+When using the `alpine` variant, add the user like so:
+
+```Dockerfile
+FROM node:7.3.0-alpine
+RUN addgroup -S node && adduser -S -g node node 
+```
+
+## Memory
 
 By default, any Docker Container may consume as much of the hardware such as CPU and RAM. If you are running multiple containers on the same host you should limit how much memory they can consume.     
 

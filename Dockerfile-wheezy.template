@@ -1,10 +1,10 @@
 FROM buildpack-deps:wheezy
 
-ENV USER node
-ENV GROUP node
-ENV UID 1000
-ENV GID 1000
-ENV HOME /home/$USER
+ARG USER=node
+ARG GROUP=node
+ARG UID=1000
+ARG GID=1000
+ARG HOME=/home/$USER
 
 RUN groupadd --gid $GID $GROUP \
   && useradd --uid $UID --gid $GID --shell /bin/bash --create-home --home $HOME $USER

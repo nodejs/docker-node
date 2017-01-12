@@ -1,10 +1,10 @@
 FROM buildpack-deps:jessie-curl
 
-ENV USER node
-ENV GROUP node
-ENV UID 1000
-ENV GID 1000
-ENV HOME /home/$USER
+ARG USER=node
+ARG GROUP=node
+ARG UID=1000
+ARG GID=1000
+ARG HOME=/home/$USER
 
 RUN groupadd --gid $GID $GROUP \
   && useradd --uid $UID --gid $GID --shell /bin/bash --create-home --home $HOME $USER
@@ -25,7 +25,7 @@ RUN set -ex \
   done
 
 ENV NPM_CONFIG_LOGLEVEL info
-ENV NODE_VERSION 6.9.2
+ENV NODE_VERSION 6.9.4
 
 RUN buildDeps='xz-utils' \
     && set -x \

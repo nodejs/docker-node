@@ -1,11 +1,11 @@
 FROM alpine:3.4
 
 ENV NPM_CONFIG_LOGLEVEL info
-ENV NODE_VERSION 4.7.0
+ENV NODE_VERSION 4.7.2
 
-ENV USER node
-ENV UID 1000
-ENV HOME /home/$USER
+ARG USER=node
+ARG UID=1000
+ARG HOME=/home/$USER
 
 RUN adduser -u $UID -s /bin/bash -D -h $HOME $USER \
     && apk add --no-cache \

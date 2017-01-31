@@ -6,6 +6,7 @@ ENV NODE_VERSION 4.7.2
 RUN adduser -D -u 1000 node \
     && apk add --no-cache \
         libstdc++ \
+        libc6-compat \
     && apk add --no-cache --virtual .build-deps \
         binutils-gold \
         curl \

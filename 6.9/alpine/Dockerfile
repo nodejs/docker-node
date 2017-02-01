@@ -1,10 +1,11 @@
-FROM alpine:3.4
+FROM alpine:3.5
 
 ENV NPM_CONFIG_LOGLEVEL info
 ENV NODE_VERSION 6.9.5
 
 RUN adduser -D -u 1000 node \
     && apk add --no-cache \
+        dumb-init \
         libstdc++ \
     && apk add --no-cache --virtual .build-deps \
         binutils-gold \
@@ -42,4 +43,5 @@ RUN adduser -D -u 1000 node \
     && rm -Rf "node-v$NODE_VERSION" \
     && rm "node-v$NODE_VERSION.tar.xz" SHASUMS256.txt.asc SHASUMS256.txt
 
+ENTRYPOINT [ "dumb-init", "--" ]
 CMD [ "node" ]

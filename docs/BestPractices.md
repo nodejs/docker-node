@@ -7,6 +7,15 @@ Run with `NODE_ENV` set to `production`. This is the way you would pass in secre
 ```
 -e "NODE_ENV=production"
 ```
+## Handling Kernel Signals
+
+Node.js was not designed to run as PID 1 which leads to unexpected behaviour when running inside of Docker. For example, a Node.js process running as PID 1 will not respond to `SIGTERM` (`CTRL-C`) and similar signals. As of Docker 1.3, you can use the `--init` flag to wrap your Node.js process with a [lightweight init system](https://github.com/krallin/tini) that properly handles running as PID 1.
+
+```
+docker run -it --init node
+```
+
+You can also include tini [directly in your Dockerfile](https://github.com/krallin/tini#using-tini), ensuring your process is always started with an init wrapper.
 
 ## Non-root User
 

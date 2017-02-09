@@ -39,6 +39,38 @@ FROM node:7.3.0-alpine
 RUN addgroup -S node && adduser -S -g node node 
 ```
 
+Note that the `node` user is neither a build-time nor a run-time dependency and it can be removed or altered, as long as the functionality of the application you want to add to the container does not depend on it.
+
+If you do not want nor need the user created in this image you can remove it with the following:
+
+```Dockerfile
+# For debian based images use:
+RUN userdel -r node
+
+# For alpine based images use:
+RUN deluser --remove-home node
+```
+
+If you need to change the uid/gid of the user you can use:
+
+```Dockerfile
+RUN groupmod -g 999 node && usermod -u 999 -g 999 node
+```
+
+If you need another name for the user (ex. `myapp`) execute:
+
+```Dockerfile
+RUN usermod -d /home/myapp -l myapp node
+```
+
+For alpine based images, you do not have `groupmod` nor `usermod`, so to change the uid/gid you have to delete the previous user:
+```Dockerfile
+RUN deluser --remove-home node \
+  && delgroup node \
+  && addgroup -S node -g 999 \
+  && adduser -S -g node -u 999 node
+```
+
 ## Memory
 
 By default, any Docker Container may consume as much of the hardware such as CPU and RAM. If you are running multiple containers on the same host you should limit how much memory they can consume.     

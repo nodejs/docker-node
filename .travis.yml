@@ -9,5 +9,5 @@ script:
 env:
     matrix :
         - NODE_VERSION: '4.7'
-        - NODE_VERSION: '6.9'
+        - NODE_VERSION: '6.10'
         - NODE_VERSION: '7.5'

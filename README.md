@@ -109,6 +109,8 @@ $ docker run node npm --loglevel=warn ...
 # Image Variants
 
 The `node` images come in many flavors, each designed for a specific use case.
+All of the images contain pre-installed versions of `node`,
+[`npm`](https://www.npmjs.com/), and [`yarn`](https://yarnpkg.com).
 
 ## `node:<version>`
 

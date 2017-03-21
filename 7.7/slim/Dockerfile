@@ -19,7 +19,7 @@ RUN set -ex \
   done
 
 ENV NPM_CONFIG_LOGLEVEL info
-ENV NODE_VERSION 7.7.3
+ENV NODE_VERSION 7.7.4
 
 RUN buildDeps='xz-utils' \
     && set -x \

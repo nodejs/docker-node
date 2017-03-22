@@ -40,7 +40,7 @@ function update_node_version {
 		fi
 
 		sed -E -i.bak 's/^FROM (.*)/FROM '"$fromprefix"'\1/' "$dockerfile" && rm "$dockerfile".bak
-		sed -E -i.bak 's/^(ENV NODE_VERSION |FROM .*node:).*/\1'"$version.$fullVersion"'/' "$dockerfile" && rm "$dockerfile".bak
+		sed -E -i.bak 's/^(ENV NODE_VERSION |FROM .*node:)0.0.0/\1'"$version.$fullVersion"'/' "$dockerfile" && rm "$dockerfile".bak
 		sed -E -i.bak 's/^(ENV YARN_VERSION ).*/\1'"$yarnVersion"'/' "$dockerfile" && rm "$dockerfile".bak
 		if [[ "${version/.*/}" -ge 8 || "$arch" = "ppc64le" ]]; then
 			sed -E -i.bak 's/FROM (.*)alpine:3.4/FROM \1alpine:3.6/' "$dockerfile"
@@ -63,6 +63,16 @@ for version in "${versions[@]}"; do
 		# Skip non-docker directories
 		[ -f "$version/$variant/Dockerfile" ] || continue
 		update_node_version "Dockerfile-$variant.template" "$version/$variant/Dockerfile" "$variant"
+	done
 
+	variants=$(get_variants windows-amd64)
+
+	for variant in $variants; do
+		# Skip non-docker directories
+		echo "$version/windows/$variant/Dockerfile"
+		[ -f "$version/windows/$variant/Dockerfile" ] || continue
+		slash='/'
+		variantDash=${variant//$slash/-}
+		update_node_version "Dockerfile-$variantDash.template" "$version/windows/$variant/Dockerfile" "$variant"
 	done
 done

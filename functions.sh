@@ -36,8 +36,12 @@ function get_arch() {
 function get_variants() {
 	local arch
 	arch=$(get_arch)
+	if [[ $# -eq 1 ]]; then
+		arch=$1
+		shift
+	fi
 	local variants
-	variants=$(grep "$arch" architectures | sed -E 's/'"$arch"'\s*//' | sed -E 's/,/ /g')
+	variants=$(grep "^$arch" architectures | sed -E 's/'"$arch"'\s*//' | sed -E 's/,/ /g')
 	echo "$variants"
 }
 

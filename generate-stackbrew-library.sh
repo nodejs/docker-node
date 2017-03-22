@@ -63,7 +63,7 @@ for version in "${versions[@]}"; do
 
 	# Get supported variants according to the target architecture.
 	# See details in function.sh
-	variants=$(get_variants | tr ' ' '\n')
+	variants=$(get_variants "$(get_arch)" | tr ' ' '\n')
 	for variant in $variants; do
 		# Skip non-docker directories
 		[ -f "$version/$variant/Dockerfile" ] || continue
@@ -81,6 +81,27 @@ for version in "${versions[@]}"; do
 		echo "Architectures: $(join ', ' "${supportedArches[@]}")"
 		echo "GitCommit: ${commit}"
 		echo "Directory: ${version}/${variant}"
+		echo
+	done
+
+	variants=$(get_variants windows-amd64 | tr ' ' '\n')
+	for variant in $variants; do
+		# Skip non-docker directories
+		[ -f "$version/windows/$variant/Dockerfile" ] || continue
+
+		commit="$(fileCommit "$version/windows/$variant")"
+
+		slash='/'
+		variantAliases=( "${versionAliases[@]/%/-${variant//$slash/-}}" )
+		variantAliases=( "${variantAliases[@]//latest-/}" )
+		# Get supported architectures for a specific version and variant.
+		# See details in function.sh
+		supportedArches=( $(get_supported_arches "$version" "$variant") )
+
+		echo "Tags: $(join ', ' "${variantAliases[@]}")"
+		echo "Architectures: $(join ', ' "${supportedArches[@]}")"
+		echo "GitCommit: ${commit}"
+		echo "Directory: ${version}/windows/${variant}"
 		echo
 	done
 done

@@ -5,6 +5,7 @@ ENV NODE_VERSION 4.8.1
 
 RUN adduser -D -u 1000 node \
     && apk add --no-cache \
+        git \
         libstdc++ \
     && apk add --no-cache --virtual .build-deps \
         binutils-gold \

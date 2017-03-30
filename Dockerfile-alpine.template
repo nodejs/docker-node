@@ -6,6 +6,7 @@ ENV NODE_VERSION 0.0.0
 RUN addgroup -g 1000 node \
     && adduser -u 1000 -G node -s /bin/sh -D node \
     && apk add --no-cache \
+        git \
         libstdc++ \
     && apk add --no-cache --virtual .build-deps \
         binutils-gold \

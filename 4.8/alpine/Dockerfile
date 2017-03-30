@@ -3,7 +3,8 @@ FROM alpine:3.4
 ENV NPM_CONFIG_LOGLEVEL info
 ENV NODE_VERSION 4.8.1
 
-RUN adduser -D -u 1000 node \
+RUN addgroup -g 1000 node \
+    && adduser -u 1000 -G node -s /bin/sh -D node \
     && apk add --no-cache \
         libstdc++ \
     && apk add --no-cache --virtual .build-deps \

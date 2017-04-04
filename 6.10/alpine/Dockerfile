@@ -1,7 +1,7 @@
 FROM alpine:3.4
 
 ENV NPM_CONFIG_LOGLEVEL info
-ENV NODE_VERSION 6.10.1
+ENV NODE_VERSION 6.10.2
 
 RUN addgroup -g 1000 node \
     && adduser -u 1000 -G node -s /bin/sh -D node \

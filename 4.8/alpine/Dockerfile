@@ -62,6 +62,8 @@ RUN apk add --no-cache --virtual .build-deps-yarn curl gnupg \
   && rm yarn.js.asc \
   && mv yarn.js /usr/local/bin/yarn \
   && chmod +x /usr/local/bin/yarn \
+  # https://github.com/yarnpkg/yarn/issues/2266
+  && yarn global add node-gyp \
   && apk del .build-deps-yarn
 
 CMD [ "node" ]

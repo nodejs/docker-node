@@ -30,13 +30,8 @@ When using the `onbuild` variant, add the user like so:
 FROM node:4.1.2-onbuild
 # Add our user and group first to make sure their IDs get assigned consistently
 RUN groupadd -r node && useradd -r -g node node
-```
-
-When using the `alpine` variant, add the user like so:
-
-```Dockerfile
-FROM node:7.3.0-alpine
-RUN addgroup -S node && adduser -S -g node node 
+# Set the user to use when running this image
+USER node
 ```
 
 ## Memory

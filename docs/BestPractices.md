@@ -1,5 +1,15 @@
 # Docker and Node.js Best Practices
 
+## Table of Contents
+
+- [Environment Variables](#environment-variables)
+- [Handling Kernel Signals](#handling-kernel-signals)
+- [Non-root User](#non-root-user)
+- [Memory](#memory)
+- [CMD](#cmd)
+- [Docker Run](#docker-run)
+- [Security](#security)
+
 ## Environment Variables
 
 Run with `NODE_ENV` set to `production`. This is the way you would pass in secrets and other runtime configurations to your application as well.

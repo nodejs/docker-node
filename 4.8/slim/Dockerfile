@@ -36,7 +36,7 @@ RUN buildDeps='xz-utils' \
     && apt-get purge -y --auto-remove $buildDeps \
     && ln -s /usr/local/bin/node /usr/local/bin/nodejs
 
-ENV YARN_VERSION 0.23.2
+ENV YARN_VERSION 0.23.4
 
 RUN set -ex \
   && for key in \

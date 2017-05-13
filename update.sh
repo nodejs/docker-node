@@ -13,7 +13,7 @@ versions=( "${versions[@]%/}" )
 template=
 dockerfile=
 
-yarnVersion="$(curl -sSL https://yarnpkg.com/latest-version)"
+yarnVersion="$(curl -sSL --compressed https://yarnpkg.com/latest-version)"
 
 function update_node_version {
 	fullVersion="$(curl -sSL --compressed 'https://nodejs.org/dist' | grep '<a href="v'"$version." | sed -E 's!.*<a href="v([^"/]+)/?".*!\1!' | cut -f 3 -d . | sort -n | tail -1)"

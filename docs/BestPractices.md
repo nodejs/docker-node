@@ -29,18 +29,17 @@ You can also include tini [directly in your Dockerfile](https://github.com/krall
 
 ## Non-root User
 
-By default, Docker runs container as root which inside of the container can pose as a security issue. You would want to run the container as an unprivileged user wherever possible. The node images (with the exception of the `onbuild` variant) provide the `node` user for such purpose. The Docker Image can than be run with the `node` user in the following way:
+By default, Docker runs container as root which inside of the container can pose as a security issue. You would want to run the container as an unprivileged user wherever possible. The node images provide the `node` user for such purpose. The Docker Image can than be run with the `node` user in the following way:
 
 ```
 -u "node"
 ```
-When using the `onbuild` variant, add the user like so:
+Alternatively, the user can be activated in the `Dockerfile`:
 
 ```Dockerfile
-FROM node:4.1.2-onbuild
-# Add our user and group first to make sure their IDs get assigned consistently
-RUN groupadd -r node && useradd -r -g node node
-# Set the user to use when running this image
+FROM node:6.10.3
+...
+# At the end, set the user to use when running this image
 USER node
 ```
 

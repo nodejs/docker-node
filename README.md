@@ -7,6 +7,29 @@
 
 The official Node.js docker image, made with love by the node community.
 
+## Table of Contents
+
+  - [What is Node.js?](#what-is-nodejs)
+  - [Usage](#usage)
+- [How to use this image](#how-to-use-this-image)
+  - [Create a `Dockerfile` in your Node.js app project](#create-a-dockerfile-in-your-nodejs-app-project)
+    - [Notes](#notes)
+  - [Run a single Node.js script](#run-a-single-nodejs-script)
+  - [Verbosity](#verbosity)
+    - [Dockerfile](#dockerfile)
+    - [Docker Run](#docker-run)
+    - [NPM run](#npm-run)
+- [Image Variants](#image-variants)
+  - [`node:<version>`](#nodeversion)
+  - [`node:alpine`](#nodealpine)
+  - [`node:onbuild`](#nodeonbuild)
+  - [`node:slim`](#nodeslim)
+- [License](#license)
+- [Supported Docker versions](#supported-docker-versions)
+- [Governance and Current Members](#governance-and-current-members)
+  - [Docker Working Group Members](#docker-working-group-members)
+  - [Docker Working Group Collaborators](#docker-working-group-collaborators)
+
 ## What is Node.js?
 
 Node.js is a platform built on Chrome's JavaScript runtime for easily building
@@ -227,3 +250,4 @@ about the expectations for all contributors to this project.
 
  * Mikeal Rogers ([mikeal](https://github.com/mikeal))
  * Laurent Goderre ([LaurentGoderre](https://github.com/LaurentGoderre))
+ * Simen Bekkhus ([SimenB](https://github.com/SimenB))

@@ -1,10 +1,23 @@
-FROM buildpack-deps:jessie-curl
+FROM alpine:3.4
 
-RUN groupadd --gid 1000 node \
-  && useradd --uid 1000 --gid node --shell /bin/bash --create-home node
+ENV NPM_CONFIG_LOGLEVEL info
+ENV NODE_VERSION 6.11.0
 
-# gpg keys listed at https://github.com/nodejs/node#release-team
-RUN set -ex \
+RUN addgroup -g 1000 node \
+    && adduser -u 1000 -G node -s /bin/sh -D node \
+    && apk add --no-cache \
+        libstdc++ \
+    && apk add --no-cache --virtual .build-deps \
+        binutils-gold \
+        curl \
+        g++ \
+        gcc \
+        gnupg \
+        libgcc \
+        linux-headers \
+        make \
+        python \
+  # gpg keys listed at https://github.com/nodejs/node#release-team
   && for key in \
     9554F04D7259F04124DE6B476D5A82AC7E37093B \
     94AE36675C464D64BAFA68DD7434390BDBE9B9C5 \
@@ -18,27 +31,24 @@ RUN set -ex \
     gpg --keyserver pgp.mit.edu --recv-keys "$key" || \
     gpg --keyserver keyserver.pgp.com --recv-keys "$key" || \
     gpg --keyserver ha.pool.sks-keyservers.net --recv-keys "$key" ; \
-  done
-
-ENV NPM_CONFIG_LOGLEVEL info
-ENV NODE_VERSION 6.10.3
-
-RUN buildDeps='xz-utils' \
-    && set -x \
-    && apt-get update && apt-get install -y $buildDeps --no-install-recommends \
-    && rm -rf /var/lib/apt/lists/* \
-    && curl -SLO "https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION-linux-x64.tar.xz" \
+  done \
+    && curl -SLO "https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION.tar.xz" \
     && curl -SLO --compressed "https://nodejs.org/dist/v$NODE_VERSION/SHASUMS256.txt.asc" \
     && gpg --batch --decrypt --output SHASUMS256.txt SHASUMS256.txt.asc \
-    && grep " node-v$NODE_VERSION-linux-x64.tar.xz\$" SHASUMS256.txt | sha256sum -c - \
-    && tar -xJf "node-v$NODE_VERSION-linux-x64.tar.xz" -C /usr/local --strip-components=1 \
-    && rm "node-v$NODE_VERSION-linux-x64.tar.xz" SHASUMS256.txt.asc SHASUMS256.txt \
-    && apt-get purge -y --auto-remove $buildDeps \
-    && ln -s /usr/local/bin/node /usr/local/bin/nodejs
+    && grep " node-v$NODE_VERSION.tar.xz\$" SHASUMS256.txt | sha256sum -c - \
+    && tar -xf "node-v$NODE_VERSION.tar.xz" \
+    && cd "node-v$NODE_VERSION" \
+    && ./configure \
+    && make -j$(getconf _NPROCESSORS_ONLN) \
+    && make install \
+    && apk del .build-deps \
+    && cd .. \
+    && rm -Rf "node-v$NODE_VERSION" \
+    && rm "node-v$NODE_VERSION.tar.xz" SHASUMS256.txt.asc SHASUMS256.txt
 
-ENV YARN_VERSION 0.24.4
+ENV YARN_VERSION 0.24.6
 
-RUN set -ex \
+RUN apk add --no-cache --virtual .build-deps-yarn curl gnupg tar \
   && for key in \
     6A010C5166006599AA17F08146C2130DFD2497F5 \
   ; do \
@@ -53,6 +63,7 @@ RUN set -ex \
   && tar -xzf yarn-v$YARN_VERSION.tar.gz -C /opt/yarn --strip-components=1 \
   && ln -s /opt/yarn/bin/yarn /usr/local/bin/yarn \
   && ln -s /opt/yarn/bin/yarn /usr/local/bin/yarnpkg \
-  && rm yarn-v$YARN_VERSION.tar.gz.asc yarn-v$YARN_VERSION.tar.gz
+  && rm yarn-v$YARN_VERSION.tar.gz.asc yarn-v$YARN_VERSION.tar.gz \
+  && apk del .build-deps-yarn
 
 CMD [ "node" ]

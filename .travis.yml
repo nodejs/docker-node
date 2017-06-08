@@ -3,7 +3,15 @@ sudo: required
 services:
     - docker
 
+addons:
+  apt:
+    sources:
+      - debian-sid
+    packages:
+      - shellcheck
+
 script:
+    - shellcheck *.sh
     - ./test-build.sh $NODE_VERSION
 
 env:

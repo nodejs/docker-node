@@ -23,6 +23,10 @@ function update_node_version {
 		rm "$dockerfile.bak"
 		sed -E -i.bak 's/^(ENV YARN_VERSION ).*/\1'"$yarnVersion"'/' "$dockerfile"
 		rm "$dockerfile.bak"
+		if [[ "${version/.*/}" -ge 8 ]]; then
+			sed -E -i.bak 's/FROM alpine:3.4/FROM alpine:3.6/' "$dockerfile"
+			rm "$dockerfile.bak"
+		fi
 	)
 }
 
@@ -40,7 +44,7 @@ for version in "${versions[@]}"; do
 	for variant in $variants; do
 		# Skip non-docker directories
 		[ -f "$version/$variant/Dockerfile" ] || continue
-		
+
 		template="Dockerfile-$variant.template"
 		dockerfile="$version/$variant/Dockerfile"
 

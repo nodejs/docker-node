@@ -26,6 +26,7 @@ fileCommit() {
 echo "# this file is generated via ${url}/blob/$(fileCommit "$self")/$self"
 echo
 echo "Maintainers: The Node.js Docker Team <${url}> (@nodejs)"
+echo "PR Bot Maintainer: Hank Brekke <brekkehj@hnryjms.io> (@hnryjms)"
 echo "GitRepo: ${url}.git"
 echo
 
@@ -39,6 +40,7 @@ join() {
 for version in "${versions[@]}"; do
 	# Skip "docs" and other non-docker directories
 	[ -f "$version/Dockerfile" ] || continue
+	[ "$version" != "docker-images" ] || continue
 
 	eval stub=$(echo "$version" | awk -F. '{ print "$array_" $1 "_" $2 }');
 	commit="$(fileCommit "$version")"

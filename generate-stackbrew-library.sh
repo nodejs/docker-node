@@ -11,7 +11,7 @@ array_6_11='6 boron';
 # shellcheck disable=SC2034
 array_8_1='8 latest';
 
-cd $(cd ${0%/*} && pwd -P);
+cd "$(cd "${0%/*}" && pwd -P)";
 
 self="$(basename "$BASH_SOURCE")"
 
@@ -44,7 +44,7 @@ for version in "${versions[@]}"; do
 	# Skip "docs" and other non-docker directories
 	[ -f "$version/Dockerfile" ] || continue
 
-	eval stub=$(echo "$version" | awk -F. '{ print "$array_" $1 "_" $2 }');
+	eval stub="$(echo "$version" | awk -F. '{ print "$array_" $1 "_" $2 }')";
 	commit="$(fileCommit "$version")"
 	fullVersion="$(grep -m1 'ENV NODE_VERSION ' "$version/Dockerfile" | cut -d' ' -f3)"
 
@@ -55,7 +55,7 @@ for version in "${versions[@]}"; do
 	echo "Directory: ${version}"
 	echo
 
-	variants=$(echo $version/*/ | xargs -n1 basename)
+	variants=$(echo "$version"/*/ | xargs -n1 basename)
 	for variant in $variants; do
 		# Skip non-docker directories
 		[ -f "$version/$variant/Dockerfile" ] || continue

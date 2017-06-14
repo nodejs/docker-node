@@ -13,7 +13,7 @@ array_8_1='8 latest';
 
 cd "$(cd "${0%/*}" && pwd -P)";
 
-self="$(basename "$BASH_SOURCE")"
+self="$(basename "${BASH_SOURCE[0]}")"
 
 versions=( */ )
 versions=( "${versions[@]%/}" )

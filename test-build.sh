@@ -28,7 +28,7 @@ for version in "${versions[@]}"; do
   # Skip "docs" and other non-docker directories
   [ -f "$version/Dockerfile" ] || continue
 
-  tag=$(cat "$version/Dockerfile" | grep "ENV NODE_VERSION" | cut -d' ' -f3)
+  tag=$(grep "ENV NODE_VERSION" "$version/Dockerfile" | cut -d' ' -f3)
 
   info "Building $tag..."
 

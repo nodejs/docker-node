@@ -16,7 +16,7 @@ fatal() {
   exit 1
 }
 
-cd "$(cd "${0%/*}" && pwd -P)";
+cd "$(cd "${0%/*}" && pwd -P)" || exit;
 
 versions=( "$@" )
 if [ ${#versions[@]} -eq 0 ]; then

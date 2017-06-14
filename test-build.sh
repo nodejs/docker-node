@@ -31,9 +31,8 @@ for version in "${versions[@]}"; do
   tag=$(cat $version/Dockerfile | grep "ENV NODE_VERSION" | cut -d' ' -f3)
 
   info "Building $tag..."
-  docker build -t node:$tag $version
 
-  if [[ $? -gt 0 ]]; then
+  if ! docker build -t node:$tag $version; then
     fatal "Build of $tag failed!"
   else
     info "Build of $tag succeeded."
@@ -53,9 +52,8 @@ for version in "${versions[@]}"; do
     [ -f "$version/$variant/Dockerfile" ] || continue
     
     info "Building $tag-$variant variant..."
-    docker build -t node:$tag-$variant $version/$variant
 
-    if [[ $? -gt 0 ]]; then
+    if ! docker build -t node:$tag-$variant $version/$variant; then
       fatal "Build of $tag-$variant failed!"
     else
       info "Build of $tag-$variant succeeded."

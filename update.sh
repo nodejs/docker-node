@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-cd $(cd ${0%/*} && pwd -P);
+cd "$(cd "${0%/*}" && pwd -P)";
 
 versions=( "$@" )
 if [ ${#versions[@]} -eq 0 ]; then
@@ -39,7 +39,7 @@ for version in "${versions[@]}"; do
 
 	update_node_version
 
-	variants=$(echo $version/*/ | xargs -n1 basename)
+	variants=$(echo "$version"/*/ | xargs -n1 basename)
 
 	for variant in $variants; do
 		# Skip non-docker directories

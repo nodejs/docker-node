@@ -26,7 +26,7 @@ fileCommit() {
 echo "# this file is generated via ${url}/blob/$(fileCommit "$self")/$self"
 echo
 echo "Maintainers: The Node.js Docker Team <${url}> (@nodejs)"
-echo "PR Bot Maintainer: Hank Brekke <brekkehj@hnryjms.io> (@hnryjms)"
+echo "# PR Bot Maintainer: Hank Brekke <brekkehj@hnryjms.io> (@hnryjms)"
 echo "GitRepo: ${url}.git"
 echo
 

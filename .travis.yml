@@ -2,7 +2,14 @@ sudo: required
 services:
 - docker
 script:
-- "./test-build.sh $NODE_VERSION"
+- shellcheck *.sh
+- ./test-build.sh $NODE_VERSION
+addons:
+  apt:
+    sources:
+      - debian-sid
+    packages:
+      - shellcheck
 env:
   matrix:
   - NODE_VERSION: '4.8'

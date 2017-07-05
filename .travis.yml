@@ -3,20 +3,22 @@ sudo: required
 services:
     - docker
 
-addons:
-  apt:
-    sources:
-      - debian-sid
-    packages:
-      - shellcheck
-
 script:
-    - shellcheck *.sh
-    - ./test-build.sh $NODE_VERSION
+    - if [ "true" = "${SHELLCHECK-}" ]; then shellcheck *.sh ; fi
+    - if [ -n "${NODE_VERSION-}" ]; then ./test-build.sh $NODE_VERSION ; fi
 
 env:
-    matrix :
-        - NODE_VERSION: '4.8'
-        - NODE_VERSION: '6.11'
-        - NODE_VERSION: '7.10'
-        - NODE_VERSION: '8.1'
+    - NODE_VERSION: '4.8'
+    - NODE_VERSION: '6.11'
+    - NODE_VERSION: '7.10'
+    - NODE_VERSION: '8.1'
+
+matrix:
+  include:
+    env: SHELLCHECK=true
+    addons:
+      apt:
+        sources:
+          - debian-sid
+        packages:
+          - shellcheck

@@ -251,3 +251,4 @@ about the expectations for all contributors to this project.
  * Mikeal Rogers ([mikeal](https://github.com/mikeal))
  * Laurent Goderre ([LaurentGoderre](https://github.com/LaurentGoderre))
  * Simen Bekkhus ([SimenB](https://github.com/SimenB))
+ * Peter Dave Hello ([PeterDaveHello](https://github.com/PeterDaveHello))

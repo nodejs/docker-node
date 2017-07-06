@@ -7,6 +7,8 @@
 
 The official Node.js docker image, made with love by the node community.
 
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 ## Table of Contents
 
   - [What is Node.js?](#what-is-nodejs)
@@ -29,6 +31,8 @@ The official Node.js docker image, made with love by the node community.
 - [Governance and Current Members](#governance-and-current-members)
   - [Docker Working Group Members](#docker-working-group-members)
   - [Docker Working Group Collaborators](#docker-working-group-collaborators)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## What is Node.js?
 

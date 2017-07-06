@@ -6,8 +6,16 @@ services:
 script:
     - if [ "true" = "${SHELLCHECK-}" ]; then shellcheck *.sh ; fi
     - if [ -n "${NODE_VERSION-}" ]; then ./test-build.sh $NODE_VERSION ; fi
+    - if [ "true" = "${DOCTOCCHECK-}" ]; then
+         nvm install node &&
+         npm i -g doctoc  &&
+         cp README.md README.md.tmp &&
+         doctoc --title='## Table of Contents' --github README.md &&
+         diff -q README.md README.md.tmp;
+      fi
 
 env:
+    - DOCTOCCHECK: true
     - NODE_VERSION: '4.8'
     - NODE_VERSION: '6.11'
     - NODE_VERSION: '7.10'

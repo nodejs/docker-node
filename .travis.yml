@@ -1,21 +1,24 @@
 sudo: required
-
 services:
-    - docker
-
+- docker
+script:
+- shellcheck *.sh
+- ./test-build.sh $NODE_VERSION
 addons:
   apt:
     sources:
       - debian-sid
     packages:
       - shellcheck
-
-script:
-    - shellcheck *.sh
-    - ./test-build.sh $NODE_VERSION
-
 env:
-    matrix :
-        - NODE_VERSION: '4.8'
-        - NODE_VERSION: '6.11'
-        - NODE_VERSION: '8.1'
+  matrix:
+  - NODE_VERSION: '4.8'
+  - NODE_VERSION: '6.11'
+  - NODE_VERSION: '8.1'
+  global:
+    secure: kV7nldhsQlx4MaRfk8lgUnSsIJ0ZciF63GUUQLPogAEaO4/lgM8nC81OXmnHwkhyFSdZbIDl3E8LCLLsx7nVnlzjY2yrjQPkEEnPsMcD6chudLBDtnyDv7drjYbt/3MeT8ZV8WKwrM69GkV0AK+/MZwRCXHSqpG5XYNlNnzJHoA=
+deploy:
+  provider: script
+  script: generate-stackbrew-pr.sh
+  on:
+    branch: master

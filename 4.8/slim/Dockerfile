@@ -21,7 +21,7 @@ RUN set -ex \
   done
 
 ENV NPM_CONFIG_LOGLEVEL info
-ENV NODE_VERSION 4.8.3
+ENV NODE_VERSION 4.8.4
 
 RUN buildDeps='xz-utils' \
     && set -x \

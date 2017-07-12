@@ -18,5 +18,4 @@ env:
     matrix :
         - NODE_VERSION: '4.8'
         - NODE_VERSION: '6.11'
-        - NODE_VERSION: '7.10'
         - NODE_VERSION: '8.1'

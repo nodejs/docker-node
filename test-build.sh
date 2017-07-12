@@ -34,16 +34,14 @@ for version in "${versions[@]}"; do
 
   if ! docker build -t node:"$tag" "$version"; then
     fatal "Build of $tag failed!"
-  else
-    info "Build of $tag succeeded."
   fi
+  info "Build of $tag succeeded."
 
   OUTPUT=$(docker run --rm -it node:"$tag" node -e "process.stdout.write(process.versions.node)")
   if [ "$OUTPUT" != "$tag" ]; then
     fatal "Test of $tag failed!"
-  else
-    info "Test of $tag succeeded."
   fi
+  info "Test of $tag succeeded."
 
   variants=$(echo "$version"/*/ | xargs -n1 basename)
 
@@ -55,16 +53,14 @@ for version in "${versions[@]}"; do
 
     if ! docker build -t node:"$tag-$variant" "$version/$variant"; then
       fatal "Build of $tag-$variant failed!"
-    else
-      info "Build of $tag-$variant succeeded."
     fi
+    info "Build of $tag-$variant succeeded."
 
     OUTPUT=$(docker run --rm -it node:"$tag-$variant" node -e "process.stdout.write(process.versions.node)")
     if [ "$OUTPUT" != "$tag" ]; then
       fatal "Test of $tag-$variant failed!"
-    else
-      info "Test of $tag-$variant succeeded."
     fi
+    info "Test of $tag-$variant succeeded."
 
   done
 

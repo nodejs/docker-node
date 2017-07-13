@@ -3,19 +3,29 @@ sudo: required
 services:
     - docker
 
-addons:
-  apt:
-    sources:
-      - debian-sid
-    packages:
-      - shellcheck
-
 script:
-    - shellcheck *.sh
-    - ./test-build.sh $NODE_VERSION
+    - if [ "true" = "${SHELLCHECK-}" ]; then shellcheck *.sh ; fi
+    - if [ -n "${NODE_VERSION-}" ]; then ./test-build.sh $NODE_VERSION ; fi
+    - if [ "true" = "${DOCTOCCHECK-}" ]; then
+         nvm install node &&
+         npm i -g doctoc  &&
+         cp README.md README.md.tmp &&
+         doctoc --title='## Table of Contents' --github README.md &&
+         diff -q README.md README.md.tmp;
+      fi
 
 env:
-    matrix :
-        - NODE_VERSION: '4.8'
-        - NODE_VERSION: '6.11'
-        - NODE_VERSION: '8.1'
+    - DOCTOCCHECK: true
+    - NODE_VERSION: '4.8'
+    - NODE_VERSION: '6.11'
+    - NODE_VERSION: '8.1'
+
+matrix:
+  include:
+    env: SHELLCHECK=true
+    addons:
+      apt:
+        sources:
+          - debian-sid
+        packages:
+          - shellcheck

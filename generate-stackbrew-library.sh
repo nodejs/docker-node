@@ -3,13 +3,19 @@ set -e
 
 hash git 2>/dev/null || { echo >&2 "git not found, exiting."; }
 
-array_4_7='4 argon';
-array_6_9='6 boron';
-array_7_5='7 latest';
+# Used dynamically: print "$array_" $1
+# shellcheck disable=SC2034
+array_4_8='4 argon';
+# shellcheck disable=SC2034
+array_6_11='6 boron';
+# shellcheck disable=SC2034
+array_7_10='7';
+# shellcheck disable=SC2034
+array_8_1='8 latest';
 
-cd $(cd ${0%/*} && pwd -P);
+cd "$(cd "${0%/*}" && pwd -P)";
 
-self="$(basename "$BASH_SOURCE")"
+self="$(basename "${BASH_SOURCE[0]}")"
 
 versions=( */ )
 versions=( "${versions[@]%/}" )
@@ -39,25 +45,25 @@ join() {
 for version in "${versions[@]}"; do
 	# Skip "docs" and other non-docker directories
 	[ -f "$version/Dockerfile" ] || continue
-	
-	eval stub=$(echo "$version" | awk -F. '{ print "$array_" $1 "_" $2 }');
+
+	eval stub="$(echo "$version" | awk -F. '{ print "$array_" $1 "_" $2 }')";
 	commit="$(fileCommit "$version")"
 	fullVersion="$(grep -m1 'ENV NODE_VERSION ' "$version/Dockerfile" | cut -d' ' -f3)"
 
 	versionAliases=( $fullVersion $version ${stub} )
-	
+
 	echo "Tags: $(join ', ' "${versionAliases[@]}")"
 	echo "GitCommit: ${commit}"
 	echo "Directory: ${version}"
 	echo
 
-	variants=$(echo $version/*/ | xargs -n1 basename)
+	variants=$(echo "$version"/*/ | xargs -n1 basename)
 	for variant in $variants; do
 		# Skip non-docker directories
 		[ -f "$version/$variant/Dockerfile" ] || continue
-		
+
 		commit="$(fileCommit "$version/$variant")"
-		
+
 		slash='/'
 		variantAliases=( "${versionAliases[@]/%/-${variant//$slash/-}}" )
 		variantAliases=( "${variantAliases[@]//latest-/}" )

@@ -7,6 +7,33 @@
 
 The official Node.js docker image, made with love by the node community.
 
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+## Table of Contents
+
+  - [What is Node.js?](#what-is-nodejs)
+  - [Usage](#usage)
+- [How to use this image](#how-to-use-this-image)
+  - [Create a `Dockerfile` in your Node.js app project](#create-a-dockerfile-in-your-nodejs-app-project)
+    - [Notes](#notes)
+  - [Run a single Node.js script](#run-a-single-nodejs-script)
+  - [Verbosity](#verbosity)
+    - [Dockerfile](#dockerfile)
+    - [Docker Run](#docker-run)
+    - [NPM run](#npm-run)
+- [Image Variants](#image-variants)
+  - [`node:<version>`](#nodeversion)
+  - [`node:alpine`](#nodealpine)
+  - [`node:onbuild`](#nodeonbuild)
+  - [`node:slim`](#nodeslim)
+- [License](#license)
+- [Supported Docker versions](#supported-docker-versions)
+- [Governance and Current Members](#governance-and-current-members)
+  - [Docker Working Group Members](#docker-working-group-members)
+  - [Docker Working Group Collaborators](#docker-working-group-collaborators)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 ## What is Node.js?
 
 Node.js is a platform built on Chrome's JavaScript runtime for easily building
@@ -109,6 +136,8 @@ $ docker run node npm --loglevel=warn ...
 # Image Variants
 
 The `node` images come in many flavors, each designed for a specific use case.
+All of the images contain pre-installed versions of `node`,
+[`npm`](https://www.npmjs.com/), and [`yarn`](https://yarnpkg.com).
 
 ## `node:<version>`
 
@@ -225,3 +254,5 @@ about the expectations for all contributors to this project.
 
  * Mikeal Rogers ([mikeal](https://github.com/mikeal))
  * Laurent Goderre ([LaurentGoderre](https://github.com/LaurentGoderre))
+ * Simen Bekkhus ([SimenB](https://github.com/SimenB))
+ * Peter Dave Hello ([PeterDaveHello](https://github.com/PeterDaveHello))

@@ -179,6 +179,8 @@ examples of how to install packages if you are unfamiliar).
 
 ## `node:onbuild`
 
+The `ONBUILD` image variants are deprecated, and their usage is discouraged. For more details, see [docker-library/official-images#2076](https://github.com/docker-library/official-images/issues/2076).
+
 This image makes building derivative images easier. For most use cases, creating
 a `Dockerfile` in the base of your project directory with the line `FROM
 node:onbuild` will be enough to create a stand-alone image for your project.

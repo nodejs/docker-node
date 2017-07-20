@@ -11,7 +11,7 @@ array_6_11='6 boron';
 # shellcheck disable=SC2034
 array_7_10='7';
 # shellcheck disable=SC2034
-array_8_1='8 latest';
+array_8_2='8 latest';
 
 cd "$(cd "${0%/*}" && pwd -P)";
 

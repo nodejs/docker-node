@@ -5,6 +5,8 @@
 set -uo pipefail
 IFS=$'\n\t'
 
+. functions.sh
+
 info() {
   printf "%s\n" "$@"
 }
@@ -43,7 +45,9 @@ for version in "${versions[@]}"; do
   fi
   info "Test of $tag succeeded."
 
-  variants=$(echo "$version"/*/ | xargs -n1 basename)
+  # Get supported variants according to the target architecture.
+  # See details in function.sh
+  variants=$(get_variants | tr ' ' '\n')
 
   for variant in $variants; do
     # Skip non-docker directories

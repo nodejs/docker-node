@@ -1,3 +1,3 @@
 bashbrew-arch   variants
-x64     alpine,onbuild,slim,wheezy
-ppc64le onbuild,slim
+amd64     default,alpine,onbuild,slim,wheezy
+ppc64le default,onbuild,slim

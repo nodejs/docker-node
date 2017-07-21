@@ -52,14 +52,17 @@ for version in "${versions[@]}"; do
 	fullVersion="$(grep -m1 'ENV NODE_VERSION ' "$version/Dockerfile" | cut -d' ' -f3)"
 
 	versionAliases=( $fullVersion $version ${stub} )
+	# Get supported architectures for a specific version. See details in function.sh
+	supportedArches=( $(get_supported_arches "$version" "default") )
 
 	echo "Tags: $(join ', ' "${versionAliases[@]}")"
+	echo "Architectures: $(join ', ' "${supportedArches[@]}")"
 	echo "GitCommit: ${commit}"
 	echo "Directory: ${version}"
 	echo
 
-        # Get supported variants according to the target architecture.
-        # See details in function.sh
+	# Get supported variants according to the target architecture.
+	# See details in function.sh
 	variants=$(get_variants | tr ' ' '\n')
 	for variant in $variants; do
 		# Skip non-docker directories
@@ -70,8 +73,12 @@ for version in "${versions[@]}"; do
 		slash='/'
 		variantAliases=( "${versionAliases[@]/%/-${variant//$slash/-}}" )
 		variantAliases=( "${variantAliases[@]//latest-/}" )
+		# Get supported architectures for a specific version and variant.
+		# See details in function.sh
+		supportedArches=( $(get_supported_arches "$version" "$variant") )
 
 		echo "Tags: $(join ', ' "${variantAliases[@]}")"
+		echo "Architectures: $(join ', ' "${supportedArches[@]}")"
 		echo "GitCommit: ${commit}"
 		echo "Directory: ${version}/${variant}"
 		echo

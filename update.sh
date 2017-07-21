@@ -35,7 +35,7 @@ function update_node_version {
 	(
 		cp "$template" "$dockerfile"
 		local fromprefix=
-		if [[ "$arch" != "x64" && "$variant" != "onbuild" ]]; then
+		if [[ "$arch" != "amd64" && "$variant" != "onbuild" ]]; then
 			fromprefix="$arch\/"
 		fi
 
@@ -55,8 +55,8 @@ for version in "${versions[@]}"; do
 
 	update_node_version "Dockerfile.template" "$version/Dockerfile"
 
-        # Get supported variants according the target architecture
-        # See details in function.sh
+	# Get supported variants according the target architecture
+	# See details in function.sh
 	variants=$(get_variants)
 
 	for variant in $variants; do

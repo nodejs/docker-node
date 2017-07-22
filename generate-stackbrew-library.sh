@@ -1,5 +1,6 @@
 #!/bin/bash
 set -e
+. functions.sh
 
 hash git 2>/dev/null || { echo >&2 "git not found, exiting."; }
 
@@ -11,7 +12,7 @@ array_6_11='6 boron';
 # shellcheck disable=SC2034
 array_7_10='7';
 # shellcheck disable=SC2034
-array_8_1='8 latest';
+array_8_2='8 latest';
 
 cd "$(cd "${0%/*}" && pwd -P)";
 
@@ -57,7 +58,9 @@ for version in "${versions[@]}"; do
 	echo "Directory: ${version}"
 	echo
 
-	variants=$(echo "$version"/*/ | xargs -n1 basename)
+        # Get supported variants according to the target architecture.
+        # See details in function.sh
+	variants=$(get_variants | tr ' ' '\n')
 	for variant in $variants; do
 		# Skip non-docker directories
 		[ -f "$version/$variant/Dockerfile" ] || continue

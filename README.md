@@ -7,6 +7,8 @@
 
 The official Node.js docker image, made with love by the node community.
 
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 ## Table of Contents
 
   - [What is Node.js?](#what-is-nodejs)
@@ -29,6 +31,8 @@ The official Node.js docker image, made with love by the node community.
 - [Governance and Current Members](#governance-and-current-members)
   - [Docker Working Group Members](#docker-working-group-members)
   - [Docker Working Group Collaborators](#docker-working-group-collaborators)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## What is Node.js?
 
@@ -133,7 +137,10 @@ $ docker run node npm --loglevel=warn ...
 
 The `node` images come in many flavors, each designed for a specific use case.
 All of the images contain pre-installed versions of `node`,
-[`npm`](https://www.npmjs.com/), and [`yarn`](https://yarnpkg.com).
+[`npm`](https://www.npmjs.com/), and [`yarn`](https://yarnpkg.com). For each
+supported architecutre, the supported variants are different. In the file:
+[architectures](./architectures), it lists all supported variants for all of
+the architecures that we support now.
 
 ## `node:<version>`
 
@@ -174,6 +181,8 @@ examples of how to install packages if you are unfamiliar).
 
 
 ## `node:onbuild`
+
+The `ONBUILD` image variants are deprecated, and their usage is discouraged. For more details, see [docker-library/official-images#2076](https://github.com/docker-library/official-images/issues/2076).
 
 This image makes building derivative images easier. For most use cases, creating
 a `Dockerfile` in the base of your project directory with the line `FROM

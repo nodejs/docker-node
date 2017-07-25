@@ -1,0 +1,3 @@
+bashbrew-arch   variants
+amd64     default,alpine,onbuild,slim,wheezy
+ppc64le default,onbuild,slim

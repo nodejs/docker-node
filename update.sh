@@ -1,6 +1,8 @@
 #!/bin/bash
 set -e
 
+. functions.sh
+
 cd "$(cd "${0%/*}" && pwd -P)";
 
 versions=( "$@" )
@@ -9,22 +11,39 @@ if [ ${#versions[@]} -eq 0 ]; then
 fi
 versions=( "${versions[@]%/}" )
 
-
-template=
-dockerfile=
+# Global variables
+# Get architecure and use this as target architecture for docker image
+# See details in function.sh
+# TODO: Should be able to specify target architecture manually
+arch=$(get_arch)
 
 yarnVersion="$(curl -sSL --compressed https://yarnpkg.com/latest-version)"
 
 function update_node_version {
+
+	local template=$1
+	shift
+	local dockerfile=$1
+	shift
+	local variant=
+	if [[ $# -eq 1 ]]; then
+		variant=$1
+		shift
+	fi
+
 	fullVersion="$(curl -sSL --compressed 'https://nodejs.org/dist' | grep '<a href="v'"$version." | sed -E 's!.*<a href="v([^"/]+)/?".*!\1!' | cut -f 3 -d . | sort -n | tail -1)"
 	(
-		cp $template $dockerfile
-		sed -E -i.bak 's/^(ENV NODE_VERSION |FROM node:).*/\1'"$version.$fullVersion"'/' "$dockerfile"
-		rm "$dockerfile.bak"
-		sed -E -i.bak 's/^(ENV YARN_VERSION ).*/\1'"$yarnVersion"'/' "$dockerfile"
-		rm "$dockerfile.bak"
-		if [[ "${version/.*/}" -ge 8 ]]; then
-			sed -E -i.bak 's/FROM alpine:3.4/FROM alpine:3.6/' "$dockerfile"
+		cp "$template" "$dockerfile"
+		local fromprefix=
+		if [[ "$arch" != "amd64" && "$variant" != "onbuild" ]]; then
+			fromprefix="$arch\/"
+		fi
+
+		sed -E -i.bak 's/^FROM (.*)/FROM '"$fromprefix"'\1/' "$dockerfile" && rm "$dockerfile".bak
+		sed -E -i.bak 's/^(ENV NODE_VERSION |FROM .*node:).*/\1'"$version.$fullVersion"'/' "$dockerfile" && rm "$dockerfile".bak
+		sed -E -i.bak 's/^(ENV YARN_VERSION ).*/\1'"$yarnVersion"'/' "$dockerfile" && rm "$dockerfile".bak
+		if [[ "${version/.*/}" -ge 8 || "$arch" = "ppc64le" ]]; then
+			sed -E -i.bak 's/FROM (.*)alpine:3.4/FROM \1alpine:3.6/' "$dockerfile"
 			rm "$dockerfile.bak"
 		fi
 	)
@@ -34,21 +53,16 @@ for version in "${versions[@]}"; do
 	# Skip "docs" and other non-docker directories
 	[ -f "$version/Dockerfile" ] || continue
 
-	template="Dockerfile.template"
-	dockerfile="$version/Dockerfile"
+	update_node_version "Dockerfile.template" "$version/Dockerfile"
 
-	update_node_version
-
-	variants=$(echo "$version"/*/ | xargs -n1 basename)
+	# Get supported variants according the target architecture
+	# See details in function.sh
+	variants=$(get_variants)
 
 	for variant in $variants; do
 		# Skip non-docker directories
 		[ -f "$version/$variant/Dockerfile" ] || continue
-
-		template="Dockerfile-$variant.template"
-		dockerfile="$version/$variant/Dockerfile"
-
-		update_node_version
+		update_node_version "Dockerfile-$variant.template" "$version/$variant/Dockerfile" "$variant"
 
 	done
 done

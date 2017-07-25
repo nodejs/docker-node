@@ -75,6 +75,8 @@ It also assumes that you have a file named [`.dockerignore`](https://docs.docker
 node_modules
 ```
 
+## Best Practices
+
 We have assembled a [Best Practices Guide](./docs/BestPractices.md) for those using these images on a daily basis.
 
 ## Run a single Node.js script
@@ -137,7 +139,10 @@ $ docker run node npm --loglevel=warn ...
 
 The `node` images come in many flavors, each designed for a specific use case.
 All of the images contain pre-installed versions of `node`,
-[`npm`](https://www.npmjs.com/), and [`yarn`](https://yarnpkg.com).
+[`npm`](https://www.npmjs.com/), and [`yarn`](https://yarnpkg.com). For each
+supported architecutre, the supported variants are different. In the file:
+[architectures](./architectures), it lists all supported variants for all of
+the architecures that we support now.
 
 ## `node:<version>`
 
@@ -178,6 +183,8 @@ examples of how to install packages if you are unfamiliar).
 
 
 ## `node:onbuild`
+
+The `ONBUILD` image variants are deprecated, and their usage is discouraged. For more details, see [docker-library/official-images#2076](https://github.com/docker-library/official-images/issues/2076).
 
 This image makes building derivative images easier. For most use cases, creating
 a `Dockerfile` in the base of your project directory with the line `FROM

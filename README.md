@@ -75,6 +75,8 @@ It also assumes that you have a file named [`.dockerignore`](https://docs.docker
 node_modules
 ```
 
+## Best Practices
+
 We have assembled a [Best Practices Guide](./docs/BestPractices.md) for those using these images on a daily basis.
 
 ## Run a single Node.js script

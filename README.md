@@ -16,6 +16,7 @@ The official Node.js docker image, made with love by the node community.
 - [How to use this image](#how-to-use-this-image)
   - [Create a `Dockerfile` in your Node.js app project](#create-a-dockerfile-in-your-nodejs-app-project)
     - [Notes](#notes)
+  - [Best Practices](#best-practices)
   - [Run a single Node.js script](#run-a-single-nodejs-script)
   - [Verbosity](#verbosity)
     - [Dockerfile](#dockerfile)

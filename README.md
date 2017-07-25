@@ -41,7 +41,7 @@ If you prefer Docker Compose:
 version: "2"
 services:
   node:
-    image: "node:4-onbuild"
+    image: "node:latest"
     environment:
       - NODE_ENV=production
     volumes:

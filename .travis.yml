@@ -16,9 +16,9 @@ script:
 
 env:
     - DOCTOCCHECK: true
-    - NODE_VERSION: '4.8'
-    - NODE_VERSION: '6.11'
-    - NODE_VERSION: '8.2'
+    - NODE_VERSION: '4.*'
+    - NODE_VERSION: '6.*'
+    - NODE_VERSION: '8.*'
 
 matrix:
   include:

@@ -63,6 +63,27 @@ $ docker build -t my-nodejs-app .
 $ docker run -it --rm --name my-running-app my-nodejs-app
 ```
 
+If you prefer Docker Compose:
+
+```yaml
+version: "2"
+services:
+  node:
+    image: "node:8"
+    environment:
+      - NODE_ENV=production
+    volumes:
+      - ./:/usr/src/app
+    expose:
+      - "8080"
+```
+      
+You can then run using Docker Compose:
+
+```console
+$ docker-compose up -d
+```
+
 ### Notes
 
 The image assumes that your application has a file named

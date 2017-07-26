@@ -1,5 +1,6 @@
 #!/bin/bash
 set -e
+. functions.sh
 
 hash git 2>/dev/null || { echo >&2 "git not found, exiting."; }
 
@@ -11,7 +12,7 @@ array_6_11='6 boron';
 # shellcheck disable=SC2034
 array_7_10='7';
 # shellcheck disable=SC2034
-array_8_1='8 latest';
+array_8_2='8 latest';
 
 cd "$(cd "${0%/*}" && pwd -P)";
 
@@ -51,13 +52,18 @@ for version in "${versions[@]}"; do
 	fullVersion="$(grep -m1 'ENV NODE_VERSION ' "$version/Dockerfile" | cut -d' ' -f3)"
 
 	versionAliases=( $fullVersion $version ${stub} )
+	# Get supported architectures for a specific version. See details in function.sh
+	supportedArches=( $(get_supported_arches "$version" "default") )
 
 	echo "Tags: $(join ', ' "${versionAliases[@]}")"
+	echo "Architectures: $(join ', ' "${supportedArches[@]}")"
 	echo "GitCommit: ${commit}"
 	echo "Directory: ${version}"
 	echo
 
-	variants=$(echo "$version"/*/ | xargs -n1 basename)
+	# Get supported variants according to the target architecture.
+	# See details in function.sh
+	variants=$(get_variants | tr ' ' '\n')
 	for variant in $variants; do
 		# Skip non-docker directories
 		[ -f "$version/$variant/Dockerfile" ] || continue
@@ -67,8 +73,12 @@ for version in "${versions[@]}"; do
 		slash='/'
 		variantAliases=( "${versionAliases[@]/%/-${variant//$slash/-}}" )
 		variantAliases=( "${variantAliases[@]//latest-/}" )
+		# Get supported architectures for a specific version and variant.
+		# See details in function.sh
+		supportedArches=( $(get_supported_arches "$version" "$variant") )
 
 		echo "Tags: $(join ', ' "${variantAliases[@]}")"
+		echo "Architectures: $(join ', ' "${supportedArches[@]}")"
 		echo "GitCommit: ${commit}"
 		echo "Directory: ${version}/${variant}"
 		echo

@@ -77,7 +77,7 @@ services:
     expose:
       - "8080"
 ```
-      
+
 You can then run using Docker Compose:
 
 ```console
@@ -195,7 +195,10 @@ requirements. However, most software doesn't have an issue with this, so this
 variant is usually a very safe choice. See
 [this Hacker News comment thread](https://news.ycombinator.com/item?id=10782897)
 for more discussion of the issues that might arise and some pro/con comparisons
-of using Alpine-based images.
+of using Alpine-based images. One common issue that may arise is a missing shared
+library required for use of `process.dlopen`. To add the missing shared libraries
+to your image, adding [`libc6-compat`](https://pkgs.alpinelinux.org/package/edge/main/x86/libc6-compat)
+to your Dockerfile is recommended.
 
 To minimize image size, it's uncommon for additional related tools
 (such as `git` or `bash`) to be included in Alpine-based images. Using this

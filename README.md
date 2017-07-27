@@ -7,6 +7,34 @@
 
 The official Node.js docker image, made with love by the node community.
 
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+## Table of Contents
+
+  - [What is Node.js?](#what-is-nodejs)
+  - [Usage](#usage)
+- [How to use this image](#how-to-use-this-image)
+  - [Create a `Dockerfile` in your Node.js app project](#create-a-dockerfile-in-your-nodejs-app-project)
+    - [Notes](#notes)
+  - [Best Practices](#best-practices)
+  - [Run a single Node.js script](#run-a-single-nodejs-script)
+  - [Verbosity](#verbosity)
+    - [Dockerfile](#dockerfile)
+    - [Docker Run](#docker-run)
+    - [NPM run](#npm-run)
+- [Image Variants](#image-variants)
+  - [`node:<version>`](#nodeversion)
+  - [`node:alpine`](#nodealpine)
+  - [`node:onbuild`](#nodeonbuild)
+  - [`node:slim`](#nodeslim)
+- [License](#license)
+- [Supported Docker versions](#supported-docker-versions)
+- [Governance and Current Members](#governance-and-current-members)
+  - [Docker Working Group Members](#docker-working-group-members)
+  - [Docker Working Group Collaborators](#docker-working-group-collaborators)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 ## What is Node.js?
 
 Node.js is a platform built on Chrome's JavaScript runtime for easily building
@@ -35,6 +63,27 @@ $ docker build -t my-nodejs-app .
 $ docker run -it --rm --name my-running-app my-nodejs-app
 ```
 
+If you prefer Docker Compose:
+
+```yaml
+version: "2"
+services:
+  node:
+    image: "node:8"
+    environment:
+      - NODE_ENV=production
+    volumes:
+      - ./:/usr/src/app
+    expose:
+      - "8080"
+```
+      
+You can then run using Docker Compose:
+
+```console
+$ docker-compose up -d
+```
+
 ### Notes
 
 The image assumes that your application has a file named
@@ -47,6 +96,8 @@ It also assumes that you have a file named [`.dockerignore`](https://docs.docker
 ```
 node_modules
 ```
+
+## Best Practices
 
 We have assembled a [Best Practices Guide](./docs/BestPractices.md) for those using these images on a daily basis.
 
@@ -109,6 +160,11 @@ $ docker run node npm --loglevel=warn ...
 # Image Variants
 
 The `node` images come in many flavors, each designed for a specific use case.
+All of the images contain pre-installed versions of `node`,
+[`npm`](https://www.npmjs.com/), and [`yarn`](https://yarnpkg.com). For each
+supported architecutre, the supported variants are different. In the file:
+[architectures](./architectures), it lists all supported variants for all of
+the architecures that we support now.
 
 ## `node:<version>`
 
@@ -149,6 +205,8 @@ examples of how to install packages if you are unfamiliar).
 
 
 ## `node:onbuild`
+
+The `ONBUILD` image variants are deprecated, and their usage is discouraged. For more details, see [docker-library/official-images#2076](https://github.com/docker-library/official-images/issues/2076).
 
 This image makes building derivative images easier. For most use cases, creating
 a `Dockerfile` in the base of your project directory with the line `FROM
@@ -225,3 +283,5 @@ about the expectations for all contributors to this project.
 
  * Mikeal Rogers ([mikeal](https://github.com/mikeal))
  * Laurent Goderre ([LaurentGoderre](https://github.com/LaurentGoderre))
+ * Simen Bekkhus ([SimenB](https://github.com/SimenB))
+ * Peter Dave Hello ([PeterDaveHello](https://github.com/PeterDaveHello))

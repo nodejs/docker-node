@@ -51,6 +51,7 @@ See: http://nodejs.org
 ## Create a `Dockerfile` in your Node.js app project
 
 ```dockerfile
+# replace latest with a specific major.minor version
 FROM node:latest
 # replace this with your application's default port
 EXPOSE 8888

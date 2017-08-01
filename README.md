@@ -51,7 +51,7 @@ See: http://nodejs.org
 ## Create a `Dockerfile` in your Node.js app project
 
 ```dockerfile
-FROM node:4-onbuild
+FROM node:alpine
 # replace this with your application's default port
 EXPOSE 8888
 ```

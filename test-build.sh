@@ -47,7 +47,7 @@ for version in "${versions[@]}"; do
 
   # Get supported variants according to the target architecture.
   # See details in function.sh
-  variants=$(get_variants | tr ' ' '\n')
+  variants=$(get_variants "$(get_arch)" | tr ' ' '\n')
 
   for variant in $variants; do
     # Skip non-docker directories

@@ -1,0 +1,9 @@
+version: 1.0.{build}
+image: Visual Studio 2017
+
+build_script:
+  - ps: Install-Package -Name docker -ProviderName DockerMsftProvider -RequiredVersion 17.06.1-ee-1-rc1 -Force
+  - ps: start-service docker
+  - docker pull microsoft/windowsservercore
+  - docker pull microsoft/nanoserver
+  - ps: .\test-build.ps1

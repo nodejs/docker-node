@@ -12,7 +12,6 @@ The official Node.js docker image, made with love by the node community.
 ## Table of Contents
 
   - [What is Node.js?](#what-is-nodejs)
-  - [Usage](#usage)
 - [How to use this image](#how-to-use-this-image)
   - [Create a `Dockerfile` in your Node.js app project](#create-a-dockerfile-in-your-nodejs-app-project)
     - [Notes](#notes)
@@ -43,8 +42,6 @@ I/O model that makes it lightweight and efficient, perfect for data-intensive
 real-time applications that run across distributed devices.
 
 See: http://nodejs.org
-
-## Usage
 
 # How to use this image
 

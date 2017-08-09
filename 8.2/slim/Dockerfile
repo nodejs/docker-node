@@ -28,6 +28,7 @@ RUN buildDeps='xz-utils' \
     && case "${dpkgArch##*-}" in \
       amd64) ARCH='x64';; \
       ppc64el) ARCH='ppc64le';; \
+      s390x) ARCH='s390x';; \
       *) echo "unsupported architecture"; exit 1 ;; \
     esac \
     && set -x \

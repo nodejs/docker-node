@@ -1,4 +1,4 @@
-FROM buildpack-deps:jessie
+FROM buildpack-deps:wheezy
 
 RUN groupadd --gid 1000 node \
   && useradd --uid 1000 --gid node --shell /bin/bash --create-home node
@@ -21,13 +21,12 @@ RUN set -ex \
   done
 
 ENV NPM_CONFIG_LOGLEVEL info
-ENV NODE_VERSION 8.2.1
+ENV NODE_VERSION 8.3.0
 
 RUN ARCH= && dpkgArch="$(dpkg --print-architecture)" \
   && case "${dpkgArch##*-}" in \
     amd64) ARCH='x64';; \
     ppc64el) ARCH='ppc64le';; \
-    s390x) ARCH='s390x';; \
     *) echo "unsupported architecture"; exit 1 ;; \
   esac \
   && curl -SLO "https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION-linux-$ARCH.tar.xz" \

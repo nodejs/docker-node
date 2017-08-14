@@ -25,7 +25,7 @@ Node.js was not designed to run as PID 1 which leads to unexpected behaviour whe
 docker run -it --init node
 ```
 
-You can also include tini [directly in your Dockerfile](https://github.com/krallin/tini#using-tini), ensuring your process is always started with an init wrapper.
+You can also include init [directly in your Dockerfile](https://github.com/krallin/tini#using-tini), ensuring your process is always started with an init wrapper.
 
 ## Non-root User
 

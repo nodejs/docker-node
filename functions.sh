@@ -23,7 +23,7 @@ function get_arch() {
 	    arch="arm64"
 		;;
 	armv7l)
-	    arch="armhf"
+	    arch="arm32v7"
 		;;
 	*)
 		echo "$0 does not support architecture $arch ... aborting"

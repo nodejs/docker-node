@@ -44,7 +44,10 @@ RUN addgroup -g 1000 node \
     && apk del .build-deps \
     && cd .. \
     && rm -Rf "node-v$NODE_VERSION" \
-    && rm "node-v$NODE_VERSION.tar.xz" SHASUMS256.txt.asc SHASUMS256.txt
+    && rm "node-v$NODE_VERSION.tar.xz" SHASUMS256.txt.asc SHASUMS256.txt \
+    && chown node:node $(npm config get prefix)/lib/node_modules \
+    && chown node:node $(npm config get prefix)/bin \
+    && chown node:node $(npm config get prefix)/share
 
 ENV YARN_VERSION 0.24.4
 

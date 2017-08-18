@@ -38,7 +38,10 @@ RUN ARCH= && dpkgArch="$(dpkg --print-architecture)" \
   && grep " node-v$NODE_VERSION-linux-$ARCH.tar.xz\$" SHASUMS256.txt | sha256sum -c - \
   && tar -xJf "node-v$NODE_VERSION-linux-$ARCH.tar.xz" -C /usr/local --strip-components=1 \
   && rm "node-v$NODE_VERSION-linux-$ARCH.tar.xz" SHASUMS256.txt.asc SHASUMS256.txt \
-  && ln -s /usr/local/bin/node /usr/local/bin/nodejs
+  && ln -s /usr/local/bin/node /usr/local/bin/nodejs \
+  && chown node:node $(npm config get prefix)/lib/node_modules \
+  && chown node:node $(npm config get prefix)/bin \
+  && chown node:node $(npm config get prefix)/share
 
 ENV YARN_VERSION 0.24.4
 

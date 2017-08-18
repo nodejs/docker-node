@@ -30,6 +30,7 @@ RUN buildDeps='xz-utils' \
       ppc64el) ARCH='ppc64le';; \
       s390x) ARCH='s390x';; \
       arm64) ARCH='arm64';; \
+      armhf) ARCH='armv7l';; \
       *) echo "unsupported architecture"; exit 1 ;; \
     esac \
     && set -x \

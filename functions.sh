@@ -20,7 +20,10 @@ function get_arch() {
 		arch="s390x"
 		;;
 	aarch64)
-	        arch="arm64"
+		arch="arm64"
+		;;
+	armv7l)
+		arch="arm32v7"
 		;;
 	*)
 		echo "$0 does not support architecture $arch ... aborting"

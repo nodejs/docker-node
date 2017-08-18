@@ -29,6 +29,7 @@ RUN ARCH= && dpkgArch="$(dpkg --print-architecture)" \
     ppc64el) ARCH='ppc64le';; \
     s390x) ARCH='s390x';; \
     arm64) ARCH='arm64';; \
+    armhf) ARCH='armv7l';; \
     *) echo "unsupported architecture"; exit 1 ;; \
   esac \
   && curl -SLO "https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION-linux-$ARCH.tar.xz" \

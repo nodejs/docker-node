@@ -1,6 +1,5 @@
 FROM alpine:3.6
 
-ENV NPM_CONFIG_LOGLEVEL info
 ENV NODE_VERSION 8.7.0
 
 RUN addgroup -g 1000 node \

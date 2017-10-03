@@ -20,7 +20,6 @@ RUN set -ex \
     gpg --keyserver ha.pool.sks-keyservers.net --recv-keys "$key" ; \
   done
 
-ENV NPM_CONFIG_LOGLEVEL info
 ENV NODE_VERSION 6.11.4
 
 RUN buildDeps='xz-utils' \

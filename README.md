@@ -63,17 +63,20 @@ $ docker run -it --rm --name my-running-app my-nodejs-app
 
 If you prefer Docker Compose:
 
-```yaml
+```yml
 version: "2"
 services:
   node:
     image: "node:8"
+    user: "node"
+    working_dir: /home/node/app
     environment:
       - NODE_ENV=production
     volumes:
-      - ./:/usr/src/app
+      - ./:/home/node/app
     expose:
-      - "8080"
+      - "8081"
+    command: "npm start"
 ```
 
 You can then run using Docker Compose:

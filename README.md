@@ -24,7 +24,6 @@ The official Node.js docker image, made with love by the node community.
   - [`node:<version>`](#nodeversion)
   - [`node:alpine`](#nodealpine)
   - [`node:onbuild`](#nodeonbuild)
-    - [Notes](#notes)
   - [`node:slim`](#nodeslim)
 - [License](#license)
 - [Supported Docker versions](#supported-docker-versions)
@@ -84,6 +83,10 @@ You can then run using Docker Compose:
 ```console
 $ docker-compose up -d
 ```
+
+Docker Compose example copies your current directory (including node_modules) to the container.
+It assumes that your application has a file named [`package.json`](https://docs.npmjs.com/files/package.json)
+defining [start script](https://docs.npmjs.com/misc/scripts#default-values).
 
 ## Best Practices
 
@@ -227,8 +230,6 @@ discussion in
 Note that npm installs devDependencies by default, which is undesirable if
 you're building a production image. To avoid this pass NODE_ENV as a build
 argument i.e. `docker build --build-arg NODE_ENV=production …`.
-
-### Notes
 
 The image assumes that your application has a file named
 [`package.json`](https://docs.npmjs.com/files/package.json) listing its

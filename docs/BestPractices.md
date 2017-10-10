@@ -3,6 +3,7 @@
 ## Table of Contents
 
 - [Environment Variables](#environment-variables)
+- [Global npm dependencies](#global-npm-dependencies)
 - [Handling Kernel Signals](#handling-kernel-signals)
 - [Non-root User](#non-root-user)
 - [Memory](#memory)
@@ -17,6 +18,15 @@ Run with `NODE_ENV` set to `production`. This is the way you would pass in secre
 ```
 -e "NODE_ENV=production"
 ```
+
+## Global npm dependencies
+
+If you need to install global npm dependencies, it is recommended to place those dependencies in the [non-root user](#non-root-user) directory. To achieve this, add the following line to you `Dockerfile`
+
+```
+NPM_CONFIG_PREFIX=/home/node/.npm-global
+```
+
 ## Handling Kernel Signals
 
 Node.js was not designed to run as PID 1 which leads to unexpected behaviour when running inside of Docker. For example, a Node.js process running as PID 1 will not respond to `SIGTERM` (`CTRL-C`) and similar signals. As of Docker 1.13, you can use the `--init` flag to wrap your Node.js process with a [lightweight init system](https://github.com/krallin/tini) that properly handles running as PID 1.

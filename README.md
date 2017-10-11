@@ -14,7 +14,6 @@ The official Node.js docker image, made with love by the node community.
   - [What is Node.js?](#what-is-nodejs)
 - [How to use this image](#how-to-use-this-image)
   - [Create a `Dockerfile` in your Node.js app project](#create-a-dockerfile-in-your-nodejs-app-project)
-    - [Notes](#notes)
   - [Best Practices](#best-practices)
   - [Run a single Node.js script](#run-a-single-nodejs-script)
   - [Verbosity](#verbosity)
@@ -85,18 +84,9 @@ You can then run using Docker Compose:
 $ docker-compose up -d
 ```
 
-### Notes
-
-The image assumes that your application has a file named
-[`package.json`](https://docs.npmjs.com/files/package.json) listing its
-dependencies and defining its [start
-script](https://docs.npmjs.com/misc/scripts#default-values).
-
-It also assumes that you have a file named [`.dockerignore`](https://docs.docker.com/engine/reference/builder/#/dockerignore-file) otherwise it will copy your local npm modules:
-
-```
-node_modules
-```
+Docker Compose example copies your current directory (including node_modules) to the container.
+It assumes that your application has a file named [`package.json`](https://docs.npmjs.com/files/package.json)
+defining [start script](https://docs.npmjs.com/misc/scripts#default-values).
 
 ## Best Practices
 
@@ -240,6 +230,17 @@ discussion in
 Note that npm installs devDependencies by default, which is undesirable if
 you're building a production image. To avoid this pass NODE_ENV as a build
 argument i.e. `docker build --build-arg NODE_ENV=production …`.
+
+The image assumes that your application has a file named
+[`package.json`](https://docs.npmjs.com/files/package.json) listing its
+dependencies and defining its [start
+script](https://docs.npmjs.com/misc/scripts#default-values).
+
+It also assumes that you have a file named [`.dockerignore`](https://docs.docker.com/engine/reference/builder/#/dockerignore-file) otherwise it will copy your local npm modules:
+
+```
+node_modules
+```
 
 ## `node:slim`
 

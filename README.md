@@ -104,28 +104,20 @@ $ docker run -it --rm --name my-running-script -v "$PWD":/usr/src/app -w /usr/sr
 
 ## Verbosity
 
-By default the Node.js Docker Image has npm log verbosity set to `info` instead
-of the default `warn`. This is because of the way Docker is isolated from the
-host operating system and you are not guaranteed to be able to retrieve the
-`npm-debug.log` file when npm fails.
-
-When npm fails, it writes it's verbose log to a log file inside the container.
-If npm fails during an install when building a Docker Image with the `docker
-build` command, this log file will become inaccessible when Docker exits.
-
-The Docker Working Group have chosen to be overly verbose during a build to
-provide an easy audit trail when install fails. If you prefer npm to be less
-verbose you can easily reset the verbosity of npm using the following
-techniques:
+Prior to 8.7.0, 6.11.4 and 4.8.4 the docker images overrode the default npm log
+level from `warn` to `info`. However due to improvements to npm and new Docker
+patterns (e.g. multi-stage builds) the working group reached a [consensus](https://github.com/nodejs/docker-node/issues/528)
+to revert the log level to npm defaults. If you need more verbose output, please
+use one of the following methods to change the verbosity level.
 
 ### Dockerfile
 
 If you create your own `Dockerfile` which inherits from the `node` image you can
 simply use `ENV` to override `NPM_CONFIG_LOGLEVEL`.
 
-```
+```dockerfile
 FROM node
-ENV NPM_CONFIG_LOGLEVEL warn
+ENV NPM_CONFIG_LOGLEVEL info
 ...
 ```
 
@@ -135,7 +127,7 @@ If you run the node image using `docker run` you can use the `-e` flag to
 override `NPM_CONFIG_LOGLEVEL`.
 
 ```
-$ docker run -e NPM_CONFIG_LOGLEVEL=warn node ...
+$ docker run -e NPM_CONFIG_LOGLEVEL=info node ...
 ```
 
 ### NPM run

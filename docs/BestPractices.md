@@ -95,7 +95,7 @@ By default, any Docker Container may consume as much of the hardware such as CPU
 
 ## CMD
 
-When creating an image, you can bypass the `package.json`'s `start` command and bake it directly into the image itself. This reduces the number of processes running inside of your container.
+When creating an image, you can bypass the `package.json`'s `start` command and bake it directly into the image itself. First off this reduces the number of processes running inside of your container. Secondly it causes exit signals such as `SIGTERM` and `SIGINT` to be received by the Node.js process instead of npm swallowing them.
 
 ```Dockerfile
 CMD ["node","index.js"]

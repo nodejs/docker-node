@@ -19,6 +19,7 @@ env:
     - NODE_VERSION: '4.*'
     - NODE_VERSION: '6.*'
     - NODE_VERSION: '8.*'
+    - NODE_VERSION: '9.*'
 
 matrix:
   include:

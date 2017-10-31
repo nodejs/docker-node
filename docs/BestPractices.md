@@ -21,7 +21,7 @@ Run with `NODE_ENV` set to `production`. This is the way you would pass in secre
 
 ## Global npm dependencies
 
-If you need to install global npm dependencies, it is recommended to place those dependencies in the [non-root user](#non-root-user) directory. To achieve this, add the following line to you `Dockerfile`
+If you need to install global npm dependencies, it is recommended to place those dependencies in the [non-root user](#non-root-user) directory. To achieve this, add the following line to your `Dockerfile`
 
 ```Dockerfile
 ENV NPM_CONFIG_PREFIX=/home/node/.npm-global

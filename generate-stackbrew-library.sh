@@ -10,7 +10,9 @@ array_4_8='4 argon';
 # shellcheck disable=SC2034
 array_6_11='6 boron';
 # shellcheck disable=SC2034
-array_8_9='8 carbon latest';
+array_8_9='8 carbon';
+# shellcheck disable=SC2034
+array_9_0='9 latest';
 
 cd "$(cd "${0%/*}" && pwd -P)";
 

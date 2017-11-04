@@ -30,6 +30,7 @@ RUN buildDeps='xz-utils' \
       s390x) ARCH='s390x';; \
       arm64) ARCH='arm64';; \
       armhf) ARCH='armv7l';; \
+      i386) ARCH='i386';; \
       *) echo "unsupported architecture"; exit 1 ;; \
     esac \
     && set -x \

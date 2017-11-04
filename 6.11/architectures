@@ -4,3 +4,4 @@ ppc64le default,onbuild,slim,stretch
 s390x default,onbuild,slim,stretch
 arm64v8 default,onbuild,slim,stretch
 arm32v7 default,onbuild,slim,stretch
+i386 default,alpine,onbuild,slim,stretch,wheezy

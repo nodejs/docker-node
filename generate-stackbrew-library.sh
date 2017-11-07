@@ -8,7 +8,7 @@ hash git 2>/dev/null || { echo >&2 "git not found, exiting."; }
 # shellcheck disable=SC2034
 array_4_8='4 argon';
 # shellcheck disable=SC2034
-array_6_11='6 boron';
+array_6_12='6 boron';
 # shellcheck disable=SC2034
 array_8_9='8 carbon';
 # shellcheck disable=SC2034

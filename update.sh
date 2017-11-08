@@ -31,7 +31,7 @@ function update_node_version {
 		shift
 	fi
 
-	fullVersion="$(curl -sSL --compressed 'https://nodejs.org/dist' | grep '<a href="v'"$version." | sed -E 's!.*<a href="v([^"/]+)/?".*!\1!' | cut -f 3 -d . | sort -n | tail -1)"
+	fullVersion="$(curl -sSL --compressed 'https://nodejs.org/dist' | grep '<a href="v'"$version." | sed -E 's!.*<a href="v([^"/]+)/?".*!\1!' | cut -d'.' -f2,3| sort -n | tail -1)"
 	(
 		cp "$template" "$dockerfile"
 		local fromprefix=

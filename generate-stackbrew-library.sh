@@ -6,13 +6,13 @@ hash git 2>/dev/null || { echo >&2 "git not found, exiting."; }
 
 # Used dynamically: print "$array_" $1
 # shellcheck disable=SC2034
-array_4_8='4 argon';
+array_4='4 argon';
 # shellcheck disable=SC2034
-array_6_12='6 boron';
+array_6='6 boron';
 # shellcheck disable=SC2034
-array_8_9='8 carbon';
+array_8='8 carbon';
 # shellcheck disable=SC2034
-array_9_1='9 latest';
+array_9='9 latest';
 
 cd "$(cd "${0%/*}" && pwd -P)";
 
@@ -47,11 +47,12 @@ for version in "${versions[@]}"; do
 	# Skip "docs" and other non-docker directories
 	[ -f "$version/Dockerfile" ] || continue
 
-	eval stub="$(echo "$version" | awk -F. '{ print "$array_" $1 "_" $2 }')";
+	eval stub="$(echo "$version" | awk -F. '{ print "$array_" $1 }')";
 	commit="$(fileCommit "$version")"
 	fullVersion="$(grep -m1 'ENV NODE_VERSION ' "$version/Dockerfile" | cut -d' ' -f3)"
+	minorVersion="$(echo "$fullVersion" | cut -d'.' -f2)"
 
-	versionAliases=( $fullVersion $version ${stub} )
+	versionAliases=( $fullVersion $version.$minorVersion ${stub} )
 	# Get supported architectures for a specific version. See details in function.sh
 	supportedArches=( $(get_supported_arches "$version" "default") )
 

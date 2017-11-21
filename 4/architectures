@@ -1,6 +1,6 @@
 bashbrew-arch   variants
-amd64     default,alpine,onbuild,slim,stretch,wheezy
-ppc64le default,onbuild,slim,stretch
-arm64v8 default,onbuild,slim,stretch
-arm32v7 default,onbuild,slim,stretch
-i386 default,onbuild,slim,stretch
+amd64     default,alpine,onbuild,slim,stretch,xenial,wheezy
+ppc64le default,onbuild,slim,stretch,xenial
+arm64v8 default,onbuild,slim,stretch,xenial
+arm32v7 default,onbuild,slim,stretch,xenial
+i386 default,onbuild,slim,stretch,xenial

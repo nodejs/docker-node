@@ -263,7 +263,7 @@ upgrade your Docker daemon.
 
 The Node.js Docker Image is governed by the Docker Working Group. See
 [GOVERNANCE.md](https://github.com/nodejs/docker-node/blob/master/GOVERNANCE.md)
-to learn more about the group's structure and [CONTRIBUTING.md](#) for guidance
+to learn more about the group's structure and [CONTRIBUTING.md](CONTRIBUTING.md) for guidance
 about the expectations for all contributors to this project.
 
 ## Docker Working Group Members

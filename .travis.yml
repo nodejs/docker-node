@@ -1,6 +1,10 @@
 dist: trusty
 sudo: required
 
+language: node_js
+node_js:
+    - lts/*
+
 services:
     - docker
 
@@ -13,7 +17,6 @@ script:
     - if [ "true" = "${SHELLCHECK-}" ]; then shellcheck *.sh ; fi
     - if [ -n "${NODE_VERSION-}" ]; then ./test-build.sh $NODE_VERSION ; fi
     - if [ "true" = "${DOCTOCCHECK-}" ]; then
-         nvm install node &&
          npm i -g doctoc  &&
          cp README.md README.md.tmp &&
          doctoc --title='## Table of Contents' --github README.md &&

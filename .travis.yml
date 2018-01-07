@@ -3,6 +3,11 @@ sudo: required
 services:
     - docker
 
+addons:
+  apt:
+    packages:
+      - docker-ce
+
 script:
     - if [ "true" = "${SHELLCHECK-}" ]; then shellcheck *.sh ; fi
     - if [ -n "${NODE_VERSION-}" ]; then ./test-build.sh $NODE_VERSION ; fi

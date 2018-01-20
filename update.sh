@@ -43,7 +43,7 @@ function update_node_version {
 		sed -E -i.bak 's/^(ENV NODE_VERSION |FROM .*node:).*/\1'"$version.${fullVersion:-0}"'/' "$dockerfile" && rm "$dockerfile".bak
 		sed -E -i.bak 's/^(ENV YARN_VERSION ).*/\1'"$yarnVersion"'/' "$dockerfile" && rm "$dockerfile".bak
 		if [[ "${version/.*/}" -ge 8 || "$arch" = "ppc64le" || "$arch" = "s390x" || "$arch" = "arm64" || "$arch" = "arm32v7" ]]; then
-			sed -E -i.bak 's/FROM (.*)alpine:3.4/FROM \1alpine:3.6/' "$dockerfile"
+			sed -E -i.bak 's/FROM (.*)alpine:3.4/FROM \1alpine:3.7/' "$dockerfile"
 			rm "$dockerfile.bak"
 		fi
 	)

@@ -29,7 +29,8 @@ RUN addgroup -g 1000 node \
   ; do \
     gpg --keyserver hkp://pgp.mit.edu:80 --recv-keys "$key" || \
     gpg --keyserver hkp://keyserver.pgp.com:80 --recv-keys "$key" || \
-    gpg --keyserver hkp://ha.pool.sks-keyservers.net:80 --recv-keys "$key" ; \
+    gpg --keyserver hkp://ipv4.pool.sks-keyservers.net:80 --recv-keys "$key" || \
+    gpg --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys "$key" ; \
   done \
     && curl -SLO "https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION.tar.xz" \
     && curl -SLO --compressed "https://nodejs.org/dist/v$NODE_VERSION/SHASUMS256.txt.asc" \
@@ -53,7 +54,8 @@ RUN apk add --no-cache --virtual .build-deps-yarn curl gnupg tar \
   ; do \
     gpg --keyserver hkp://pgp.mit.edu:80 --recv-keys "$key" || \
     gpg --keyserver hkp://keyserver.pgp.com:80 --recv-keys "$key" || \
-    gpg --keyserver hkp://ha.pool.sks-keyservers.net:80 --recv-keys "$key" ; \
+    gpg --keyserver hkp://ipv4.pool.sks-keyservers.net:80 --recv-keys "$key" || \
+    gpg --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys "$key" ; \
   done \
   && curl -fSLO --compressed "https://yarnpkg.com/downloads/$YARN_VERSION/yarn-v$YARN_VERSION.tar.gz" \
   && curl -fSLO --compressed "https://yarnpkg.com/downloads/$YARN_VERSION/yarn-v$YARN_VERSION.tar.gz.asc" \

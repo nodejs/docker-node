@@ -17,7 +17,7 @@ RUN set -ex \
   ; do \
     gpg --keyserver hkp://pgp.mit.edu:80 --recv-keys "$key" || \
     gpg --keyserver hkp://keyserver.pgp.com:80 --recv-keys "$key" || \
-    gpg --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys "$key" ; \
+    gpg --keyserver hkp://ipv4.pool.sks-keyservers.net:80 --recv-keys "$key" ; \
   done
 
 ENV NODE_VERSION 4.8.7
@@ -48,7 +48,7 @@ RUN set -ex \
   ; do \
     gpg --keyserver hkp://pgp.mit.edu:80 --recv-keys "$key" || \
     gpg --keyserver hkp://keyserver.pgp.com:80 --recv-keys "$key" || \
-    gpg --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys "$key" ; \
+    gpg --keyserver hkp://ipv4.pool.sks-keyservers.net:80 --recv-keys "$key" ; \
   done \
   && curl -fSLO --compressed "https://yarnpkg.com/downloads/$YARN_VERSION/yarn-v$YARN_VERSION.tar.gz" \
   && curl -fSLO --compressed "https://yarnpkg.com/downloads/$YARN_VERSION/yarn-v$YARN_VERSION.tar.gz.asc" \

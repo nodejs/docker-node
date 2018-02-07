@@ -25,6 +25,8 @@ If you need to install global npm dependencies, it is recommended to place those
 
 ```Dockerfile
 ENV NPM_CONFIG_PREFIX=/home/node/.npm-global
+
+ENV PATH=$PATH:/home/node/.npm-global/bin # optionally if you want to run npm global bin without specifying path
 ```
 
 ## Handling Kernel Signals

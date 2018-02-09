@@ -17,7 +17,8 @@ RUN set -ex \
   ; do \
     gpg --keyserver hkp://pgp.mit.edu:80 --recv-keys "$key" || \
     gpg --keyserver hkp://keyserver.pgp.com:80 --recv-keys "$key" || \
-    gpg --keyserver hkp://ha.pool.sks-keyservers.net:80 --recv-keys "$key" ; \
+    gpg --keyserver hkp://ipv4.pool.sks-keyservers.net --recv-keys "$key" || \
+    gpg --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys "$key" ; \
   done
 
 ENV NODE_VERSION 8.9.4

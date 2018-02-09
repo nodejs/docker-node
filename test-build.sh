@@ -3,34 +3,22 @@
 # Run a test build for all images.
 
 set -uo pipefail
-IFS=$'\n\t'
 
 . functions.sh
 
-info() {
-  printf "%s\n" "$@"
-}
-
-fatal() {
-  printf "**********\n"
-  printf "%s\n" "$@"
-  printf "**********\n"
-  exit 1
-}
-
 cd "$(cd "${0%/*}" && pwd -P)" || exit;
 
-versions=( "$@" )
+IFS=' ' read -ra versions <<< "$(get_versions . "$@")"
 if [ ${#versions[@]} -eq 0 ]; then
-  versions=( */ )
+  fatal "No valid versions found!"
 fi
-versions=( "${versions[@]%/}" )
 
 for version in "${versions[@]}"; do
   # Skip "docs" and other non-docker directories
   [ -f "$version/Dockerfile" ] || continue
 
-  tag=$(grep "ENV NODE_VERSION" "$version/Dockerfile" | cut -d' ' -f3)
+  tag=$(get_tag "$version")
+  full_version=$(get_full_version "$version")
 
   info "Building $tag..."
 
@@ -40,14 +28,14 @@ for version in "${versions[@]}"; do
   info "Build of $tag succeeded."
 
   OUTPUT=$(docker run --rm -it node:"$tag" node -e "process.stdout.write(process.versions.node)")
-  if [ "$OUTPUT" != "$tag" ]; then
+  if [ "$OUTPUT" != "$full_version" ]; then
     fatal "Test of $tag failed!"
   fi
   info "Test of $tag succeeded."
 
   # Get supported variants according to the target architecture.
   # See details in function.sh
-  variants=$(get_variants | tr ' ' '\n')
+  variants=$(get_variants "$(dirname "$version")")
 
   for variant in $variants; do
     # Skip non-docker directories
@@ -61,7 +49,7 @@ for version in "${versions[@]}"; do
     info "Build of $tag-$variant succeeded."
 
     OUTPUT=$(docker run --rm -it node:"$tag-$variant" node -e "process.stdout.write(process.versions.node)")
-    if [ "$OUTPUT" != "$tag" ]; then
+    if [ "$OUTPUT" != "$full_version" ]; then
       fatal "Test of $tag-$variant failed!"
     fi
     info "Test of $tag-$variant succeeded."

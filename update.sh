@@ -53,6 +53,7 @@ function update_node_version {
 }
 
 for version in "${versions[@]}"; do
+{
 	# Skip "docs" and other non-docker directories
 	[ -f "$version/Dockerfile" ] || continue
 
@@ -73,6 +74,8 @@ for version in "${versions[@]}"; do
 		[ -f "$version/$variant/Dockerfile" ] || continue
 		update_node_version "$baseuri" "$versionnum" "$parentpath/Dockerfile-$variant.template" "$version/$variant/Dockerfile" "$variant"
 	done
+} &
 done
 
+wait
 info "Done!"

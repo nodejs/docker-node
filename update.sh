@@ -70,10 +70,13 @@ for version in "${versions[@]}"; do
 	variants=$(get_variants "$parentpath")
 
 	for variant in $variants; do
+	{
 		# Skip non-docker directories
-		[ -f "$version/$variant/Dockerfile" ] || continue
+		[ -f "$version/$variant/Dockerfile" ] || exit
 		update_node_version "$baseuri" "$versionnum" "$parentpath/Dockerfile-$variant.template" "$version/$variant/Dockerfile" "$variant"
+	} &
 	done
+	wait
 } &
 done
 

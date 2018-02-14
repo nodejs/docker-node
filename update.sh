@@ -55,7 +55,7 @@ function update_node_version {
 for version in "${versions[@]}"; do
 {
 	# Skip "docs" and other non-docker directories
-	[ -f "$version/Dockerfile" ] || continue
+	[ -f "$version/Dockerfile" ] || exit
 
 	info "Updating version $version..."
 

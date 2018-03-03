@@ -82,7 +82,7 @@ members affiliated with the over-represented employer(s).
 This working group does not meet.  All discussions and decisions
 happen in the
 [nodejs/docker-node](https://github.com/nodejs/docker-node) repository
-in issues and pull requests.  Items that requires a decission by the
+in issues and pull requests.  Items that requires a decision by the
 WG can be flagged with the ***WG-agenda*** label.
 
 When an issue is tagged with ***WG-agenda***, the WG may invite
@@ -96,7 +96,7 @@ Seeking](http://en.wikipedia.org/wiki/Consensus-seeking_decision-making)
 decision-making model.
 
 All proposed changes to the project must be made in the form of a pull
-request to the repository (directly commiting to a production branch
+request to the repository (directly committing to a production branch
 of the repository is not permitted).  The consensus seeking process
 will then follow via discussion by the WG members on that pull
 request.  Changes deemed trivial by WG members may be merged instantly

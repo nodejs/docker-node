@@ -29,6 +29,21 @@ ENV NPM_CONFIG_PREFIX=/home/node/.npm-global
 ENV PATH=$PATH:/home/node/.npm-global/bin # optionally if you want to run npm global bin without specifying path
 ```
 
+## Upgrading/downgrading Yarn
+
+If you need to upgrade/downgrade `yarn`, you can do so by issuing the following commands in your `Dockerfile`:
+
+```Dockerfile
+FROM node:6
+
+ENV YARN_VERSION 1.5.1
+
+RUN curl -fSLO --compressed "https://yarnpkg.com/downloads/$YARN_VERSION/yarn-v$YARN_VERSION.tar.gz" \
+    && tar -xzf yarn-v$YARN_VERSION.tar.gz -C /opt/ \
+    && ln -snf /opt/yarn-v$YARN_VERSION /opt/yarn \
+    && rm yarn-v$YARN_VERSION.tar.gz
+```
+
 ## Handling Kernel Signals
 
 Node.js was not designed to run as PID 1 which leads to unexpected behaviour when running inside of Docker. For example, a Node.js process running as PID 1 will not respond to `SIGTERM` (`CTRL-C`) and similar signals. As of Docker 1.13, you can use the `--init` flag to wrap your Node.js process with a [lightweight init system](https://github.com/krallin/tini) that properly handles running as PID 1.

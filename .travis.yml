@@ -1,30 +1,25 @@
 dist: trusty
 sudo: required
 
-language: node_js
-node_js:
-    - lts/*
-
-services:
-    - docker
-
-addons:
-  apt:
-    packages:
-      - docker-ce
+language: generic
 
 script: ./test-build.sh $NODE_VERSION
 
 jobs:
   include:
-    - stage: Doc TOC Check
+    - stage: Test
+      env:
+        - TEST: Doc Toc Check
+      language: node_js
       install: npm i -g doctoc
       script:
         - cp README.md README.md.tmp &&
           doctoc --title='## Table of Contents' --github README.md &&
           diff -q README.md README.md.tmp
 
-    - stage: Shell Check
+    - stage: Test
+      env:
+        - TEST: Shell Check
       script: shellcheck *.sh
       addons:
         apt:
@@ -34,6 +29,12 @@ jobs:
             - shellcheck
 
     - stage: Build
+      services:
+          - docker
+      addons:
+        apt:
+          packages:
+            - docker-ce
       env:
         - NODE_VERSION: '4'
 

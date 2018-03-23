@@ -6,6 +6,35 @@ set -uo pipefail
 
 . functions.sh
 
+function build () {
+  local version
+  local tag
+  local variant
+  local full_tag
+  local path
+  version="$1"; shift
+  variant="$1"; shift
+  tag="$1"; shift
+
+  if [ -z "$variant" ]; then
+    full_tag="$tag"
+    path="$version/$variant"
+  else
+    full_tag="$tag-$variant"
+    path="$version/$variant"
+  fi
+
+  info "Building $full_tag..."
+
+  if ! docker build -t node:"$full_tag" "$path"; then
+    fatal "Build of $full_tag failed!"
+  fi
+  info "Build of $full_tag succeeded."
+
+  info "Testing $full_tag"
+  docker run --rm -v "$PWD/test-image.sh:/usr/local/bin/test.sh" node:"$full_tag" test.sh "$full_version"
+}
+
 cd "$(cd "${0%/*}" && pwd -P)" || exit;
 
 IFS=' ' read -ra versions <<< "$(get_versions . "$@")"
@@ -20,14 +49,7 @@ for version in "${versions[@]}"; do
   tag=$(get_tag "$version")
   full_version=$(get_full_version "$version")
 
-  info "Building $tag..."
-
-  if ! docker build -t node:"$tag" "$version"; then
-    fatal "Build of $tag failed!"
-  fi
-  info "Build of $tag succeeded."
-
-  docker run --rm -v "$PWD/test-image.sh:/usr/local/bin/test.sh" node:"$tag" test.sh "$full_version"
+  build "$version" "" "$tag"
 
   # Get supported variants according to the target architecture.
   # See details in function.sh
@@ -37,14 +59,7 @@ for version in "${versions[@]}"; do
     # Skip non-docker directories
     [ -f "$version/$variant/Dockerfile" ] || continue
 
-    info "Building $tag-$variant variant..."
-
-    if ! docker build -t node:"$tag-$variant" "$version/$variant"; then
-      fatal "Build of $tag-$variant failed!"
-    fi
-    info "Build of $tag-$variant succeeded."
-
-    docker run --rm -v "$PWD/test-image.sh:/usr/local/bin/test.sh" node:"$tag-$variant" test.sh "$full_version"
+    build "$version" "$variant" "$tag"
   done
 
 done

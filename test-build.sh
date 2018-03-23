@@ -27,21 +27,7 @@ for version in "${versions[@]}"; do
   fi
   info "Build of $tag succeeded."
 
-  OUTPUT=$(docker run --rm -it node:"$tag" node -e "process.stdout.write(process.versions.node)")
-  if [ "$OUTPUT" != "$full_version" ]; then
-    fatal "Test of $tag for node failed!"
-  fi
-  info "Test of $tag for node succeeded."
-
-  if ! docker run --rm -i node:"$tag" npm --version; then
-    fatal "Test of $tag for npm failed!"
-  fi
-  info "Test of $tag for npm succeeded."
-
-  if ! docker run --rm -i node:"$tag" yarn --version; then
-    fatal "Test of $tag for yarn failed!"
-  fi
-  info "Test of $tag for yarn succeeded."
+  docker run --rm -v "$PWD/test-image.sh:/usr/local/bin/test.sh" node:"$tag" test.sh "$full_version"
 
   # Get supported variants according to the target architecture.
   # See details in function.sh
@@ -58,12 +44,7 @@ for version in "${versions[@]}"; do
     fi
     info "Build of $tag-$variant succeeded."
 
-    OUTPUT=$(docker run --rm -it node:"$tag-$variant" node -e "process.stdout.write(process.versions.node)")
-    if [ "$OUTPUT" != "$full_version" ]; then
-      fatal "Test of $tag-$variant failed!"
-    fi
-    info "Test of $tag-$variant succeeded."
-
+    docker run --rm -v "$PWD/test-image.sh:/usr/local/bin/test.sh" node:"$tag-$variant" test.sh "$full_version"
   done
 
 done

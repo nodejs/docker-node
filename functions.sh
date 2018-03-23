@@ -201,7 +201,7 @@ function sort_versions () {
 	local sorted
 	local lines
 	local line
-	
+
 	IFS=$'\n'
 	lines="${versions[*]}"
 	unset IFS

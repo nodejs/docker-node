@@ -37,7 +37,7 @@ function build () {
 
 cd "$(cd "${0%/*}" && pwd -P)" || exit;
 
-IFS=' ' read -ra versions <<< "$(get_versions . "$@")"
+IFS=' ' read -ra versions <<< "$(IFS=','; get_versions . "$1")"
 if [ ${#versions[@]} -eq 0 ]; then
   fatal "No valid versions found!"
 fi

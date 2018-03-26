@@ -56,10 +56,29 @@ function get_variants() {
 	shift
 
 	local arch
-	arch=$(get_arch)
+	local availablevariants
+	local variantsfilter
 	local variants
-	variants=$(grep "^$arch" "$dir/architectures" | sed -E 's/'"$arch"'[[:space:]]*//' | sed -E 's/,/ /g')
-	echo "$variants"
+
+	arch=$(get_arch)
+	variantsfilter=( "$@" )
+	IFS=' ' read -ra availablevariants <<< "$(grep "^$arch" "$dir/architectures" | sed -E 's/'"$arch"'[[:space:]]*//' | sed -E 's/,/ /g')"
+
+	if [ ${#variantsfilter[@]} -gt 0 ]; then
+		for variant1 in "${availablevariants[@]}"; do
+			for variant2 in "${variantsfilter[@]}"; do
+				if [[ "$variant1" = "$variant2" ]]; then
+					variants+=("$variant1")
+				fi
+			done
+		done
+
+		if [ ${#variants[@]} -gt 0 ]; then
+			echo "${variants[@]}"
+		fi
+	else
+		echo "${availablevariants[@]}"
+	fi
 }
 
 # Get supported architectures for a specific version and variant

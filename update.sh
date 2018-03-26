@@ -85,9 +85,9 @@ for version in "${versions[@]}"; do
 
 	# Get supported variants according the target architecture
 	# See details in function.sh
-	variants=$(get_variants "$parentpath")
+	IFS=' ' read -ra variants <<< "$(get_variants "$parentpath")"
 
-	for variant in $variants; do
+	for variant in "${variants[@]}"; do
 		# Skip non-docker directories
 		[ -f "$version/$variant/Dockerfile" ] || continue
 		add_stage "$baseuri" "$version" "$variant"

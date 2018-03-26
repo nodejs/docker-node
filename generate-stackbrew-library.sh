@@ -70,8 +70,8 @@ for version in "${versions[@]}"; do
 
 	# Get supported variants according to the target architecture.
 	# See details in function.sh
-	variants=$(get_variants "$(dirname "$version")")
-	for variant in $variants; do
+	IFS=' ' read -ra variants <<< "$(get_variants "$(dirname "$version")")"
+	for variant in "${variants[@]}"; do
 		# Skip non-docker directories
 		[ -f "$version/$variant/Dockerfile" ] || continue
 

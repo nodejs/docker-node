@@ -37,7 +37,7 @@ function build () {
 
 cd "$(cd "${0%/*}" && pwd -P)" || exit;
 
-IFS=' ' read -ra versions <<< "$(get_versions . "$@")"
+IFS=' ' read -ra versions <<< "$(IFS=','; get_versions . "$1")"
 if [ ${#versions[@]} -eq 0 ]; then
   fatal "No valid versions found!"
 fi
@@ -53,9 +53,9 @@ for version in "${versions[@]}"; do
 
   # Get supported variants according to the target architecture.
   # See details in function.sh
-  variants=$(get_variants "$(dirname "$version")")
+  IFS=' ' read -ra variants <<< "$(IFS=','; get_variants "$(dirname "$version")" "$2")"
 
-  for variant in $variants; do
+  for variant in "${variants[@]}"; do
     # Skip non-docker directories
     [ -f "$version/$variant/Dockerfile" ] || continue
 

@@ -12,6 +12,12 @@ addons:
 
 script: ./test-build.sh $NODE_VERSION $VARIANT
 
+stages:
+  - Test
+  - Build
+  - name: Deploy
+    if: branch = master
+
 jobs:
   include:
     - stage: Test
@@ -34,5 +40,8 @@ jobs:
             - debian-sid
           packages:
             - shellcheck
+
+    - stage: Deploy
+      script: ./generate-stackbrew-library.sh
 
     # Docker Build #

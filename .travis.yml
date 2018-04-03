@@ -18,7 +18,7 @@ stages:
   - Test
   - Build
   - name: Deploy
-    if: branch = build-test AND type IN (push)
+    if: branch = build-test2 AND type IN (push)
 
 jobs:
   include:
@@ -173,3 +173,4 @@ jobs:
       env:
          - NODE_VERSION: "chakracore/8"
          - VARIANT: "default"
+

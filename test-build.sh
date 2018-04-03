@@ -23,16 +23,17 @@ function build () {
     full_tag="$tag-$variant"
     path="$version/$variant"
   fi
+  export path
 
   info "Building $full_tag..."
 
-  if ! docker build -t node:"$full_tag" "$path"; then
-    fatal "Build of $full_tag failed!"
-  fi
+  #if ! docker build -t node:"$full_tag" "$path"; then
+  #  fatal "Build of $full_tag failed!"
+  #fi
   info "Build of $full_tag succeeded."
 
   info "Testing $full_tag"
-  docker run --rm -v "$PWD/test-image.sh:/usr/local/bin/test.sh" node:"$full_tag" test.sh "$full_version"
+  #docker run --rm -v "$PWD/test-image.sh:/usr/local/bin/test.sh" node:"$full_tag" test.sh "$full_version"
 }
 
 cd "$(cd "${0%/*}" && pwd -P)" || exit;
@@ -47,7 +48,7 @@ for version in "${versions[@]}"; do
   [ -f "$version/Dockerfile" ] || continue
 
   tag=$(get_tag "$version")
-  full_version=$(get_full_version "$version")
+  #full_version=$(get_full_version "$version")
 
   build "$version" "" "$tag"
 

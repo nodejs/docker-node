@@ -8,7 +8,7 @@ IMAGES_FILE="library/node"
 REPO_NAME="official-images"
 BRANCH_NAME="travis-$TRAVIS_BUILD_ID"
 ORIGIN_SLUG="$GITHUB_USERNAME/$REPO_NAME"
-UPSTREAM_SLUG="docker-library/$REPO_NAME"
+#UPSTREAM_SLUG="docker-library/$REPO_NAME"
 
 function updated() {
 	local versions
@@ -86,20 +86,20 @@ if updated; then
 	info "Pushing..."
 	git push "https://$GITHUB_API_TOKEN:x-oauth-basic@github.com/$ORIGIN_SLUG.git" -f "$BRANCH_NAME" 2> /dev/null || fatal "Error pushing the updated stackbrew"
 
-	info "Creating Pull request"
-	response_payload="$(curl -H "Authorization: token $GITHUB_API_TOKEN" \
-		-s \
-		-X POST \
-		-d "$(pr_payload)" \
-		"https://api.github.com/repos/$UPSTREAM_SLUG/pulls")"
+	#info "Creating Pull request"
+	#response_payload="$(curl -H "Authorization: token $GITHUB_API_TOKEN" \
+	#	-s \
+	#	-X POST \
+	#	-d "$(pr_payload)" \
+	#	"https://api.github.com/repos/$UPSTREAM_SLUG/pulls")"
 
-	url="$(echo "$response_payload" | jq .html_url)"
-	if [ "$url" != "null" ]; then
-		info "Pull request created at $url"
-	else
-		error_message=$(echo "$response_payload" | jq .message)
-		fatal "Error creating pull request ($error_message)"
-	fi
+	#url="$(echo "$response_payload" | jq .html_url)"
+	#if [ "$url" != "null" ]; then
+	#	info "Pull request created at $url"
+	#else
+	#	error_message=$(echo "$response_payload" | jq .message)
+	#	fatal "Error creating pull request ($error_message)"
+	#fi
 else
 	info "No change!"
 fi

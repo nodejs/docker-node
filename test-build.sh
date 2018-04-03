@@ -49,11 +49,13 @@ for version in "${versions[@]}"; do
   tag=$(get_tag "$version")
   full_version=$(get_full_version "$version")
 
-  build "$version" "" "$tag"
-
   # Get supported variants according to the target architecture.
   # See details in function.sh
   IFS=' ' read -ra variants <<< "$(IFS=','; get_variants "$(dirname "$version")" "$2")"
+
+  if [[ "${variants[*]}" =~ "default" ]]; then
+    build "$version" "" "$tag"
+  fi
 
   for variant in "${variants[@]}"; do
     # Skip non-docker directories

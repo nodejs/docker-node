@@ -6,6 +6,12 @@ set -uo pipefail
 
 . functions.sh
 
+# Convert comma delimited cli arguments to arrays
+# E.g. ./test-build.sh 4,6 slim,onbuild
+# "4,6" becomes "4 6" and "slim,onbuild" becomes "slim onbuild"
+IFS=',' read -ra versions_arg <<< "${1:-}"
+IFS=',' read -ra variant_arg <<< "${2:-}"
+
 function build () {
   local version
   local tag
@@ -37,7 +43,7 @@ function build () {
 
 cd "$(cd "${0%/*}" && pwd -P)" || exit;
 
-IFS=' ' read -ra versions <<< "$(IFS=','; get_versions . "$1")"
+IFS=' ' read -ra versions <<< "$(get_versions . "${versions_arg[@]}")"
 if [ ${#versions[@]} -eq 0 ]; then
   fatal "No valid versions found!"
 fi
@@ -49,11 +55,14 @@ for version in "${versions[@]}"; do
   tag=$(get_tag "$version")
   full_version=$(get_full_version "$version")
 
-  build "$version" "" "$tag"
-
   # Get supported variants according to the target architecture.
   # See details in function.sh
-  IFS=' ' read -ra variants <<< "$(IFS=','; get_variants "$(dirname "$version")" "$2")"
+  IFS=' ' read -ra variants <<< "$(get_variants "$(dirname "$version")" "${variant_arg[@]}")"
+
+  # Only build the default Dockerfile if "default" is in the variant list
+  if [[ "${variants[*]}" =~ "default" ]]; then
+    build "$version" "" "$tag"
+  fi
 
   for variant in "${variants[@]}"; do
     # Skip non-docker directories

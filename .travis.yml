@@ -18,7 +18,7 @@ stages:
   - Test
   - Build
   - name: Deploy
-    if: branch = master AND type IN (push)
+    if: branch = build-test AND type IN (push)
 
 jobs:
   include:
@@ -45,6 +45,8 @@ jobs:
 
     - stage: Deploy
       script: ./generate-stackbrew-pr.sh
+      env:
+        secure: "HkgYgawkr/hkg2vURHGOb/JmF6U1e71QQsd0HXJ1UJh6WBiFJOrjomCMHZGHnpyopdRna++up8dISBqM2X+EiLAr9yWdRXy72oMP9X42M0ccnja/3E5KYYXMkETS50JnUhMCOt2xRZW5/ojqrHukqRo0YIjIu+P0U0VsZ4QIsng="
 
     # Docker Build #
     - stage: Build
@@ -171,4 +173,3 @@ jobs:
       env:
          - NODE_VERSION: "chakracore/8"
          - VARIANT: "default"
-

@@ -60,7 +60,7 @@ for version in "${versions[@]}"; do
   IFS=' ' read -ra variants <<< "$(get_variants "$(dirname "$version")" "${variant_arg[@]}")"
 
   # Only build the default Dockerfile if "default" is in the variant list
-  if [[ "${variants[*]}" =~ "default" ]]; then
+  if [[ "${variants[*]}" =~ "default" ]] || [[ "${variants[*]}" =~ "onbuild" ]] ; then
     build "$version" "" "$tag"
   fi
 

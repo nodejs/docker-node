@@ -20,7 +20,7 @@ RUN set -ex \
     gpg --keyserver hkp://pgp.mit.edu:80 --recv-keys "$key" ; \
   done
 
-ENV NODE_VERSION 9.10.1
+ENV NODE_VERSION 9.11.1
 
 RUN ARCH= && dpkgArch="$(dpkg --print-architecture)" \
   && case "${dpkgArch##*-}" in \

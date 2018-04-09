@@ -2,20 +2,32 @@
 set -e
 . functions.sh
 
-GITHUB_USERNAME="nodejs-github-bot"
-gitpath="../docker-images"
+if [ -z "$1" ]; then
+	COMMIT_ID="$TRAVIS_COMMIT"
+	COMMIT_MESSAGE="$TRAVIS_COMMIT_MESSAGE"
+	BRANCH_NAME="travis-$TRAVIS_BUILD_ID"
+	GITHUB_USERNAME="nodejs-github-bot"
+else
+	COMMIT_ID="$1"
+	COMMIT_MESSAGE="$(git show -s --format=%B "$1")"
+	BRANCH_NAME="travis-$(date +%s)"
+	if [[ "$(git remote get-url origin)" =~ github.com/([^/]*)/docker-node.git ]]; then
+		GITHUB_USERNAME="${BASH_REMATCH[1]}"
+	fi
+fi
+
 IMAGES_FILE="library/node"
 REPO_NAME="official-images"
-BRANCH_NAME="travis-$TRAVIS_BUILD_ID"
 ORIGIN_SLUG="$GITHUB_USERNAME/$REPO_NAME"
 UPSTREAM_SLUG="docker-library/$REPO_NAME"
+gitpath="$REPO_NAME"
 
 function updated() {
 	local versions
 	local images_changed
 
 	IFS=' ' read -ra versions <<< "$(IFS=','; get_versions)"
-	images_changed=$(git show --name-only "$TRAVIS_COMMIT" "${versions[@]}")
+	images_changed=$(git show --name-only "$COMMIT_ID" "${versions[@]}")
 
 	if [ -z "$images_changed" ]; then
 		return 1
@@ -24,15 +36,24 @@ function updated() {
 	fi
 }
 
+function auth_header() {
+	echo "Authorization: token $GITHUB_API_TOKEN"
+}
+
 function permission_check() {
-	auth="$(curl -H "Authorization: token $GITHUB_API_TOKEN" \
+	if [ -z "$GITHUB_API_TOKEN" ]; then
+		fatal "Environment variable \$GITHUB_API_TOKEN is missing or empty"
+	fi
+
+	auth="$(curl -H "$(auth_header)" \
 		-s \
 		"https://api.github.com")"
+
 	if [ "$(echo "$auth" | jq .message)" = "\"Bad credentials\"" ]; then
 		fatal "Authentication Failed! Invalid \$GITHUB_API_TOKEN"
 	fi
 
-	auth="$(curl -H "Authorization: token $GITHUB_API_TOKEN" \
+	auth="$(curl -H "$(auth_header)" \
 		-s \
 		"https://api.github.com/repos/$ORIGIN_SLUG/collaborators/$GITHUB_USERNAME/permission")"
 	if [ "$(echo "$auth" | jq .message)" != "null" ]; then
@@ -41,25 +62,25 @@ function permission_check() {
 }
 
 function setup_git_author() {
-	GIT_AUTHOR_NAME="$(git show -s --format="%aN" "$TRAVIS_COMMIT")"
-	GIT_AUTHOR_EMAIL="$(git show -s --format="%aE" "$TRAVIS_COMMIT")"
-	GIT_COMMITTER_NAME="$(git show -s --format="%cN" "$TRAVIS_COMMIT")"
-	GIT_COMMITTER_EMAIL="$(git show -s --format="%cN" "$TRAVIS_COMMIT")"
+	GIT_AUTHOR_NAME="$(git show -s --format="%aN" "$COMMIT_ID")"
+	GIT_AUTHOR_EMAIL="$(git show -s --format="%aE" "$COMMIT_ID")"
+	GIT_COMMITTER_NAME="$(git show -s --format="%cN" "$COMMIT_ID")"
+	GIT_COMMITTER_EMAIL="$(git show -s --format="%cN" "$COMMIT_ID")"
 
 	export GIT_AUTHOR_NAME GIT_AUTHOR_EMAIL GIT_COMMITTER_NAME GIT_COMMITTER_EMAIL
 }
 
 function message() {
-	echo "Node: $TRAVIS_COMMIT_MESSAGE"
+	echo "Node: $COMMIT_MESSAGE"
 }
 
 function pr_payload() {
 	local escaped_message
-	IFS=' ' read -ra escaped_message <<< "$TRAVIS_COMMIT_MESSAGE"
+	IFS=' ' read -ra escaped_message <<< "$COMMIT_MESSAGE"
 	escaped_message="$(printf '%q ' "${escaped_message[@]}")"
 	echo '{
 		"title": "Node: '"$escaped_message"'",
-		"body": "Commit: nodejs/docker-node@'"$TRAVIS_COMMIT"'",
+		"body": "Commit: nodejs/docker-node@'"$COMMIT_ID"'",
 		"head": "'"$GITHUB_USERNAME"':'"$BRANCH_NAME"'",
 		"base": "master"
 	}'
@@ -73,12 +94,13 @@ if updated; then
 	setup_git_author
 
 	info "Cloning..."
-	git clone --depth 50  https://github.com/docker-library/official-images.git $gitpath 2> /dev/null
+	git clone --depth 50  "https://github.com/$UPSTREAM_SLUG.git" $gitpath 2> /dev/null
 
-	./generate-stackbrew-library.sh > "$gitpath/$IMAGES_FILE"
+	stackbrew="$(./generate-stackbrew-library.sh)"
 
 	cd $gitpath
 
+	echo "$stackbrew" > "$IMAGES_FILE"
 	git checkout -b "$BRANCH_NAME"
 	git add "$IMAGES_FILE"
 	git commit -m "$(message)"
@@ -87,17 +109,17 @@ if updated; then
 	git push "https://$GITHUB_API_TOKEN:x-oauth-basic@github.com/$ORIGIN_SLUG.git" -f "$BRANCH_NAME" 2> /dev/null || fatal "Error pushing the updated stackbrew"
 
 	info "Creating Pull request"
-	response_payload="$(curl -H "Authorization: token $GITHUB_API_TOKEN" \
+	pr_response_payload="$(curl -H "$(auth_header)" \
 		-s \
 		-X POST \
 		-d "$(pr_payload)" \
 		"https://api.github.com/repos/$UPSTREAM_SLUG/pulls")"
 
-	url="$(echo "$response_payload" | jq .html_url)"
+	url="$(echo "$pr_response_payload" | jq .html_url)"
 	if [ "$url" != "null" ]; then
 		info "Pull request created at $url"
 	else
-		error_message=$(echo "$response_payload" | jq .message)
+		error_message=$(echo "$pr_response_payload" | jq .message)
 		fatal "Error creating pull request ($error_message)"
 	fi
 else

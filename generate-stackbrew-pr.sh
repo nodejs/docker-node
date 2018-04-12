@@ -16,6 +16,13 @@ else
 	fi
 fi
 
+if [[ "$COMMIT_MESSAGE" =~ Merge\ pull\ request\ \#([0-9]*) ]]; then
+
+	# This is a merge from a pull request
+	PR_NUMBER="${BASH_REMATCH[1]}"
+	COMMIT_MESSAGE="$(printf "%s" "$COMMIT_MESSAGE" | tail -n 1)"
+fi
+
 IMAGES_FILE="library/node"
 REPO_NAME="official-images"
 ORIGIN_SLUG="$GITHUB_USERNAME/$REPO_NAME"
@@ -130,12 +137,18 @@ if updated; then
 	if [ "$url" != "null" ]; then
 		info "Pull request created at $url"
 
+		if [ ! -z "$PR_NUMBER" ]; then
+			comment_endpoint="https://api.github.com/repos/$DOCKER_SLUG/issues/$PR_NUMBER/comments"
+		else
+			comment_endpoint="https://api.github.com/repos/$DOCKER_SLUG/commits/$COMMIT_ID/comments"
+		fi
+
 		info "Creating Commit Comment"
 		commit_response_payload="$(curl -H "$(auth_header)" \
 			-s \
 			-X POST \
 			-d "$(comment_payload "$url")" \
-			"https://api.github.com/repos/$DOCKER_SLUG/commits/$COMMIT_ID/comments")"
+			"$comment_endpoint")"
 
 		if [ "$(echo "$commit_response_payload" | jq .message)" != "null" ]; then
 			fatal "Error linking the pull request ($error_message)"

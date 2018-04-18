@@ -1,10 +1,16 @@
 dist: trusty
 sudo: false
 
-language: generic
+language: cpp
+
+cache: ccache
 
 before_install:
   - source functions.sh && images_updated $TRAVIS_COMMIT_RANGE || tests_updated $TRAVIS_COMMIT_RANGE || travis_terminate
+
+before_script:
+  - mkdir -p "$HOME/.ccache"
+  - ln -s $HOME/.ccache .
 
 script: ./test-build.sh $NODE_VERSION $VARIANT
 

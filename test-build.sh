@@ -40,8 +40,25 @@ function build() {
 
   info "Building ${full_tag}..."
 
-  if ! docker build --cpuset-cpus="0,1" -t node:"${full_tag}" "${path}"; then
-    fatal "Build of ${full_tag} failed!"
+  if [[ "${variant}" =~ alpine* ]]; then
+    if [ ! -d .ccache ]; then
+      mkdir .ccache
+    fi;
+
+    cp -r .ccache "${path}"
+
+    if ! docker build --cpuset-cpus="0,1" -t node:"${full_tag}" "${path}"; then
+      fatal "Build of ${full_tag} failed!"
+    fi
+
+    info "Extracting compile cache"
+    docker run --rm node:"${full_tag}" tar -c -C /root/.ccache . | tar x -C "${path}/.ccache"
+    cp -r "${path}/.ccache" . && rm -r "${path}/.ccache"
+
+  else
+    if ! docker build --cpuset-cpus="0,1" -t node:"${full_tag}" "${path}"; then
+      fatal "Build of ${full_tag} failed!"
+    fi
   fi
   info "Build of ${full_tag} succeeded."
 

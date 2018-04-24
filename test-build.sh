@@ -14,6 +14,21 @@ IFS=',' read -ra variant_arg <<<"${2:-}"
 
 default_variant=$(get_config "./" "default_variant")
 
+function get_alpine_buildimage_id() {
+  local log
+  log="$1"
+
+  regexp='s/ ---> ([^\n]*)(\nStep [0-9]*\/[0-9]* : FROM alpine:[0-9]\.[0-9]*)/\1/p'
+  command1='$!N;'
+  command2='1{$!N;};$!N;'
+  id="$(echo "${log}" | sed -En -e "${command1} ${regexp}")"
+  if [ ! -z "${id}" ]; then
+    echo "${id}"
+  else
+    echo "${log}" | sed -En -e "${command2} ${regexp}"
+  fi
+}
+
 function build() {
   local version
   local tag
@@ -41,20 +56,22 @@ function build() {
   info "Building ${full_tag}..."
 
   if [[ "${variant}" =~ alpine* ]]; then
-    if [ ! -d .ccache ]; then
-      mkdir .ccache
-    fi;
+    mkdir -p .ccache
+    mkdir -p "${path}/.ccache"
+    cp -r .ccache/* "${path}/.ccache/"
 
-    cp -r .ccache "${path}"
-
-    if ! docker build --cpuset-cpus="0,1" -t node:"${full_tag}" "${path}"; then
+    exec 5>&1
+    if ! alpine_build="$(docker build --cpuset-cpus="0,1" -t node:"${full_tag}" "${path}" | tee /dev/fd/5)"; then
       fatal "Build of ${full_tag} failed!"
     fi
 
     info "Extracting compile cache"
-    docker run --rm node:"${full_tag}" tar -c -C /root/.ccache . | tar x -C "${path}/.ccache"
-    cp -r "${path}/.ccache" . && rm -r "${path}/.ccache"
-
+    build_image_id="$(get_alpine_buildimage_id "${alpine_build}")"
+    if [ -z "${build_image_id}" ]; then
+      fatal "Can't find build image id"
+    fi
+    docker run --rm "${build_image_id}" tar -c -C /root/.ccache . | tar x -C "${path}/.ccache"
+    cp -r "${path}/.ccache/"* ./.ccache && rm -r "${path}/.ccache/"
   else
     if ! docker build --cpuset-cpus="0,1" -t node:"${full_tag}" "${path}"; then
       fatal "Build of ${full_tag} failed!"

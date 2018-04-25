@@ -195,6 +195,11 @@ jobs:
 
     - stage: Build
       env:
+         - NODE_VERSION: "chakracore/10"
+         - VARIANT: "default"
+
+    - stage: Build
+      env:
          - NODE_VERSION: "chakracore/8"
          - VARIANT: "default"
 

@@ -34,12 +34,6 @@ jobs:
       env:
         - TEST: Shell Check
       script: shellcheck *.sh
-      addons:
-        apt:
-          sources:
-            - debian-sid
-          packages:
-            - shellcheck
 
     - stage: Deploy
       script: ./generate-stackbrew-pr.sh

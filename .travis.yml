@@ -45,6 +45,36 @@ jobs:
     # Docker Build #
     - stage: Build
       env:
+         - NODE_VERSION: "10"
+         - VARIANT: "default"
+
+    - stage: Build
+      env:
+         - NODE_VERSION: "10"
+         - VARIANT: "alpine"
+
+    - stage: Build
+      env:
+         - NODE_VERSION: "10"
+         - VARIANT: "onbuild"
+
+    - stage: Build
+      env:
+         - NODE_VERSION: "10"
+         - VARIANT: "slim"
+
+    - stage: Build
+      env:
+         - NODE_VERSION: "10"
+         - VARIANT: "stretch"
+
+    - stage: Build
+      env:
+         - NODE_VERSION: "10"
+         - VARIANT: "wheezy"
+
+    - stage: Build
+      env:
          - NODE_VERSION: "4"
          - VARIANT: "default"
 
@@ -162,6 +192,11 @@ jobs:
       env:
          - NODE_VERSION: "9"
          - VARIANT: "wheezy"
+
+    - stage: Build
+      env:
+         - NODE_VERSION: "chakracore/10"
+         - VARIANT: "default"
 
     - stage: Build
       env:

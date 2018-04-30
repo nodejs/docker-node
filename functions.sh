@@ -132,7 +132,7 @@ function get_config () {
 # Get available versions for a given path
 #
 # If full or partial versions are provided then they are processed and
-# validated. e.g. "4 chakracore" returns "4 chakracore/8" since it processed the
+# validated. e.g. "6 chakracore" returns "6 chakracore/8" since it processed the
 # chakracore entry and found it to be a fork rather than a complete version.
 #
 # The result is a list of valid versions.

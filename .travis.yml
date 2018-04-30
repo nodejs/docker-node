@@ -70,36 +70,6 @@ jobs:
 
     - stage: Build
       env:
-         - NODE_VERSION: "4"
-         - VARIANT: "default"
-
-    - stage: Build
-      env:
-         - NODE_VERSION: "4"
-         - VARIANT: "alpine"
-
-    - stage: Build
-      env:
-         - NODE_VERSION: "4"
-         - VARIANT: "onbuild"
-
-    - stage: Build
-      env:
-         - NODE_VERSION: "4"
-         - VARIANT: "slim"
-
-    - stage: Build
-      env:
-         - NODE_VERSION: "4"
-         - VARIANT: "stretch"
-
-    - stage: Build
-      env:
-         - NODE_VERSION: "4"
-         - VARIANT: "wheezy"
-
-    - stage: Build
-      env:
          - NODE_VERSION: "6"
          - VARIANT: "default"
 

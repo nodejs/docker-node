@@ -6,8 +6,6 @@ hash git 2>/dev/null || { echo >&2 "git not found, exiting."; }
 
 # Used dynamically: print "$array_" $1
 # shellcheck disable=SC2034
-array_4='4 argon';
-# shellcheck disable=SC2034
 array_6='6 boron';
 # shellcheck disable=SC2034
 array_8='8 carbon';

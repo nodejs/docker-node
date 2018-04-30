@@ -19,6 +19,8 @@ array_chakracore_8='chakracore-8'
 # shellcheck disable=SC2034
 array_chakracore_10='chakracore-10 chakracore'
 
+default_variant=$(get_config "./" "default_variant")
+
 cd "$(cd "${0%/*}" && pwd -P)"
 
 self="$(basename "${BASH_SOURCE[0]}")"
@@ -58,7 +60,7 @@ get_stub() {
 
 for version in "${versions[@]}"; do
   # Skip "docs" and other non-docker directories
-  [ -f "${version}/Dockerfile" ] || continue
+  [ -f "${version}/Dockerfile" ] || [ -f "${version}/${default_variant}/Dockerfile" ] || continue
 
   stub=$(get_stub "${version}")
   commit="$(fileCommit "${version}")"
@@ -66,14 +68,17 @@ for version in "${versions[@]}"; do
   majorMinorVersion="$(get_tag "${version}" majorminor)"
 
   IFS=' ' read -ra versionAliases <<<"$fullVersion $majorMinorVersion $stub"
-  # Get supported architectures for a specific version. See details in function.sh
-  IFS=' ' read -ra supportedArches <<<"$(get_supported_arches "${version}" "default")"
 
-  echo "Tags: $(join ', ' "${versionAliases[@]}")"
-  echo "Architectures: $(join ', ' "${supportedArches[@]}")"
-  echo "GitCommit: ${commit}"
-  echo "Directory: ${version}"
-  echo
+  if [ -f "${version}/Dockerfile" ]; then
+    # Get supported architectures for a specific version. See details in function.sh
+    IFS=' ' read -ra supportedArches <<<"$(get_supported_arches "${version}" "default")"
+
+    echo "Tags: $(join ', ' "${versionAliases[@]}")"
+    echo "Architectures: $(join ', ' "${supportedArches[@]}")"
+    echo "GitCommit: ${commit}"
+    echo "Directory: ${version}"
+    echo
+  fi
 
   # Get supported variants according to the target architecture.
   # See details in function.sh
@@ -87,6 +92,10 @@ for version in "${versions[@]}"; do
     slash='/'
     variantAliases=("${versionAliases[@]/%/-${variant//${slash}/-}}")
     variantAliases=("${variantAliases[@]//latest-/}")
+    if [ "${variant}" = "${default_variant}" ]; then
+      variantAliases+=("${versionAliases[@]}")
+    fi
+
     # Get supported architectures for a specific version and variant.
     # See details in function.sh
     IFS=' ' read -ra supportedArches <<<"$(get_supported_arches "${version}" "${variant}")"

@@ -12,6 +12,8 @@ set -uo pipefail
 IFS=',' read -ra versions_arg <<<"${1:-}"
 IFS=',' read -ra variant_arg <<<"${2:-}"
 
+default_variant=$(get_config "./" "default_variant")
+
 function build() {
   local version
   local tag
@@ -28,6 +30,9 @@ function build() {
   if [ -z "${variant}" ]; then
     full_tag="${tag}"
     path="${version}/${variant}"
+  elif [ "${variant}" = "default" ]; then
+    full_tag="${tag}"
+    path="${version}"
   else
     full_tag="${tag}-${variant}"
     path="${version}/${variant}"
@@ -53,7 +58,7 @@ fi
 
 for version in "${versions[@]}"; do
   # Skip "docs" and other non-docker directories
-  [ -f "${version}/Dockerfile" ] || continue
+  [ -f "${version}/Dockerfile" ] || [ -a "${version}/${default_variant}/Dockerfile" ] || continue
 
   tag=$(get_tag "${version}")
   full_version=$(get_full_version "${version}")
@@ -62,14 +67,13 @@ for version in "${versions[@]}"; do
   # See details in function.sh
   IFS=' ' read -ra variants <<<"$(get_variants "$(dirname "${version}")" "${variant_arg[@]}")"
 
-  # Only build the default Dockerfile if "default" is in the variant list
-  if [[ "${variants[*]}" =~ "default" ]] || [[ "${variants[*]}" =~ "onbuild" ]]; then
-    build "${version}" "" "${tag}"
-  fi
-
   for variant in "${variants[@]}"; do
     # Skip non-docker directories
     [ -f "${version}/${variant}/Dockerfile" ] || continue
+
+    if [ "${variant}" = "onbuild" ]; then
+      build "${version}" "${default_variant}" "$tag"
+    fi
 
     build "${version}" "${variant}" "${tag}"
   done

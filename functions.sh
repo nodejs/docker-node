@@ -145,6 +145,9 @@ function get_versions() {
 
   local versions
   local dirs=("$@")
+
+  local default_variant
+  default_variant=$(get_config "./" "default_variant")
   if [ ${#dirs[@]} -eq 0 ]; then
     IFS=' ' read -ra dirs <<<"$(echo "${prefix%/}/"*/)"
   fi
@@ -156,7 +159,7 @@ function get_versions() {
       for subdir in "${subdirs[@]}"; do
         versions+=("${subdir}")
       done
-    elif [ -a "${dir}/Dockerfile" ]; then
+    elif [ -a "${dir}/Dockerfile" ] || [ -a "${dir}/${default_variant}/Dockerfile" ]; then
       versions+=("${dir#./}")
     fi
   done
@@ -182,7 +185,14 @@ function get_full_version() {
   version=$1
   shift
 
-  grep -m1 'ENV NODE_VERSION ' "${version}/Dockerfile" | cut -d' ' -f3
+  local default_dockerfile
+  if [ -f "${version}/${default_variant}/Dockerfile" ]; then
+    default_dockerfile="${version}/${default_variant}/Dockerfile"
+  else
+    default_dockerfile="${version}/Dockerfile"
+  fi
+
+  grep -m1 'ENV NODE_VERSION ' "${default_dockerfile}" | cut -d' ' -f3
 }
 
 function get_major_minor_version() {

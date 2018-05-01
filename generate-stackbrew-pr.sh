@@ -35,7 +35,7 @@ function updated() {
 	local images_changed
 
 	IFS=' ' read -ra versions <<< "$(IFS=','; get_versions)"
-	images_changed=$(git show --name-only "$COMMIT_ID" "${versions[@]}")
+	images_changed=$(git diff --name-only "$COMMIT_ID".."$COMMIT_ID"~1 "${versions[@]}")
 
 	if [ -z "$images_changed" ]; then
 		return 1

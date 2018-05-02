@@ -56,9 +56,14 @@ function update_node_version() {
       fromprefix="${arch}\\/"
     fi
 
-    sed -Ei -e 's/^FROM (.*)/FROM '"${fromprefix}"'\1/' "${dockerfile}"
-    sed -Ei -e 's/^(ENV NODE_VERSION |FROM .*node:).*/\1'"${version}.${fullVersion:-0}"'/' "${dockerfile}"
+    nodeVersion="${version}.${fullVersion:-0}"
+
+    sed -Ei -e 's/^FROM (.*)/FROM '"$fromprefix"'\1/' "${dockerfile}"
+    sed -Ei -e 's/^(ENV NODE_VERSION ).*/\1'"${nodeVersion}"'/' "${dockerfile}"
     sed -Ei -e 's/^(ENV YARN_VERSION ).*/\1'"${yarnVersion}"'/' "${dockerfile}"
+
+    # Only for onbuild variant
+    sed -Ei -e 's/^(FROM .*node:)[^-]*(-.*)/\1'"${nodeVersion}"'\2/' "${dockerfile}"
 
     # shellcheck disable=SC1004
     new_line=' \\\

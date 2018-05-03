@@ -7,8 +7,8 @@ set -uo pipefail
 . functions.sh
 
 # Convert comma delimited cli arguments to arrays
-# E.g. ./test-build.sh 4,6 slim,onbuild
-# "4,6" becomes "4 6" and "slim,onbuild" becomes "slim onbuild"
+# E.g. ./test-build.sh 8,10 slim,onbuild
+# "8,10" becomes "8 10" and "slim,onbuild" becomes "slim onbuild"
 IFS=',' read -ra versions_arg <<< "${1:-}"
 IFS=',' read -ra variant_arg <<< "${2:-}"
 

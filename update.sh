@@ -45,6 +45,22 @@ function update_node_version {
 		sed -E -i.bak 's/^FROM (.*)/FROM '"$fromprefix"'\1/' "$dockerfile" && rm "$dockerfile".bak
 		sed -E -i.bak 's/^(ENV NODE_VERSION |FROM .*node:).*/\1'"$version.${fullVersion:-0}"'/' "$dockerfile" && rm "$dockerfile".bak
 		sed -E -i.bak 's/^(ENV YARN_VERSION ).*/\1'"$yarnVersion"'/' "$dockerfile" && rm "$dockerfile".bak
+
+		# shellcheck disable=SC1004
+		new_line=' \\\
+'
+
+		# Add GPG keys
+		for key_type in "node" "yarn"
+		do
+			while read -r line
+			do
+				pattern="\"\\$\\{$(echo "$key_type" | tr '[:lower:]' '[:upper:]')_KEYS\\[@\\]\\}\""
+				sed -E -i.bak -e "s/([ \\t]*)($pattern)/\\1${line}${new_line}\\1\\2/" "$dockerfile" && rm "$dockerfile".bak
+			done < "keys/$key_type.keys"
+			sed -E -i.bak "/$pattern/d" "$dockerfile" && rm "$dockerfile".bak
+		done
+
 		if [[ "${version/.*/}" -ge 10 ]]; then
 			sed -E -i.bak 's/FROM (.*)alpine:3.4/FROM \1alpine:3.7/' "$dockerfile"
 			rm "$dockerfile.bak"

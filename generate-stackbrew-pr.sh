@@ -84,8 +84,7 @@ function message() {
 
 function pr_payload() {
 	local escaped_message
-	IFS=' ' read -ra escaped_message <<< "$COMMIT_MESSAGE"
-	escaped_message="$(printf '%q ' "${escaped_message[@]}")"
+	escaped_message="$(echo "$COMMIT_MESSAGE" | sed -E -e "s/\"/\\\\\"/g")"
 	echo '{
 		"title": "Node: '"$escaped_message"'",
 		"body": "Commit: nodejs/docker-node@'"$COMMIT_ID"'",

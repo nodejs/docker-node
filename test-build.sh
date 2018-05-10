@@ -60,7 +60,7 @@ for version in "${versions[@]}"; do
 
   # Get supported variants according to the target architecture.
   # See details in function.sh
-  IFS=' ' read -ra variants <<<"$(get_variants "$(dirname "$version")" "${variant_arg[@]}")"
+  IFS=' ' read -ra variants <<<"$(get_variants "$version" "${variant_arg[@]}")"
 
   # Only build the default Dockerfile if "default" is in the variant list
   if [[ "${variants[*]}" =~ "default" ]] || [[ "${variants[*]}" =~ "onbuild" ]]; then

@@ -62,7 +62,15 @@ function get_variants() {
 
   arch=$(get_arch)
   variantsfilter=("$@")
-  IFS=' ' read -ra availablevariants <<<"$(grep "^$arch" "$dir/architectures" | sed -E 's/'"$arch"'[[:space:]]*//' | sed -E 's/,/ /g')"
+
+  if [ -a "$dir/architectures" ]; then
+    arch_path="$dir/architectures"
+  else
+
+    arch_path="$(dirname "$dir")/architectures"
+  fi
+
+  IFS=' ' read -ra availablevariants <<<"$(grep "^$arch" "$arch_path" | sed -E 's/'"$arch"'[[:space:]]*//' | sed -E 's/,/ /g')"
 
   if [ ${#variantsfilter[@]} -gt 0 ]; then
     for variant1 in "${availablevariants[@]}"; do

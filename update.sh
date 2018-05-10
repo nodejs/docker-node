@@ -18,6 +18,30 @@ arch=$(get_arch)
 
 yarnVersion="$(curl -sSL --compressed https://yarnpkg.com/latest-version)"
 
+function get_template_path() {
+  local path=$1
+  shift
+
+  local version=${1:-}
+  shift
+
+  local variant=""
+  if [[ $# -eq 1 ]]; then
+    variant=$1
+    shift
+  fi
+
+  if [[ "$version" == chakracore* ]]; then
+    echo "chakracore/Dockerfile.template"
+  elif [ -z "$variant" ]; then
+    echo "$path/Dockerfile.template"
+  elif [[ $variant =~ alpine ]]; then
+    echo "$path/Dockerfile-alpine.template"
+  else
+    echo "$path/Dockerfile-$variant.template"
+  fi
+}
+
 function update_node_version() {
 
   local baseuri=$1
@@ -28,7 +52,7 @@ function update_node_version() {
   shift
   local dockerfile=$1
   shift
-  local variant
+  local variant=""
   if [[ $# -eq 1 ]]; then
     variant=$1
     shift
@@ -59,12 +83,9 @@ function update_node_version() {
       sed -E -i.bak "/$pattern/d" "$dockerfile" && rm "$dockerfile".bak
     done
 
-    if [[ "${version/.*/}" -ge 10 ]]; then
-      sed -E -i.bak 's/FROM (.*)alpine:3.4/FROM \1alpine:3.7/' "$dockerfile"
-      rm "$dockerfile.bak"
-    elif [[ "${version/.*/}" -ge 8 || "$arch" == "ppc64le" || "$arch" == "s390x" || "$arch" == "arm64" || "$arch" == "arm32v7" ]]; then
-      sed -E -i.bak 's/FROM (.*)alpine:3.4/FROM \1alpine:3.6/' "$dockerfile"
-      rm "$dockerfile.bak"
+    if [[ $variant =~ alpine ]]; then
+      alpine_version="$(echo "$variant" | sed -En -e "s/alpine([0-9]+.[0-9]+)/\\1/p")"
+      sed -E -i.bak "s/(alpine:)0.0/\\1$alpine_version/" "$dockerfile" && rm "$dockerfile".bak
     fi
   )
 }
@@ -97,18 +118,23 @@ for version in "${versions[@]}"; do
   versionnum=$(basename "$version")
   baseuri=$(get_config "$parentpath" "baseuri")
 
+  # Fix for chakracore
+  if [[ "$parentpath" == $(dirname "$version")* ]]; then
+    parentpath=$(dirname "$parentpath")
+  fi
+
   add_stage "$baseuri" "$version" "default"
-  update_node_version "$baseuri" "$versionnum" "$parentpath/Dockerfile.template" "$version/Dockerfile" &
+  update_node_version "$baseuri" "$versionnum" "$(get_template_path "$parentpath" "$version")" "$version/Dockerfile" &
 
   # Get supported variants according the target architecture
   # See details in function.sh
-  IFS=' ' read -ra variants <<<"$(get_variants "$parentpath")"
+  IFS=' ' read -ra variants <<<"$(get_variants "$parentpath/$version")"
 
   for variant in "${variants[@]}"; do
     # Skip non-docker directories
     [ -f "$version/$variant/Dockerfile" ] || continue
     add_stage "$baseuri" "$version" "$variant"
-    update_node_version "$baseuri" "$versionnum" "$parentpath/Dockerfile-$variant.template" "$version/$variant/Dockerfile" "$variant" &
+    update_node_version "$baseuri" "$versionnum" "$(get_template_path "$parentpath" "$version" "$variant")" "$version/$variant/Dockerfile" "$variant" &
   done
 done
 

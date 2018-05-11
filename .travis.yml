@@ -65,11 +65,6 @@ jobs:
 
     - stage: Build
       env:
-         - NODE_VERSION: "10"
-         - VARIANT: "wheezy"
-
-    - stage: Build
-      env:
          - NODE_VERSION: "6"
          - VARIANT: "default"
 
@@ -92,11 +87,6 @@ jobs:
       env:
          - NODE_VERSION: "6"
          - VARIANT: "stretch"
-
-    - stage: Build
-      env:
-         - NODE_VERSION: "6"
-         - VARIANT: "wheezy"
 
     - stage: Build
       env:
@@ -125,11 +115,6 @@ jobs:
 
     - stage: Build
       env:
-         - NODE_VERSION: "8"
-         - VARIANT: "wheezy"
-
-    - stage: Build
-      env:
          - NODE_VERSION: "9"
          - VARIANT: "default"
 
@@ -152,11 +137,6 @@ jobs:
       env:
          - NODE_VERSION: "9"
          - VARIANT: "stretch"
-
-    - stage: Build
-      env:
-         - NODE_VERSION: "9"
-         - VARIANT: "wheezy"
 
     - stage: Build
       env:
@@ -167,4 +147,3 @@ jobs:
       env:
          - NODE_VERSION: "chakracore/8"
          - VARIANT: "default"
-

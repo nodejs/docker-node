@@ -28,7 +28,7 @@ REPO_NAME="official-images"
 ORIGIN_SLUG="$GITHUB_USERNAME/$REPO_NAME"
 UPSTREAM_SLUG="docker-library/$REPO_NAME"
 DOCKER_SLUG="nodejs/docker-node"
-gitpath="$REPO_NAME"
+gitpath="../$REPO_NAME"
 
 function updated() {
 	local versions

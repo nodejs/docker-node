@@ -9,18 +9,21 @@ set -uo pipefail
 # Convert comma delimited cli arguments to arrays
 # E.g. ./test-build.sh 8,10 slim,onbuild
 # "8,10" becomes "8 10" and "slim,onbuild" becomes "slim onbuild"
-IFS=',' read -ra versions_arg <<< "${1:-}"
-IFS=',' read -ra variant_arg <<< "${2:-}"
+IFS=',' read -ra versions_arg <<<"${1:-}"
+IFS=',' read -ra variant_arg <<<"${2:-}"
 
-function build () {
+function build() {
   local version
   local tag
   local variant
   local full_tag
   local path
-  version="$1"; shift
-  variant="$1"; shift
-  tag="$1"; shift
+  version="$1"
+  shift
+  variant="$1"
+  shift
+  tag="$1"
+  shift
 
   if [ -z "$variant" ]; then
     full_tag="$tag"
@@ -41,9 +44,9 @@ function build () {
   docker run --rm -v "$PWD/test-image.sh:/usr/local/bin/test.sh" node:"$full_tag" test.sh "$full_version"
 }
 
-cd "$(cd "${0%/*}" && pwd -P)" || exit;
+cd "$(cd "${0%/*}" && pwd -P)" || exit
 
-IFS=' ' read -ra versions <<< "$(get_versions . "${versions_arg[@]}")"
+IFS=' ' read -ra versions <<<"$(get_versions . "${versions_arg[@]}")"
 if [ ${#versions[@]} -eq 0 ]; then
   fatal "No valid versions found!"
 fi
@@ -57,10 +60,10 @@ for version in "${versions[@]}"; do
 
   # Get supported variants according to the target architecture.
   # See details in function.sh
-  IFS=' ' read -ra variants <<< "$(get_variants "$(dirname "$version")" "${variant_arg[@]}")"
+  IFS=' ' read -ra variants <<<"$(get_variants "$(dirname "$version")" "${variant_arg[@]}")"
 
   # Only build the default Dockerfile if "default" is in the variant list
-  if [[ "${variants[*]}" =~ "default" ]] || [[ "${variants[*]}" =~ "onbuild" ]] ; then
+  if [[ "${variants[*]}" =~ "default" ]] || [[ "${variants[*]}" =~ "onbuild" ]]; then
     build "$version" "" "$tag"
   fi
 

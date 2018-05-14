@@ -24,6 +24,17 @@ jobs:
   include:
     - stage: Test
       env:
+        - TEST: Editor Config check
+      language: node_js
+      node_js:
+        - lts/*
+      install:
+        - npm i -g eclint
+      script:
+        - eclint check
+
+    - stage: Test
+      env:
         - TEST: Doc Toc Check
       language: node_js
       install: npm i -g doctoc

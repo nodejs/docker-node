@@ -56,6 +56,14 @@ jobs:
         - TEST: Shell Check
       script: shellcheck *.sh
 
+    - stage: Test
+      env:
+        - TEST: .travis.yml and travis.yml.template consistency
+      language: generic
+      script:
+        - ./update.sh
+        - git diff --stat --exit-code .travis.yml
+
     - stage: Deploy
       script: ./generate-stackbrew-pr.sh
       env:

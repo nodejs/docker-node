@@ -72,6 +72,7 @@ jobs:
         secure: "HkgYgawkr/hkg2vURHGOb/JmF6U1e71QQsd0HXJ1UJh6WBiFJOrjomCMHZGHnpyopdRna++up8dISBqM2X+EiLAr9yWdRXy72oMP9X42M0ccnja/3E5KYYXMkETS50JnUhMCOt2xRZW5/ojqrHukqRo0YIjIu+P0U0VsZ4QIsng="
 
     # Docker Build #
+
     - stage: Build
       env:
         - NODE_VERSION: "10"

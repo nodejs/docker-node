@@ -105,7 +105,7 @@ RUN deluser --remove-home node \
 
 ## Memory
 
-By default, any Docker Container may consume as much of the hardware such as CPU and RAM. If you are running multiple containers on the same host you should limit how much memory they can consume.     
+By default, any Docker Container may consume as much of the hardware such as CPU and RAM. If you are running multiple containers on the same host you should limit how much memory they can consume.
 
 ```
 -m "300M" --memory-swap "1G"

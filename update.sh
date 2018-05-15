@@ -79,8 +79,8 @@ function add_stage() {
 
   echo '    - stage: Build
       env:
-         - NODE_VERSION: "'"$version"'"
-         - VARIANT: "'"$variant"'"
+        - NODE_VERSION: "'"$version"'"
+        - VARIANT: "'"$variant"'"
 ' >>.travis.yml
 }
 

@@ -37,7 +37,7 @@ function update_node_version() {
   fullVersion="$(curl -sSL --compressed "$baseuri" | grep '<a href="v'"$version." | sed -E 's!.*<a href="v([^"/]+)/?".*!\1!' | cut -d'.' -f2,3 | sort -n | tail -1)"
   (
     cp "$template" "$dockerfile"
-    local fromprefix
+    local fromprefix=""
     if [[ "$arch" != "amd64" && "$variant" != "onbuild" ]]; then
       fromprefix="$arch\\/"
     fi

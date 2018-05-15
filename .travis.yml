@@ -37,6 +37,8 @@ jobs:
       env:
         - TEST: Doc Toc Check
       language: node_js
+      node_js:
+        - lts/*
       install: npm i -g doctoc
       script:
         - cp README.md README.md.tmp &&

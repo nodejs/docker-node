@@ -22,6 +22,17 @@ jobs:
   include:
     - stage: Test
       env:
+        - TEST: Editor Config check
+      language: node_js
+      node_js:
+        - lts/*
+      install:
+        - npm i -g eclint
+      script:
+        - eclint check
+
+    - stage: Test
+      env:
         - TEST: Doc Toc Check
       language: node_js
       install: npm i -g doctoc
@@ -29,6 +40,14 @@ jobs:
         - cp README.md README.md.tmp &&
           doctoc --title='## Table of Contents' --github README.md &&
           diff -q README.md README.md.tmp
+
+    - stage: Test
+      env:
+        - TEST: shfmt check
+      script:
+        - docker run -it --rm -v "$(pwd)":/sh -w /sh jamesmstone/shfmt -i 2 -l -w -ci .
+        - git diff --color
+        - git diff --stat=220 --color --exit-code
 
     - stage: Test
       env:

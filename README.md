@@ -268,15 +268,15 @@ about the expectations for all contributors to this project.
 
 ## Docker Working Group Members
 
- * Christopher Horrell ([chorrell](https://github.com/chorrell))
- * Hans Kristian Flaatten ([starefossen](https://github.com/starefossen))
- * Hugues Malphettes ([hmalphettes](https://github.com/hmalphettes))
- * John Mitchell ([jlmitch5](https://github.com/jlmitch5))
- * Peter Petrov ([pesho](https://github.com/pesho))
+  * Christopher Horrell ([chorrell](https://github.com/chorrell))
+  * Hans Kristian Flaatten ([starefossen](https://github.com/starefossen))
+  * Hugues Malphettes ([hmalphettes](https://github.com/hmalphettes))
+  * John Mitchell ([jlmitch5](https://github.com/jlmitch5))
+  * Peter Petrov ([pesho](https://github.com/pesho))
 
 ## Docker Working Group Collaborators
 
- * Mikeal Rogers ([mikeal](https://github.com/mikeal))
- * Laurent Goderre ([LaurentGoderre](https://github.com/LaurentGoderre))
- * Simen Bekkhus ([SimenB](https://github.com/SimenB))
- * Peter Dave Hello ([PeterDaveHello](https://github.com/PeterDaveHello))
+  * Mikeal Rogers ([mikeal](https://github.com/mikeal))
+  * Laurent Goderre ([LaurentGoderre](https://github.com/LaurentGoderre))
+  * Simen Bekkhus ([SimenB](https://github.com/SimenB))
+  * Peter Dave Hello ([PeterDaveHello](https://github.com/PeterDaveHello))

@@ -34,6 +34,14 @@ jobs:
 
     - stage: Test
       env:
+        - TEST: shfmt check
+      script:
+        - docker run -it --rm -v "$(pwd)":/sh -w /sh jamesmstone/shfmt -i 2 -l -w -ci .
+        - git diff --color
+        - git diff --stat=220 --color --exit-code
+
+    - stage: Test
+      env:
         - TEST: Shell Check
       script: shellcheck *.sh
 

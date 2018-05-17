@@ -86,6 +86,11 @@ jobs:
     - stage: Build
       env:
         - NODE_VERSION: "10"
+        - VARIANT: "onbuild"
+
+    - stage: Build
+      env:
+        - NODE_VERSION: "10"
         - VARIANT: "slim"
 
     - stage: Build

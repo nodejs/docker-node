@@ -31,22 +31,6 @@ UPSTREAM_SLUG="docker-library/${REPO_NAME}"
 DOCKER_SLUG="nodejs/docker-node"
 gitpath="../${REPO_NAME}"
 
-function updated() {
-  local versions
-  local images_changed
-
-  IFS=' ' read -ra versions <<<"$(
-    IFS=','
-    get_versions
-  )"
-  images_changed=$(git diff --name-only "${COMMIT_ID}".."${COMMIT_ID}"~1 "${versions[@]}")
-
-  if [ -z "${images_changed}" ]; then
-    return 1
-  fi
-  return 0
-}
-
 function auth_header() {
   echo "Authorization: token ${GITHUB_API_TOKEN}"
 }
@@ -104,7 +88,7 @@ function comment_payload() {
   }"
 }
 
-if updated; then
+if images_updated "${COMMIT_ID}"; then
 
   permission_check
 

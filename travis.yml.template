@@ -10,6 +10,9 @@ addons:
     packages:
       - docker-ce
 
+before_install:
+  - source functions.sh && images_updated $TRAVIS_COMMIT_RANGE || tests_updated $TRAVIS_COMMIT_RANGE || travis_terminate
+
 script: ./test-build.sh $NODE_VERSION $VARIANT
 
 stages:

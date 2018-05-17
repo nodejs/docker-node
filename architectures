@@ -1,8 +1,8 @@
+arm32v6  alpine
+arm32v7  default,onbuild,slim,stretch
+arm64v8  default,alpine,onbuild,slim,stretch
+amd64    default,alpine,onbuild,slim,stretch
+i386     default,alpine,onbuild,slim,stretch
+ppc64le  default,alpine,onbuild,slim,stretch
+s390x    default,alpine,onbuild,slim,stretch
 bashbrew-arch   variants
-amd64     default,alpine,onbuild,slim,stretch
-ppc64le default,alpine,onbuild,slim,stretch
-s390x default,alpine,onbuild,slim,stretch
-arm64v8 default,alpine,onbuild,slim,stretch
-arm32v7 default,onbuild,slim,stretch
-arm32v6 alpine
-i386 default,alpine,onbuild,slim,stretch

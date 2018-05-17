@@ -4,6 +4,8 @@ set -e
 
 hash git 2>/dev/null || { echo >&2 "git not found, exiting."; }
 
+default_alpine_version=$(get_config "./" "default_alpine_version")
+
 # Used dynamically: print "$array_" $1
 # shellcheck disable=SC2034
 array_6='6 boron'
@@ -85,6 +87,11 @@ for version in "${versions[@]}"; do
 
     slash='/'
     variantAliases=("${versionAliases[@]/%/-${variant//$slash/-}}")
+
+    if [[ "$variant" == "alpine$default_alpine_version" ]]; then
+      variantAliases+=("${versionAliases[@]/%/-alpine}")
+    fi
+
     variantAliases=("${variantAliases[@]//latest-/}")
     # Get supported architectures for a specific version and variant.
     # See details in function.sh

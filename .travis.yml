@@ -81,7 +81,12 @@ jobs:
     - stage: Build
       env:
         - NODE_VERSION: "10"
-        - VARIANT: "alpine"
+        - VARIANT: "alpine3.6"
+
+    - stage: Build
+      env:
+        - NODE_VERSION: "10"
+        - VARIANT: "alpine3.7"
 
     - stage: Build
       env:
@@ -101,7 +106,12 @@ jobs:
     - stage: Build
       env:
         - NODE_VERSION: "6"
-        - VARIANT: "alpine"
+        - VARIANT: "alpine3.4"
+
+    - stage: Build
+      env:
+        - NODE_VERSION: "6"
+        - VARIANT: "alpine3.7"
 
     - stage: Build
       env:
@@ -126,7 +136,12 @@ jobs:
     - stage: Build
       env:
         - NODE_VERSION: "8"
-        - VARIANT: "alpine"
+        - VARIANT: "alpine3.6"
+
+    - stage: Build
+      env:
+        - NODE_VERSION: "8"
+        - VARIANT: "alpine3.7"
 
     - stage: Build
       env:
@@ -151,7 +166,12 @@ jobs:
     - stage: Build
       env:
         - NODE_VERSION: "9"
-        - VARIANT: "alpine"
+        - VARIANT: "alpine3.6"
+
+    - stage: Build
+      env:
+        - NODE_VERSION: "9"
+        - VARIANT: "alpine3.7"
 
     - stage: Build
       env:

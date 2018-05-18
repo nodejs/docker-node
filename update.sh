@@ -29,7 +29,7 @@ function update_node_version() {
   local dockerfile=$1
   shift
   local variant
-  if [[ $# -eq 1 ]]; then
+  if [ $# -eq 1 ]; then
     variant=$1
     shift
   fi
@@ -38,7 +38,7 @@ function update_node_version() {
   (
     cp "$template" "$dockerfile"
     local fromprefix=""
-    if [[ "$arch" != "amd64" && "$variant" != "onbuild" ]]; then
+    if [ "$arch" != "amd64" ] && [ "$variant" != "onbuild" ]; then
       fromprefix="$arch\\/"
     fi
 
@@ -59,10 +59,10 @@ function update_node_version() {
       sed -E -i.bak "/$pattern/d" "$dockerfile" && rm "$dockerfile".bak
     done
 
-    if [[ "${version/.*/}" -ge 10 ]]; then
+    if [ "${version/.*/}" -ge 10 ]; then
       sed -E -i.bak 's/FROM (.*)alpine:3.4/FROM \1alpine:3.7/' "$dockerfile"
       rm "$dockerfile.bak"
-    elif [[ "${version/.*/}" -ge 8 || "$arch" == "ppc64le" || "$arch" == "s390x" || "$arch" == "arm64" || "$arch" == "arm32v7" ]]; then
+    elif [ "${version/.*/}" -ge 8 ] || [ "$arch" = "ppc64le" ] || [ "$arch" = "s390x" ] || [ "$arch" == "arm64" ] || [ "$arch" == "arm32v7" ]; then
       sed -E -i.bak 's/FROM (.*)alpine:3.4/FROM \1alpine:3.6/' "$dockerfile"
       rm "$dockerfile.bak"
     fi

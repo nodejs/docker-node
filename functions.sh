@@ -1,5 +1,5 @@
-#!/bin/bash
-
+#!/usr/bin/env bash
+#
 # Utlity functions
 
 info() {
@@ -37,12 +37,12 @@ function get_arch() {
       arch="arm32v7"
       ;;
     *)
-      echo "$0 does not support architecture $arch ... aborting"
+      echo "$0 does not support architecture ${arch} ... aborting"
       exit 1
       ;;
   esac
 
-  echo "$arch"
+  echo "${arch}"
 }
 
 # Get corresponding variants based on the architecture.
@@ -62,12 +62,12 @@ function get_variants() {
 
   arch=$(get_arch)
   variantsfilter=("$@")
-  IFS=' ' read -ra availablevariants <<<"$(grep "^$arch" "$dir/architectures" | sed -E 's/'"$arch"'[[:space:]]*//' | sed -E 's/,/ /g')"
+  IFS=' ' read -ra availablevariants <<<"$(grep "^${arch}" "${dir}/architectures" | sed -E 's/'"${arch}"'[[:space:]]*//' | sed -E 's/,/ /g')"
 
   if [ ${#variantsfilter[@]} -gt 0 ]; then
     for variant1 in "${availablevariants[@]}"; do
       for variant2 in "${variantsfilter[@]}"; do
-        if [[ "$variant1" == "$variant2" ]]; then
+        if [ "$variant1" = "$variant2" ]; then
           variants+=("$variant1")
         fi
       done
@@ -100,16 +100,16 @@ function get_supported_arches() {
   shift
 
   # Get default supported arches
-  lines=$(grep "$variant" "$(dirname "$version")"/architectures 2>/dev/null | cut -d' ' -f1)
+  lines=$(grep "$variant" "$(dirname "${version}")"/architectures 2>/dev/null | cut -d' ' -f1)
 
   # Get version specific supported architectures if there is specialized information
-  if [ -a "$version"/architectures ]; then
-    lines=$(grep "$variant" "$version"/architectures 2>/dev/null | cut -d' ' -f1)
+  if [ -a "${version}"/architectures ]; then
+    lines=$(grep "$variant" "${version}"/architectures 2>/dev/null | cut -d' ' -f1)
   fi
 
   while IFS='' read -r line; do
-    arches+=("$line")
-  done <<<"$lines"
+    arches+=("${line}")
+  done <<<"${lines}"
 
   echo "${arches[@]}"
 }
@@ -127,7 +127,7 @@ function get_config() {
   shift
 
   local value
-  value=$(grep "^$name" "$dir/config" | sed -E 's/'"$name"'[[:space:]]*//')
+  value=$(grep "^$name" "${dir}/config" | sed -E 's/'"$name"'[[:space:]]*//')
   echo "$value"
 }
 
@@ -150,13 +150,13 @@ function get_versions() {
   fi
 
   for dir in "${dirs[@]}"; do
-    if [ -a "$dir/config" ]; then
+    if [ -a "${dir}/config" ]; then
       local subdirs
       IFS=' ' read -ra subdirs <<<"$(get_versions "${dir#./}")"
       for subdir in "${subdirs[@]}"; do
         versions+=("$subdir")
       done
-    elif [ -a "$dir/Dockerfile" ]; then
+    elif [ -a "${dir}/Dockerfile" ]; then
       versions+=("${dir#./}")
     fi
   done
@@ -171,7 +171,7 @@ function get_fork_name() {
   version=$1
   shift
 
-  IFS='/' read -ra versionparts <<<"$version"
+  IFS='/' read -ra versionparts <<<"${version}"
   if [ ${#versionparts[@]} -gt 1 ]; then
     echo "${versionparts[0]}"
   fi
@@ -182,7 +182,7 @@ function get_full_version() {
   version=$1
   shift
 
-  grep -m1 'ENV NODE_VERSION ' "$version/Dockerfile" | cut -d' ' -f3
+  grep -m1 'ENV NODE_VERSION ' "${version}/Dockerfile" | cut -d' ' -f3
 }
 
 function get_major_minor_version() {
@@ -191,9 +191,9 @@ function get_major_minor_version() {
   shift
 
   local fullversion
-  fullversion=$(get_full_version "$version")
+  fullversion=$(get_full_version "${version}")
 
-  echo "$(echo "$fullversion" | cut -d'.' -f1).$(echo "$fullversion" | cut -d'.' -f2)"
+  echo "$(echo "${fullversion}" | cut -d'.' -f1).$(echo "${fullversion}" | cut -d'.' -f2)"
 }
 
 function get_tag() {
@@ -206,14 +206,14 @@ function get_tag() {
   shift
 
   local tagversion
-  if [ "$versiontype" = full ]; then
-    tagversion=$(get_full_version "$version")
-  elif [ "$versiontype" = majorminor ]; then
-    tagversion=$(get_major_minor_version "$version")
+  if [ "${versiontype}" = full ]; then
+    tagversion=$(get_full_version "${version}")
+  elif [ "${versiontype}" = majorminor ]; then
+    tagversion=$(get_major_minor_version "${version}")
   fi
 
   local tagparts
-  IFS=' ' read -ra tagparts <<<"$(get_fork_name "$version") $tagversion"
+  IFS=' ' read -ra tagparts <<<"$(get_fork_name "${version}") ${tagversion}"
   IFS='-'
   echo "${tagparts[*]}"
   unset IFS
@@ -230,12 +230,12 @@ function sort_versions() {
   unset IFS
 
   while IFS='' read -r line; do
-    sorted+=("$line")
-  done <<<"$(echo "$lines" | grep "^[0-9]" | sort -r)"
+    sorted+=("${line}")
+  done <<<"$(echo "${lines}" | grep "^[0-9]" | sort -r)"
 
   while IFS='' read -r line; do
-    sorted+=("$line")
-  done <<<"$(echo "$lines" | grep -v "^[0-9]" | sort -r)"
+    sorted+=("${line}")
+  done <<<"$(echo "${lines}" | grep -v "^[0-9]" | sort -r)"
 
   echo "${sorted[@]}"
 }

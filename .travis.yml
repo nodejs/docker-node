@@ -24,6 +24,17 @@ jobs:
   include:
     - stage: Test
       env:
+        - TEST: Markdown link check
+      language: node_js
+      node_js:
+        - lts/*
+      install:
+        - npm i -g markdown-link-check
+      script:
+        - find . -name "*.md" -exec markdown-link-check {} \;
+
+    - stage: Test
+      env:
         - TEST: Editor Config check
       language: node_js
       node_js:

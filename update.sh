@@ -5,7 +5,8 @@ set -ue
 
 cd "$(cd "${0%/*}" && pwd -P)"
 
-IFS=' ' read -ra versions <<<"$(get_versions . "$@")"
+IFS=' ' read -ra versions <<<"$(get_versions .)"
+IFS=' ' read -ra update_versions <<<"$(get_versions . "$@")"
 if [ ${#versions[@]} -eq 0 ]; then
   fatal "No valid versions found!"
 fi
@@ -17,6 +18,19 @@ fi
 arch=$(get_arch)
 
 yarnVersion="$(curl -sSL --compressed https://yarnpkg.com/latest-version)"
+
+function in_versions_to_update() {
+  local version=$1
+
+  for version_to_update in "${update_versions[@]}"; do
+    if [ "${version_to_update}" = "${version}" ]; then
+      echo 0
+      return
+    fi
+  done
+
+  echo 1
+}
 
 function update_node_version() {
 
@@ -91,14 +105,17 @@ for version in "${versions[@]}"; do
   # Skip "docs" and other non-docker directories
   [ -f "$version/Dockerfile" ] || continue
 
-  info "Updating version $version..."
-
   parentpath=$(dirname "$version")
   versionnum=$(basename "$version")
   baseuri=$(get_config "$parentpath" "baseuri")
+  update=$(in_versions_to_update "$version")
 
   add_stage "$baseuri" "$version" "default"
-  update_node_version "$baseuri" "$versionnum" "$parentpath/Dockerfile.template" "$version/Dockerfile" &
+
+  if [ "$update" -eq 0 ]; then
+    info "Updating version $version..."
+    update_node_version "$baseuri" "$versionnum" "$parentpath/Dockerfile.template" "$version/Dockerfile" &
+  fi
 
   # Get supported variants according the target architecture
   # See details in function.sh
@@ -108,7 +125,10 @@ for version in "${versions[@]}"; do
     # Skip non-docker directories
     [ -f "$version/$variant/Dockerfile" ] || continue
     add_stage "$baseuri" "$version" "$variant"
-    update_node_version "$baseuri" "$versionnum" "$parentpath/Dockerfile-$variant.template" "$version/$variant/Dockerfile" "$variant" &
+
+    if [ "$update" -eq 0 ]; then
+      update_node_version "$baseuri" "$versionnum" "$parentpath/Dockerfile-$variant.template" "$version/$variant/Dockerfile" "$variant" &
+    fi
   done
 done
 

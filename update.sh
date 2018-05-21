@@ -42,7 +42,7 @@ function update_node_version() {
   shift
   local dockerfile=$1
   shift
-  local variant
+  local variant=""
   if [ $# -eq 1 ]; then
     variant=$1
     shift
@@ -73,10 +73,9 @@ function update_node_version() {
       sed -Ei -e "/${pattern}/d" "${dockerfile}"
     done
 
-    if [ "${version/.*/}" -ge 10 ]; then
-      sed -Ei -e 's/FROM (.*)alpine:3.4/FROM \1alpine:3.7/' "${dockerfile}"
-    elif [ "${version/.*/}" -ge 8 ] || [ "$arch" = "ppc64le" ] || [ "$arch" = "s390x" ] || [ "$arch" == "arm64" ] || [ "$arch" == "arm32v7" ]; then
-      sed -Ei -e 's/FROM (.*)alpine:3.4/FROM \1alpine:3.6/' "${dockerfile}"
+    if [ "${variant}" = "alpine" ]; then
+      alpine_version=$(get_config "./" "alpine_version")
+      sed -Ei "s/(alpine:)0.0/\\1${alpine_version}/" "${dockerfile}"
     fi
   )
 }

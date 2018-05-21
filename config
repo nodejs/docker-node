@@ -1,1 +1,2 @@
 baseuri     https://nodejs.org/dist
+alpine_version  3.7

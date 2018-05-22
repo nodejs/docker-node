@@ -67,8 +67,8 @@ function get_variants() {
   if [ ${#variantsfilter[@]} -gt 0 ]; then
     for variant1 in "${availablevariants[@]}"; do
       for variant2 in "${variantsfilter[@]}"; do
-        if [ "$variant1" = "$variant2" ]; then
-          variants+=("$variant1")
+        if [ "${variant1}" = "${variant2}" ]; then
+          variants+=("${variant1}")
         fi
       done
     done
@@ -100,11 +100,11 @@ function get_supported_arches() {
   shift
 
   # Get default supported arches
-  lines=$(grep "$variant" "$(dirname "${version}")"/architectures 2>/dev/null | cut -d' ' -f1)
+  lines=$(grep "${variant}" "$(dirname "${version}")"/architectures 2>/dev/null | cut -d' ' -f1)
 
   # Get version specific supported architectures if there is specialized information
   if [ -a "${version}"/architectures ]; then
-    lines=$(grep "$variant" "${version}"/architectures 2>/dev/null | cut -d' ' -f1)
+    lines=$(grep "${variant}" "${version}"/architectures 2>/dev/null | cut -d' ' -f1)
   fi
 
   while IFS='' read -r line; do
@@ -123,12 +123,12 @@ function get_config() {
   shift
 
   local name
-  name=$1
+  name=${1}
   shift
 
   local value
-  value=$(grep "^$name" "${dir}/config" | sed -E 's/'"$name"'[[:space:]]*//')
-  echo "$value"
+  value=$(grep "^${name}" "${dir}/config" | sed -E 's/'"${name}"'[[:space:]]*//')
+  echo "${value}"
 }
 
 # Get available versions for a given path
@@ -154,7 +154,7 @@ function get_versions() {
       local subdirs
       IFS=' ' read -ra subdirs <<<"$(get_versions "${dir#./}")"
       for subdir in "${subdirs[@]}"; do
-        versions+=("$subdir")
+        versions+=("${subdir}")
       done
     elif [ -a "${dir}/Dockerfile" ]; then
       versions+=("${dir#./}")

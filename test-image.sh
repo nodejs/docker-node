@@ -1,5 +1,5 @@
 #!/bin/sh
-if [ "$(node -e "process.stdout.write(process.versions.node)")" != "$1" ]; then
+if [ "$(node -e "process.stdout.write(process.versions.node)")" != "${1}" ]; then
   echo "Test for node failed!"
   exit 1
 fi

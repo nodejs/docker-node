@@ -34,17 +34,17 @@ function in_versions_to_update() {
 
 function update_node_version() {
 
-  local baseuri=$1
+  local baseuri=${1}
   shift
-  local version=$1
+  local version=${1}
   shift
-  local template=$1
+  local template=${1}
   shift
-  local dockerfile=$1
+  local dockerfile=${1}
   shift
   local variant=""
   if [ $# -eq 1 ]; then
-    variant=$1
+    variant=${1}
     shift
   fi
 
@@ -58,7 +58,7 @@ function update_node_version() {
 
     sed -Ei -e 's/^FROM (.*)/FROM '"${fromprefix}"'\1/' "${dockerfile}"
     sed -Ei -e 's/^(ENV NODE_VERSION |FROM .*node:).*/\1'"${version}.${fullVersion:-0}"'/' "${dockerfile}"
-    sed -Ei -e 's/^(ENV YARN_VERSION ).*/\1'"${yarnVersion}"'/' "$dockerfile"
+    sed -Ei -e 's/^(ENV YARN_VERSION ).*/\1'"${yarnVersion}"'/' "${dockerfile}"
 
     # shellcheck disable=SC1004
     new_line=' \\\
@@ -69,7 +69,7 @@ function update_node_version() {
       while read -r line; do
         pattern="\"\\$\\{$(echo "${key_type}" | tr '[:lower:]' '[:upper:]')_KEYS\\[@\\]\\}\""
         sed -Ei -e "s/([ \\t]*)(${pattern})/\\1${line}${new_line}\\1\\2/" "${dockerfile}"
-      done <"keys/$key_type.keys"
+      done <"keys/${key_type}.keys"
       sed -Ei -e "/${pattern}/d" "${dockerfile}"
     done
 
@@ -81,11 +81,11 @@ function update_node_version() {
 }
 
 function add_stage() {
-  local baseuri=$1
+  local baseuri=${1}
   shift
-  local version=$1
+  local version=${1}
   shift
-  local variant=$1
+  local variant=${1}
   shift
 
   echo '
@@ -102,21 +102,21 @@ for version in "${versions[@]}"; do
   # Skip "docs" and other non-docker directories
   [ -f "${version}/Dockerfile" ] || continue
 
-  parentpath=$(dirname "$version")
-  versionnum=$(basename "$version")
-  baseuri=$(get_config "$parentpath" "baseuri")
-  update=$(in_versions_to_update "$version")
+  parentpath=$(dirname "${version}")
+  versionnum=$(basename "${version}")
+  baseuri=$(get_config "${parentpath}" "baseuri")
+  update=$(in_versions_to_update "${version}")
 
   add_stage "${baseuri}" "${version}" "default"
 
   if [ "${update}" -eq 0 ]; then
-    info "Updating version $version..."
+    info "Updating version ${version}..."
     update_node_version "${baseuri}" "${versionnum}" "${parentpath}/Dockerfile.template" "${version}/Dockerfile" &
   fi
 
   # Get supported variants according the target architecture
   # See details in function.sh
-  IFS=' ' read -ra variants <<<"$(get_variants "$parentpath")"
+  IFS=' ' read -ra variants <<<"$(get_variants "${parentpath}")"
 
   for variant in "${variants[@]}"; do
     # Skip non-docker directories

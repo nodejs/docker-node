@@ -48,12 +48,12 @@ join() {
 }
 
 get_stub() {
-  local version="$1"
+  local version="${1}"
   shift
   IFS='/' read -ra versionparts <<<"${version}"
   local stub
   eval stub="$(join '_' "${versionparts[@]}" | awk -F. '{ print "$array_" $1 }')"
-  echo "$stub"
+  echo "${stub}"
 }
 
 for version in "${versions[@]}"; do
@@ -85,7 +85,7 @@ for version in "${versions[@]}"; do
     commit="$(fileCommit "${version}/${variant}")"
 
     slash='/'
-    variantAliases=("${versionAliases[@]/%/-${variant//$slash/-}}")
+    variantAliases=("${versionAliases[@]/%/-${variant//${slash}/-}}")
     variantAliases=("${variantAliases[@]//latest-/}")
     # Get supported architectures for a specific version and variant.
     # See details in function.sh

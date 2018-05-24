@@ -3,14 +3,14 @@
 set -e
 . functions.sh
 
-if [ -z "$1" ]; then
-  COMMIT_ID="$TRAVIS_COMMIT"
-  COMMIT_MESSAGE="$TRAVIS_COMMIT_MESSAGE"
-  BRANCH_NAME="travis-$TRAVIS_BUILD_ID"
+if [ -z "${1}" ]; then
+  COMMIT_ID="${TRAVIS_COMMIT}"
+  COMMIT_MESSAGE="${TRAVIS_COMMIT_MESSAGE}"
+  BRANCH_NAME="travis-${TRAVIS_BUILD_ID}"
   GITHUB_USERNAME="nodejs-github-bot"
 else
-  COMMIT_ID="$1"
-  COMMIT_MESSAGE="$(git show -s --format=%B "$1")"
+  COMMIT_ID="${1}"
+  COMMIT_MESSAGE="$(git show -s --format=%B "${COMMIT_ID}")"
   BRANCH_NAME="travis-$(date +%s)"
   if [[ "$(git remote get-url origin)" =~ github.com/([^/]*)/docker-node.git ]]; then
     GITHUB_USERNAME="${BASH_REMATCH[1]}"
@@ -41,18 +41,18 @@ function updated() {
   )"
   images_changed=$(git diff --name-only "${COMMIT_ID}".."${COMMIT_ID}"~1 "${versions[@]}")
 
-  if [ -z "$images_changed" ]; then
+  if [ -z "${images_changed}" ]; then
     return 1
   fi
   return 0
 }
 
 function auth_header() {
-  echo "Authorization: token $GITHUB_API_TOKEN"
+  echo "Authorization: token ${GITHUB_API_TOKEN}"
 }
 
 function permission_check() {
-  if [ -z "$GITHUB_API_TOKEN" ]; then
+  if [ -z "${GITHUB_API_TOKEN}" ]; then
     fatal "Environment variable \$GITHUB_API_TOKEN is missing or empty"
   fi
 
@@ -60,14 +60,14 @@ function permission_check() {
     -s \
     "https://api.github.com")"
 
-  if [ "$(echo "$auth" | jq -r .message)" = "Bad credentials" ]; then
+  if [ "$(echo "${auth}" | jq -r .message)" = "Bad credentials" ]; then
     fatal "Authentication Failed! Invalid \$GITHUB_API_TOKEN"
   fi
 
   auth="$(curl -H "$(auth_header)" \
     -s \
     "https://api.github.com/repos/${ORIGIN_SLUG}/collaborators/${GITHUB_USERNAME}/permission")"
-  if [ "$(echo "$auth" | jq -r .message)" != "null" ]; then
+  if [ "$(echo "${auth}" | jq -r .message)" != "null" ]; then
     fatal "\$GITHUB_API_TOKEN can't push to https://github.com/${ORIGIN_SLUG}.git"
   fi
 }
@@ -98,7 +98,7 @@ function pr_payload() {
 
 function comment_payload() {
   local pr_url
-  pr_url="$1"
+  pr_url="${1}"
   echo "{
     'body': 'Created PR to the ${REPO_NAME} repo (${pr_url})'
   }"
@@ -116,7 +116,7 @@ if updated; then
 
   stackbrew="$(./generate-stackbrew-library.sh)"
 
-  cd $gitpath
+  cd ${gitpath}
 
   echo "${stackbrew}" >"${IMAGES_FILE}"
   git checkout -b "${BRANCH_NAME}"
@@ -126,7 +126,7 @@ if updated; then
   info "Pushing..."
   git push "https://${GITHUB_API_TOKEN}:x-oauth-basic@github.com/${ORIGIN_SLUG}.git" -f "${BRANCH_NAME}" 2>/dev/null || fatal "Error pushing the updated stackbrew"
 
-  cd - && rm -rf $gitpath
+  cd - && rm -rf ${gitpath}
 
   info "Creating Pull request"
   pr_response_payload="$(curl -H "$(auth_header)" \
@@ -136,8 +136,8 @@ if updated; then
     "https://api.github.com/repos/${UPSTREAM_SLUG}/pulls")"
 
   url="$(echo "${pr_response_payload}" | jq -r .html_url)"
-  if [ "$url" != "null" ]; then
-    info "Pull request created at $url"
+  if [ "${url}" != "null" ]; then
+    info "Pull request created at ${url}"
 
     if [ ! -z "${PR_NUMBER}" ]; then
       comment_endpoint="https://api.github.com/repos/${DOCKER_SLUG}/issues/${PR_NUMBER}/comments"
@@ -149,8 +149,8 @@ if updated; then
     commit_response_payload="$(curl -H "$(auth_header)" \
       -s \
       -X POST \
-      -d "$(comment_payload "$url")" \
-      "$comment_endpoint")"
+      -d "$(comment_payload "${url}")" \
+      "${comment_endpoint}")"
 
     if [ "$(echo "${commit_response_payload}" | jq -r .message)" != "null" ]; then
       fatal "Error linking the pull request (${error_message})"

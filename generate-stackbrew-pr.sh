@@ -118,7 +118,7 @@ if updated; then
 
   cd $gitpath
 
-  echo "${stackbrew}" >"{$IMAGES_FILE}"
+  echo "${stackbrew}" >"${IMAGES_FILE}"
   git checkout -b "${BRANCH_NAME}"
   git add "${IMAGES_FILE}"
   git commit -m "$(message)"

@@ -75,7 +75,12 @@ function update_node_version() {
 
     if [ "${variant}" = "alpine" ]; then
       alpine_version=$(get_config "./" "alpine_version")
-      sed -Ei "s/(alpine:)0.0/\\1${alpine_version}/" "${dockerfile}"
+      sed -Ei -e "s/(alpine:)0.0/\\1${alpine_version}/" "${dockerfile}"
+    fi
+
+    # Required for POSIX sed
+    if [ -f "${dockerfile}-e" ]; then
+      rm "${dockerfile}-e"
     fi
   )
 }

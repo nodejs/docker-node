@@ -87,7 +87,7 @@ jobs:
     - stage: Build
       env:
         - NODE_VERSION: "10"
-        - VARIANT: "default"
+        - VARIANT: "jessie"
 
     - stage: Build
       env:
@@ -107,7 +107,7 @@ jobs:
     - stage: Build
       env:
         - NODE_VERSION: "6"
-        - VARIANT: "default"
+        - VARIANT: "jessie"
 
     - stage: Build
       env:
@@ -132,7 +132,7 @@ jobs:
     - stage: Build
       env:
         - NODE_VERSION: "8"
-        - VARIANT: "default"
+        - VARIANT: "jessie"
 
     - stage: Build
       env:
@@ -157,7 +157,7 @@ jobs:
     - stage: Build
       env:
         - NODE_VERSION: "9"
-        - VARIANT: "default"
+        - VARIANT: "jessie"
 
     - stage: Build
       env:

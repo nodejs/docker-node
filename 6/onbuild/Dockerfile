@@ -1,4 +1,4 @@
-FROM node:6.14.2
+FROM node:6.14.2-jessie
 
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app

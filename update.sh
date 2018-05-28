@@ -114,6 +114,8 @@ for version in "${versions[@]}"; do
   baseuri=$(get_config "${parentpath}" "baseuri")
   update=$(in_versions_to_update "${version}")
 
+  [ "${update}" -eq 0 ] && info "Updating version ${version}..."
+
   # Get supported variants according the target architecture
   # See details in function.sh
   IFS=' ' read -ra variants <<<"$(get_variants "${parentpath}")"
@@ -122,7 +124,6 @@ for version in "${versions[@]}"; do
     add_stage "${baseuri}" "${version}" "default"
 
     if [ "${update}" -eq 0 ]; then
-      info "Updating version ${version}..."
       update_node_version "${baseuri}" "${versionnum}" "${parentpath}/Dockerfile.template" "${version}/Dockerfile" &
     fi
   fi

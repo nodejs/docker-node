@@ -249,3 +249,54 @@ function sort_versions() {
 
   echo "${sorted[@]}"
 }
+
+function commit_range() {
+  local commit_id_end=${1}
+  shift
+  local commit_id_start=${1}
+
+  if [ -z "${commit_id_start}" ]; then
+    if [ -z "${commit_id_end}" ]; then
+      echo "HEAD~1..HEAD"
+    elif [[ "${commit_id_end}" =~ .. ]]; then
+      echo "${commit_id_end}"
+    else
+      echo "${commit_id_end}~1..${commit_id_end}"
+    fi
+  else
+    echo "${commit_id_end}..${commit_id_start}"
+  fi
+}
+
+function images_updated() {
+  local commit_range
+  local versions
+  local images_changed
+
+  commit_range="$(commit_range "$@")"
+
+  IFS=' ' read -ra versions <<<"$(
+    IFS=','
+    get_versions
+  )"
+  images_changed=$(git diff --name-only "${commit_range}" "${versions[@]}")
+
+  if [ -z "${images_changed}" ]; then
+    return 1
+  fi
+  return 0
+}
+
+function tests_updated() {
+  local commit_range
+  local test_changed
+
+  commit_range="$(commit_range "$@")"
+
+  test_changed=$(git diff --name-only "${commit_range}" test*)
+
+  if [ -z "${test_changed}" ]; then
+    return 1
+  fi
+  return 0
+}

@@ -3,6 +3,13 @@ sudo: false
 
 language: generic
 
+services:
+    - docker
+addons:
+  apt:
+    packages:
+      - docker-ce
+
 before_install:
   - source functions.sh && images_updated $TRAVIS_COMMIT_RANGE || tests_updated $TRAVIS_COMMIT_RANGE || travis_terminate
 

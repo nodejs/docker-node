@@ -7,11 +7,17 @@
 }
 
 @test "Test for npm" {
+  if [ ${variant} == "core" ]; then
+    skip "Skip npm tests in core variant"
+  fi
   run docker run --rm -it node:"$full_tag" npm --version
   [ "$status" -eq 0 ]
 }
 
 @test "Test for yarn" {
+  if [ ${variant} == "core" ]; then
+    skip "Skip yarn tests in core variant"
+  fi
   run docker run --rm -it node:"$full_tag" yarn --version
   [ "$status" -eq 0 ]
 }

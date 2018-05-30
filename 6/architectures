@@ -1,7 +1,7 @@
 bashbrew-arch   variants
-arm32v7  jessie,onbuild,slim,stretch
-arm64v8  jessie,onbuild,slim,stretch
-amd64    jessie,alpine,onbuild,slim,stretch
-i386     jessie,onbuild,slim,stretch
-ppc64le  jessie,onbuild,slim,stretch
-s390x    jessie,onbuild,slim,stretch
+arm32v7  jessie,onbuild,slim,stretch,core
+arm64v8  jessie,onbuild,slim,stretch,core
+amd64    jessie,alpine,onbuild,slim,stretch,core
+i386     jessie,onbuild,slim,stretch,core
+ppc64le  jessie,onbuild,slim,stretch,core
+s390x    jessie,onbuild,slim,stretch,core

@@ -140,11 +140,13 @@ function update_node_version() {
     sed -Ei -e 's/^FROM (.*)/FROM '"$fromprefix"'\1/' "${dockerfile}-tmp"
     sed -Ei -e 's/^(ENV NODE_VERSION ).*/\1'"${nodeVersion}"'/' "${dockerfile}-tmp"
 
-    if [ "${SKIP}" = true ]; then
-      # Get the currently used Yarn version
-      yarnVersion="$(grep "ENV YARN_VERSION" "${dockerfile}" | cut -d' ' -f3)"
+    if [ "${variant}" != "core" ]; then
+      if [ "${SKIP}" = true ]; then
+        # Get the currently used Yarn version
+        yarnVersion="$(grep "ENV YARN_VERSION" "${dockerfile}" | cut -d' ' -f3)"
+      fi
+      sed -Ei -e 's/^(ENV YARN_VERSION ).*/\1'"${yarnVersion}"'/' "${dockerfile}-tmp"
     fi
-    sed -Ei -e 's/^(ENV YARN_VERSION ).*/\1'"${yarnVersion}"'/' "${dockerfile}-tmp"
 
     # Only for onbuild variant
     sed -Ei -e 's/^(FROM .*node:)[^-]*(-.*)/\1'"${nodeVersion}"'\2/' "${dockerfile}-tmp"

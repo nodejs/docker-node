@@ -5,7 +5,7 @@ if [ "$(node -e "process.stdout.write(process.versions.node)")" != "${1}" ]; the
 fi
 echo "Test for node succeeded."
 
-if ! npm --version 2>&1 >/dev/null; then
+if ! notnpm --version 2>&1 >/dev/null; then
   echo "Test for npm failed!"
   exit 2
 fi

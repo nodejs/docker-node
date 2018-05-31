@@ -2,7 +2,7 @@
 #
 # Run a test build for all images.
 
-set -uo pipefail
+set -euo pipefail
 
 . functions.sh
 

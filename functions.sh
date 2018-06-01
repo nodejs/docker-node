@@ -54,13 +54,16 @@ function get_variants() {
   local dir
   dir=${1:-.}
   shift
+  local archprefix
+  archprefix=${1:-}
+  shift
 
   local arch
   local availablevariants
   local variantsfilter
   local variants
 
-  arch=$(get_arch)
+  arch="${archprefix}$(get_arch)"
   variantsfilter=("$@")
   IFS=' ' read -ra availablevariants <<<"$(grep "^${arch}" "${dir}/architectures" | sed -E 's/'"${arch}"'[[:space:]]*//' | sed -E 's/,/ /g')"
 
@@ -79,6 +82,19 @@ function get_variants() {
   else
     echo "${availablevariants[@]}"
   fi
+}
+
+# Get corresponding variants based on the architecture.
+# All supported variants of each supported architecutre are listed in a
+# file - 'architectures'. Its format is:
+#   <architecutre 1> <supported variant 1 >,<supported variant 2>...
+#   <architecutre 2> <supported variant 1 >,<supported variant 2>...
+function get_windows_variants() {
+  local dir
+  dir=${1:-.}
+  shift
+
+  get_variants "${dir}" "windows-"
 }
 
 # Get supported architectures for a specific version and variant

@@ -1,0 +1,23 @@
+version: 1.0.{build}
+image: Visual Studio 2017
+
+build_script:
+  - ps: .\test-build.ps1 $env:NODE_VERSION $env:VARIANT
+
+for:
+  -
+    matrix:
+      only:
+        - STAGE: "Test"
+    install:
+      - ps: Install-PackageProvider -Name NuGet -Force
+      - ps: Install-Module PsScriptAnalyzer -Force
+    build_script:
+      - ps: Invoke-ScriptAnalyzer -Path './'
+
+environment:
+  matrix:
+    -
+      STAGE: "Test"
+
+    # Docker Build #

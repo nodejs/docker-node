@@ -7,12 +7,12 @@ echo "Test for node succeeded."
 
 if ! npm --version >/dev/null; then
   echo "Test for npm failed!"
-  exit 2
+  exit 1
 fi
 echo "Test for npm succeeded."
 
 if ! yarn --version >/dev/null; then
   echo "Test of yarn failed!"
-  exit 3
+  exit 1
 fi
 echo "Test for yarn succeeded."

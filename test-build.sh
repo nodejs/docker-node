@@ -46,7 +46,9 @@ function build() {
   info "Build of ${full_tag} succeeded."
 
   info "Testing ${full_tag}"
-  docker run --rm -v "$PWD/test-image.sh:/usr/local/bin/test.sh" node:"${full_tag}" test.sh "${full_version}"
+  export full_tag=${full_tag}
+  export full_version=${full_version}
+  bats test-image.bats
 }
 
 cd "$(cd "${0%/*}" && pwd -P)" || exit

@@ -5,10 +5,6 @@ language: generic
 
 services:
     - docker
-addons:
-  apt:
-    packages:
-      - docker-ce
 
 script: ./test-build.sh $NODE_VERSION $VARIANT
 

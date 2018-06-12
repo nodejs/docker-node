@@ -1,4 +1,4 @@
-FROM microsoft/windowsservercore as download
+FROM microsoft/windowsservercore
 
 SHELL ["powershell", "-Command", "$ErrorActionPreference = 'Stop'; $ProgressPreference = 'SilentlyContinue';"]
 
@@ -34,16 +34,6 @@ RUN [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityPro
       'AF764E1EA56C762617BDC757C8B0F3780A0CF5F9' \
       ) -notcontains $sig.SignerCertificate.Thumbprint) { Write-Error 'Unknown signer certificate' } ; \
     Start-Process msiexec.exe -ArgumentList '/i', 'yarn.msi', '/quiet', '/norestart' -NoNewWindow -Wait
-
-FROM microsoft/windowsservercore
-
-SHELL ["powershell", "-Command", "$ErrorActionPreference = 'Stop'; $ProgressPreference = 'SilentlyContinue';"]
-
-ENV NODE_VERSION 0.0.0
-ENV YARN_VERSION 0.0.0
-
-COPY --from=download /nodejs /nodejs
-COPY --from=download [ "/Program Files (x86)/yarn", "/yarn" ]
 
 RUN New-Item $($env:APPDATA + '\npm') -Type Directory ; \
     $env:PATH = 'C:\nodejs;{0}\npm;C:\yarn\bin;{1}' -f $env:APPDATA, $env:PATH ; \

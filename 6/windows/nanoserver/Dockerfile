@@ -1,4 +1,4 @@
-FROM microsoft/windowsservercore as download
+FROM microsoft/nanoserver
 
 SHELL ["powershell", "-Command", "$ErrorActionPreference = 'Stop'; $ProgressPreference = 'SilentlyContinue';"]
 
@@ -6,8 +6,7 @@ ENV NODE_VERSION 6.14.2
 
 ENV GPG_VERSION 2.3.4
 
-RUN [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls12 ; \
-    Invoke-WebRequest $('https://files.gpg4win.org/gpg4win-vanilla-{0}.exe' -f $env:GPG_VERSION) -OutFile 'gpg4win.exe' -UseBasicParsing ; \
+RUN Invoke-WebRequest $('https://files.gpg4win.org/gpg4win-vanilla-{0}.exe' -f $env:GPG_VERSION) -OutFile 'gpg4win.exe' -UseBasicParsing ; \
     Start-Process .\gpg4win.exe -ArgumentList '/S' -NoNewWindow -Wait ;
 
 RUN @( \
@@ -23,7 +22,7 @@ RUN @( \
     ) | foreach { \
       gpg --keyserver ha.pool.sks-keyservers.net --recv-keys $_ ; \
     } ; \
-    [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls12 ; \
+    [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12 ; \
     Invoke-WebRequest $('https://nodejs.org/dist/v{0}/SHASUMS256.txt.asc' -f $env:NODE_VERSION) -OutFile 'SHASUMS256.txt.asc' -UseBasicParsing ; \
     gpg --batch --decrypt --output SHASUMS256.txt SHASUMS256.txt.asc ; \
     Invoke-WebRequest $('https://nodejs.org/dist/v{0}/node-v{0}-win-x64.zip' -f $env:NODE_VERSION) -OutFile 'node.zip' -UseBasicParsing ; \
@@ -32,9 +31,9 @@ RUN @( \
     Expand-Archive node.zip -DestinationPath C:\ ; \
     Rename-Item -Path $('C:\node-v{0}-win-x64' -f $env:NODE_VERSION) -NewName 'C:\nodejs'
 
-ENV YARN_VERSION 1.6.0
+ENV YARN_VERSION 1.7.0
 
-RUN [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls12 ; \
+RUN [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12 ; \
     Invoke-WebRequest $('https://yarnpkg.com/downloads/{0}/yarn-{0}.msi' -f $env:YARN_VERSION) -OutFile yarn.msi -UseBasicParsing ; \
     $sig = Get-AuthenticodeSignature -filepath yarn.msi ; \
     if ($sig.Status -ne 'Valid') { Write-Error 'Authenticode signature is not valid' } ; \
@@ -42,16 +41,6 @@ RUN [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityPro
       'AF764E1EA56C762617BDC757C8B0F3780A0CF5F9' \
       ) -notcontains $sig.SignerCertificate.Thumbprint) { Write-Error 'Unknown signer certificate' } ; \
     Start-Process msiexec.exe -ArgumentList '/i', 'yarn.msi', '/quiet', '/norestart' -NoNewWindow -Wait
-
-FROM microsoft/nanoserver
-
-SHELL ["powershell", "-Command", "$ErrorActionPreference = 'Stop'; $ProgressPreference = 'SilentlyContinue';"]
-
-ENV NODE_VERSION 6.14.2
-ENV YARN_VERSION 1.6.0
-
-COPY --from=download /nodejs /nodejs
-COPY --from=download [ "/Program Files (x86)/yarn", "/yarn" ]
 
 RUN New-Item $($env:APPDATA + '\npm') -Type Directory ; \
     $env:PATH = 'C:\nodejs;{0}\npm;C:\yarn\bin;{1}' -f $env:APPDATA, $env:PATH ; \

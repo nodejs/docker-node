@@ -106,4 +106,25 @@ for version in "${versions[@]}"; do
     echo "Directory: ${version}/${variant}"
     echo
   done
+
+  IFS=' ' read -ra variants <<<"$(get_windows_variants "$(dirname "$version")")"
+  for variant in $variants; do
+    # Skip non-docker directories
+    [ -f "${version}/windows/${variant}/Dockerfile" ] || continue
+
+    commit="$(fileCommit "${version}/windows/${variant}")"
+
+    slash='/'
+    variantAliases=("${versionAliases[@]/%/-${variant//$slash/-}}")
+    variantAliases=("${variantAliases[@]//latest-/}")
+    # Get supported architectures for a specific version and variant.
+    # See details in function.sh
+    supportedArches=("$(get_supported_arches "${version}" "${variant}")")
+
+    echo "Tags: $(join ', ' "${variantAliases[@]}")"
+    echo "Architectures: $(join ', ' "${supportedArches[@]}")"
+    echo "GitCommit: ${commit}"
+    echo "Directory: ${version}/windows/${variant}"
+    echo
+  done
 done

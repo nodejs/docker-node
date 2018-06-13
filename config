@@ -1,3 +1,4 @@
 baseuri     https://nodejs.org/dist
 default_variant	jessie
+default_windows_variant windowsservercore
 alpine_version  3.7

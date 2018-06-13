@@ -1,6 +1,46 @@
 #!/bin/bash
 set -ue
 
+function usage() {
+  cat <<EOF
+
+  Update the node docker images.
+
+  Usage:
+    $0 [-s] [MAJOR_VERSION] [VARIANT]
+
+  Examples:
+    - update.sh            # Update all images
+    - update.sh -s         # Update all images, skip updating Alpine and Yarn
+    - update.sh 8          # Update version 8 and variants (default, slim, alpine etc.)
+    - update.sh -s 8       # Update version 8 and variants, skip updating Alpine and Yarn
+    - update.sh 8 slim     # Update all variants for version 8
+    - update.sh -s 8 slim  # Update all variants for version 8, skip updating Alpine and Yarn
+
+  OPTIONS:
+    -s Security update; skip updating the yarn and alpine versions.
+    -h Show this message
+
+EOF
+}
+
+SKIP=false
+while getopts "sh" opt; do
+  case "${opt}" in
+    s)
+      SKIP=true
+      ;;
+    h)
+      usage
+      exit
+      ;;
+    \?)
+      usage
+      exit
+      ;;
+  esac
+done
+
 . functions.sh
 
 cd "$(cd "${0%/*}" && pwd -P)"
@@ -17,7 +57,10 @@ fi
 # TODO: Should be able to specify target architecture manually
 arch=$(get_arch)
 
-yarnVersion="$(curl -sSL --compressed https://yarnpkg.com/latest-version)"
+if [ "${SKIP}" != true ]; then
+  alpine_version=$(get_config "./" "alpine_version")
+  yarnVersion="$(curl -sSL --compressed https://yarnpkg.com/latest-version)"
+fi
 
 function in_versions_to_update() {
   local version=$1
@@ -50,7 +93,7 @@ function update_node_version() {
 
   fullVersion="$(curl -sSL --compressed "${baseuri}" | grep '<a href="v'"${version}." | sed -E 's!.*<a href="v([^"/]+)/?".*!\1!' | cut -d'.' -f2,3 | sort -n | tail -1)"
   (
-    cp "${template}" "${dockerfile}"
+    cp "${template}" "${dockerfile}-tmp"
     local fromprefix=""
     if [ "${arch}" != "amd64" ] && [ "${variant}" != "onbuild" ]; then
       fromprefix="${arch}\\/"
@@ -58,12 +101,17 @@ function update_node_version() {
 
     nodeVersion="${version}.${fullVersion:-0}"
 
-    sed -Ei -e 's/^FROM (.*)/FROM '"$fromprefix"'\1/' "${dockerfile}"
-    sed -Ei -e 's/^(ENV NODE_VERSION ).*/\1'"${nodeVersion}"'/' "${dockerfile}"
-    sed -Ei -e 's/^(ENV YARN_VERSION ).*/\1'"${yarnVersion}"'/' "${dockerfile}"
+    sed -Ei -e 's/^FROM (.*)/FROM '"$fromprefix"'\1/' "${dockerfile}-tmp"
+    sed -Ei -e 's/^(ENV NODE_VERSION ).*/\1'"${nodeVersion}"'/' "${dockerfile}-tmp"
+
+    if [ "${SKIP}" = true ]; then
+      # Get the currently used Yarn version
+      yarnVersion="$(grep "ENV YARN_VERSION" "${dockerfile}" | cut -d' ' -f3)"
+    fi
+    sed -Ei -e 's/^(ENV YARN_VERSION ).*/\1'"${yarnVersion}"'/' "${dockerfile}-tmp"
 
     # Only for onbuild variant
-    sed -Ei -e 's/^(FROM .*node:)[^-]*(-.*)/\1'"${nodeVersion}"'\2/' "${dockerfile}"
+    sed -Ei -e 's/^(FROM .*node:)[^-]*(-.*)/\1'"${nodeVersion}"'\2/' "${dockerfile}-tmp"
 
     # shellcheck disable=SC1004
     new_line=' \\\
@@ -75,18 +123,22 @@ function update_node_version() {
         pattern='"\$\{'$(echo "${key_type}" | tr '[:lower:]' '[:upper:]')'_KEYS\[@\]\}"'
         sed -Ei -e "s/([ \\t]*)(${pattern})/\\1${line}${new_line}\\1\\2/" "${dockerfile}"
       done <"keys/${key_type}.keys"
-      sed -Ei -e "/${pattern}/d" "${dockerfile}"
+      sed -Ei -e "/${pattern}/d" "${dockerfile}-tmp"
     done
 
     if [ "${variant}" = "alpine" ]; then
-      alpine_version=$(get_config "./" "alpine_version")
-      sed -Ei -e "s/(alpine:)0.0/\\1${alpine_version}/" "${dockerfile}"
+      if [ "${SKIP}" = true ]; then
+        # Get the currently used Alpine version
+        alpine_version=$(grep "FROM" "${dockerfile}" | cut -d':' -f2)
+      fi
+      sed -Ei -e "s/(alpine:)0.0/\\1${alpine_version}/" "${dockerfile}-tmp"
     fi
 
     # Required for POSIX sed
-    if [ -f "${dockerfile}-e" ]; then
-      rm "${dockerfile}-e"
+    if [ -f "${dockerfile}-tmp-e" ]; then
+      rm "${dockerfile}-tmp-e"
     fi
+    mv -f "${dockerfile}-tmp" "${dockerfile}"
   )
 }
 

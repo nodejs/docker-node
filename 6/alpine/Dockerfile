@@ -2,20 +2,25 @@ FROM alpine:3.4
 
 ENV NODE_VERSION 6.14.3
 
+ARG CCACHE_REPO=https://github.com/LaurentGoderre/nodejs-alpine-ccache
+
 RUN addgroup -g 1000 node \
     && adduser -u 1000 -G node -s /bin/sh -D node \
     && apk add --no-cache \
         libstdc++ \
     && apk add --no-cache --virtual .build-deps \
         binutils-gold \
+        ccache \
         curl \
         g++ \
         gcc \
+        git \
         gnupg \
         libgcc \
         linux-headers \
         make \
         python \
+  && git clone $CCACHE_REPO /root/.ccache \
   # gpg keys listed at https://github.com/nodejs/node#release-team
   && for key in \
     94AE36675C464D64BAFA68DD7434390BDBE9B9C5 \
@@ -37,14 +42,27 @@ RUN addgroup -g 1000 node \
     && gpg --batch --decrypt --output SHASUMS256.txt SHASUMS256.txt.asc \
     && grep " node-v$NODE_VERSION.tar.xz\$" SHASUMS256.txt | sha256sum -c - \
     && tar -xf "node-v$NODE_VERSION.tar.xz" \
+    && ln -s /usr/bin/ccache /usr/local/bin/gcc \
+    && ln -s /usr/bin/ccache /usr/local/bin/g++ \
     && cd "node-v$NODE_VERSION" \
     && ./configure \
     && make -j$(getconf _NPROCESSORS_ONLN) \
     && make install \
-    && apk del .build-deps \
     && cd .. \
     && rm -Rf "node-v$NODE_VERSION" \
-    && rm "node-v$NODE_VERSION.tar.xz" SHASUMS256.txt.asc SHASUMS256.txt
+    && rm "node-v$NODE_VERSION.tar.xz" SHASUMS256.txt.asc SHASUMS256.txt \
+    && rm /usr/local/bin/gcc /usr/local/bin/g++ \
+    # update the ccache
+    && ( \
+      [ ! "$GITHUB_API_TOKEN" ] || ( \
+          cd /root/.ccache \
+          && git add . \
+          && git -c user.name="Node.js GitHub Bot" -c user.email="bot@nodejs.org"  commit -m "Updated the cache" \
+          && git push "${CCACHE_REPO//github.com/$GITHUB_API_TOKEN:x-oauth-basic@github.com}" master > /dev/null 2>&1  || echo "Unable to push the cache update" && exit 1  \
+      ) \
+    ) \
+    && rm -rf /root/.ccache \
+    && apk del .build-deps
 
 ENV YARN_VERSION 1.6.0
 

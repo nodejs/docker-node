@@ -40,7 +40,7 @@ function build() {
 
   info "Building ${full_tag}..."
 
-  if ! docker build --cpuset-cpus="0,1" -t node:"${full_tag}" "${path}"; then
+  if ! docker build --cpuset-cpus="0,1" --build-arg GITHUB_API_TOKEN="${GITHUB_API_TOKEN:-}" -t node:"${full_tag}" "${path}"; then
     fatal "Build of ${full_tag} failed!"
   fi
   info "Build of ${full_tag} succeeded."

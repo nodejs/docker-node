@@ -56,7 +56,7 @@ jobs:
       env:
         - TEST: shfmt check
       script:
-        - docker run -it --rm -v "$(pwd)":/sh -w /sh jamesmstone/shfmt -i 2 -l -w -ci .
+        - docker run -it --rm -v "$(pwd)":/sh -w /sh jamesmstone/shfmt@sha256:4eff05b54e87c11e8214848de3e5f4bb47a4241b99ac5c6554db5cc164015810 -i 2 -l -w -ci .
         - git diff --color
         - git diff --stat=220 --color --exit-code
 

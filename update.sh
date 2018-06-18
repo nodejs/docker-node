@@ -72,7 +72,7 @@ function update_node_version() {
     # Add GPG keys
     for key_type in "node" "yarn"; do
       while read -r line; do
-        pattern="\"\\$\\{$(echo "${key_type}" | tr '[:lower:]' '[:upper:]')_KEYS\\[@\\]\\}\""
+        pattern='"\$\{'$(echo "${key_type}" | tr '[:lower:]' '[:upper:]')'_KEYS\[@\]\}"'
         sed -Ei -e "s/([ \\t]*)(${pattern})/\\1${line}${new_line}\\1\\2/" "${dockerfile}"
       done <"keys/${key_type}.keys"
       sed -Ei -e "/${pattern}/d" "${dockerfile}"

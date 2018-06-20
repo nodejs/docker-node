@@ -58,7 +58,7 @@ function get_variants() {
   local arch
   local availablevariants
   local variantsfilter
-  local variants
+  local variants=()
 
   arch=$(get_arch)
   variantsfilter=("$@")
@@ -143,7 +143,7 @@ function get_versions() {
   prefix=${1:-.}
   shift
 
-  local versions
+  local versions=()
   local dirs=("$@")
 
   local default_variant

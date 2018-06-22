@@ -29,6 +29,7 @@ while getopts "sh" opt; do
   case "${opt}" in
     s)
       SKIP=true
+      shift
       ;;
     h)
       usage
@@ -46,7 +47,8 @@ done
 cd "$(cd "${0%/*}" && pwd -P)"
 
 IFS=' ' read -ra versions <<<"$(get_versions .)"
-IFS=' ' read -ra update_versions <<<"$(get_versions . "$@")"
+IFS=' ' read -ra update_versions <<<"$(get_versions . "${1-}")"
+IFS=' ' read -ra update_variants <<<"$(get_variants . "${2-}")"
 if [ ${#versions[@]} -eq 0 ]; then
   fatal "No valid versions found!"
 fi
@@ -65,8 +67,31 @@ fi
 function in_versions_to_update() {
   local version=$1
 
+  if [ "${#update_versions[@]}" -eq 0 ]; then
+    echo 0
+    return
+  fi
+
   for version_to_update in "${update_versions[@]}"; do
     if [ "${version_to_update}" = "${version}" ]; then
+      echo 0
+      return
+    fi
+  done
+
+  echo 1
+}
+
+function in_variants_to_update() {
+  local variant=$1
+
+  if [ "${#update_variants[@]}" -eq 0 ]; then
+    echo 0
+    return
+  fi
+
+  for variant_to_update in "${update_variants[@]}"; do
+    if [ "${variant_to_update}" = "${variant}" ]; then
       echo 0
       return
     fi
@@ -121,7 +146,7 @@ function update_node_version() {
     for key_type in "node" "yarn"; do
       while read -r line; do
         pattern='"\$\{'$(echo "${key_type}" | tr '[:lower:]' '[:upper:]')'_KEYS\[@\]\}"'
-        sed -Ei -e "s/([ \\t]*)(${pattern})/\\1${line}${new_line}\\1\\2/" "${dockerfile}"
+        sed -Ei -e "s/([ \\t]*)(${pattern})/\\1${line}${new_line}\\1\\2/" "${dockerfile}-tmp"
       done <"keys/${key_type}.keys"
       sed -Ei -e "/${pattern}/d" "${dockerfile}-tmp"
     done
@@ -164,9 +189,9 @@ for version in "${versions[@]}"; do
   parentpath=$(dirname "${version}")
   versionnum=$(basename "${version}")
   baseuri=$(get_config "${parentpath}" "baseuri")
-  update=$(in_versions_to_update "${version}")
+  update_version=$(in_versions_to_update "${version}")
 
-  [ "${update}" -eq 0 ] && info "Updating version ${version}..."
+  [ "${update_version}" -eq 0 ] && info "Updating version ${version}..."
 
   # Get supported variants according the target architecture
   # See details in function.sh
@@ -175,7 +200,7 @@ for version in "${versions[@]}"; do
   if [ -f "${version}/Dockerfile" ]; then
     add_stage "${baseuri}" "${version}" "default"
 
-    if [ "${update}" -eq 0 ]; then
+    if [ "${update_version}" -eq 0 ]; then
       update_node_version "${baseuri}" "${versionnum}" "${parentpath}/Dockerfile.template" "${version}/Dockerfile" &
     fi
   fi
@@ -185,7 +210,9 @@ for version in "${versions[@]}"; do
     [ -f "${version}/${variant}/Dockerfile" ] || continue
     add_stage "${baseuri}" "${version}" "${variant}"
 
-    if [ "${update}" -eq 0 ]; then
+    update_variant=$(in_variants_to_update "${variant}")
+
+    if [ "${update_version}" -eq 0 ] && [ "${update_variant}" -eq 0 ]; then
       update_node_version "${baseuri}" "${versionnum}" "${parentpath}/Dockerfile-${variant}.template" "${version}/${variant}/Dockerfile" "${variant}" &
     fi
   done

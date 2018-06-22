@@ -74,6 +74,6 @@ jobs:
     - stage: Deploy
       script: ./generate-stackbrew-pr.sh
       env:
-        secure: "HkgYgawkr/hkg2vURHGOb/JmF6U1e71QQsd0HXJ1UJh6WBiFJOrjomCMHZGHnpyopdRna++up8dISBqM2X+EiLAr9yWdRXy72oMP9X42M0ccnja/3E5KYYXMkETS50JnUhMCOt2xRZW5/ojqrHukqRo0YIjIu+P0U0VsZ4QIsng="
+        secure: "XjaE72aIC1hojGF8fKJNtePpxIM6s9Tjc69/RQ5WKlblCT67Ca2bePQoLDrmEiZmqf7iw1z0hSZuboS12KQrj2kFMagtace/br8pk55gHYM6v4sND6CNIcQYrtY/PVPOss8TJmnWkfLBu/aACVfht7rK6Jycdmj0XL7mM5pKghs="
 
     # Docker Build #

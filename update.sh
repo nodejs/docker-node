@@ -7,15 +7,15 @@ function usage() {
   Update the node docker images.
 
   Usage:
-    $0 [-s] [MAJOR_VERSION] [VARIANT]
+    $0 [-s] [MAJOR_VERSION(S)] [VARIANT(S)]
 
   Examples:
-    - update.sh            # Update all images
-    - update.sh -s         # Update all images, skip updating Alpine and Yarn
-    - update.sh 8          # Update version 8 and variants (default, slim, alpine etc.)
-    - update.sh -s 8       # Update version 8 and variants, skip updating Alpine and Yarn
-    - update.sh 8 slim     # Update all variants for version 8
-    - update.sh -s 8 slim  # Update all variants for version 8, skip updating Alpine and Yarn
+    - update.sh                   # Update all images
+    - update.sh -s                # Update all images, skip updating Alpine and Yarn
+    - update.sh 8,9               # Update version 8 and 9 and variants (default, slim, alpine etc.)
+    - update.sh -s 8              # Update version 8 and variants, skip updating Alpine and Yarn
+    - update.sh 8 slim,stretch    # Update only slim and stretch variants for version 8
+    - update.sh -s 8 slim,stretch # Update only slim and stretch variants for version 8, skip updating Alpine and Yarn
 
   OPTIONS:
     -s Security update; skip updating the yarn and alpine versions.
@@ -46,9 +46,12 @@ done
 
 cd "$(cd "${0%/*}" && pwd -P)"
 
+IFS=',' read -ra versions_arg <<<"${1:-}"
+IFS=',' read -ra variant_arg <<<"${2:-}"
+
 IFS=' ' read -ra versions <<<"$(get_versions .)"
-IFS=' ' read -ra update_versions <<<"$(get_versions . "${1-}")"
-IFS=' ' read -ra update_variants <<<"$(get_variants . "${2-}")"
+IFS=' ' read -ra update_versions <<<"$(get_versions . "${versions_arg[@]:-}")"
+IFS=' ' read -ra update_variants <<<"$(get_variants . "${variant_arg[@]:-}")"
 if [ ${#versions[@]} -eq 0 ]; then
   fatal "No valid versions found!"
 fi

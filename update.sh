@@ -16,6 +16,7 @@ function usage() {
     - update.sh -s 8              # Update version 8 and variants, skip updating Alpine and Yarn
     - update.sh 8 slim,stretch    # Update only slim and stretch variants for version 8
     - update.sh -s 8 slim,stretch # Update only slim and stretch variants for version 8, skip updating Alpine and Yarn
+    - update.sh . alpine          # Update the alpine variant for all versions
 
   OPTIONS:
     -s Security update; skip updating the yarn and alpine versions.

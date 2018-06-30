@@ -44,10 +44,31 @@ function build() {
     fatal "Build of ${full_tag} failed!"
   fi
   info "Build of ${full_tag} succeeded."
+}
+
+function test_image() {
+  local full_version
+  local variant
+  local tag
+  local full_tag
+  version="$1"
+  shift
+  variant="$1"
+  shift
+  tag="$1"
+  shift
+
+  if [ -z "${variant}" ]; then
+    full_tag="${tag}"
+  elif [ "${variant}" = "default" ]; then
+    full_tag="${tag}"
+  else
+    full_tag="${tag}-${variant}"
+  fi
 
   info "Testing ${full_tag}"
-  export full_tag=${full_tag}
   export full_version=${full_version}
+  export full_tag=${full_tag}
   bats test-image.bats
 }
 
@@ -68,6 +89,7 @@ for version in "${versions[@]}"; do
   # Required for chakracore
   if [ -f "${version}/Dockerfile" ]; then
     build "${version}" "default" "${tag}"
+    test_image "${full_version}" "default" "${tag}"
   fi
 
   # Get supported variants according to the target architecture.
@@ -80,9 +102,11 @@ for version in "${versions[@]}"; do
 
     if [ "${variant}" = "onbuild" ]; then
       build "${version}" "${default_variant}" "$tag"
+      test_image "${full_version}" "${default_variant}" "$tag"
     fi
 
     build "${version}" "${variant}" "${tag}"
+    test_image "${full_version}" "${variant}" "${tag}"
   done
 
 done

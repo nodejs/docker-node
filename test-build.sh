@@ -27,16 +27,8 @@ function build() {
   tag="$1"
   shift
 
-  if [ -z "${variant}" ]; then
-    full_tag="${tag}"
-    path="${version}/${variant}"
-  elif [ "${variant}" = "default" ]; then
-    full_tag="${tag}"
-    path="${version}"
-  else
-    full_tag="${tag}-${variant}"
-    path="${version}/${variant}"
-  fi
+  full_tag=$(get_full_tag "${variant}" "${tag}")
+  path=$(get_path "${version}" "${variant}")
 
   info "Building ${full_tag}..."
 
@@ -51,20 +43,14 @@ function test_image() {
   local variant
   local tag
   local full_tag
-  version="$1"
+  full_version="$1"
   shift
   variant="$1"
   shift
   tag="$1"
   shift
 
-  if [ -z "${variant}" ]; then
-    full_tag="${tag}"
-  elif [ "${variant}" = "default" ]; then
-    full_tag="${tag}"
-  else
-    full_tag="${tag}-${variant}"
-  fi
+  full_tag=$(get_full_tag "${variant}" "${tag}")
 
   info "Testing ${full_tag}"
   export full_version=${full_version}

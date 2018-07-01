@@ -150,31 +150,6 @@ jobs:
 
     - stage: Build
       env:
-        - NODE_VERSION: "9"
-        - VARIANT: "jessie"
-
-    - stage: Build
-      env:
-        - NODE_VERSION: "9"
-        - VARIANT: "alpine"
-
-    - stage: Build
-      env:
-        - NODE_VERSION: "9"
-        - VARIANT: "onbuild"
-
-    - stage: Build
-      env:
-        - NODE_VERSION: "9"
-        - VARIANT: "slim"
-
-    - stage: Build
-      env:
-        - NODE_VERSION: "9"
-        - VARIANT: "stretch"
-
-    - stage: Build
-      env:
         - NODE_VERSION: "chakracore/10"
         - VARIANT: "default"
 

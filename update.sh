@@ -12,7 +12,7 @@ function usage() {
   Examples:
     - update.sh                   # Update all images
     - update.sh -s                # Update all images, skip updating Alpine and Yarn
-    - update.sh 8,9               # Update version 8 and 9 and variants (default, slim, alpine etc.)
+    - update.sh 8,10               # Update version 8 and 10 and variants (default, slim, alpine etc.)
     - update.sh -s 8              # Update version 8 and variants, skip updating Alpine and Yarn
     - update.sh 8 slim,stretch    # Update only slim and stretch variants for version 8
     - update.sh -s 8 slim,stretch # Update only slim and stretch variants for version 8, skip updating Alpine and Yarn

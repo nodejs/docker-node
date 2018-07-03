@@ -23,17 +23,6 @@ jobs:
         - 'find . -name "*.md" -exec markdown-link-check {} \;'
     - stage: Test
       env:
-        - TEST: Doc Toc Check
-      language: node_js
-      node_js:
-        - lts/*
-      install: npm i -g doctoc
-      script:
-        - >-
-          cp README.md README.md.tmp && doctoc --title='## Table of Contents'
-          --github README.md && diff -q README.md README.md.tmp
-    - stage: Test
-      env:
         - TEST: shfmt check
       script:
         - >-

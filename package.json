@@ -10,7 +10,8 @@
   "scripts": {
     "lint-doctoc": "cp README.md README.md.tmp && doctoc --title='## Table of Contents' --github README.md && diff -q README.md README.md.tmp",
     "lint-eclint": "eclint check",
-    "test": "npm run updateDockerfiles && npm run lint-eclint && npm run lint-doctoc",
+    "lint-markdown-link-check": "find . -name \"*.md\" -not -path \"./node_modules/*\" -exec markdown-link-check {} \\;",
+    "test": "npm run updateDockerfiles && npm run lint-eclint && npm run lint-doctoc && npm run lint-markdown-link-check",
     "updateDockerfiles": "node update.js"
   },
   "repository": {

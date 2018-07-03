@@ -7,6 +7,8 @@ const glob = require('glob');
 const yaml = require('js-yaml');
 const rimraf = require('rimraf');
 
+let globalConfig = JSON.parse(fs.readFileSync(path.join(__dirname, 'config.json')));
+
 const nodeKeys = fs.readFileSync(path.join('keys', 'node.keys')).toString().split('\n').join(' \\\n    ').trim();
 const yarnKeys = fs.readFileSync(path.join('keys', 'yarn.keys')).toString().split('\n').join(' \\\n    ').trim();
 
@@ -15,83 +17,94 @@ request('https://yarnpkg.com/latest-version', function (error, response, body) {
   if (!error && response.statusCode == 200) {
     let yarn = response.body.toString()
 
-    // Check the NodeJS schedule data to find what releases have valid start/end dates
-    request('https://raw.githubusercontent.com/nodejs/Release/master/schedule.json', function (error, response, body) {
-      let supportedNodeJSVersions = [];
-      let supportedChakracoreVersions = [];
+    globalConfig.yarn = yarn;
 
-      if (!error && response.statusCode == 200) {
-        let schedule = JSON.parse(body);
-        const now = Date.now();
-        for (var version in schedule) {
-          if (schedule.hasOwnProperty(version)) {
-            let details = schedule[version];
-            let start = new Date(details.start);
-            let end = new Date(details.end);
-            if (now >= start && now <= end) {
-              supportedNodeJSVersions.push(version);
-            } else {
-              removeDockerFile(version);
-            }
-          }
-        }
-        supportedChakracoreVersions = Array.from(supportedNodeJSVersions);
+    fs.writeFileSync(path.join(__dirname, 'config.json'), JSON.stringify(globalConfig, null, '  ') + '\n')
 
-        // Get the full release information from the NodeJS index.json
-        request('https://nodejs.org/dist/index.json', function (error, response, body) {
-          if (!error && response.statusCode == 200) {
-            let nodejsReleases = JSON.parse(body);
-            for (var record in nodejsReleases) {
-              if (nodejsReleases.hasOwnProperty(record)) {
-                let nodejs = nodejsReleases[record];
-                let version = nodejs.version;
-                let major = version.split('.')[0]
-                if (supportedNodeJSVersions.indexOf(major) != -1) {
-                  // First hit should be the latests, so pop it off
-                  // and look for the next latest major release
-                  supportedNodeJSVersions.pop();
-                  updateDockerFile(nodejs, yarn);
-                }
-              }
-            }
-
-            // Get the full release information from the Chakracore index.json
-            request('https://nodejs.org/download/chakracore-release/index.json', function (error, response, body) {
-              if (!error && response.statusCode == 200) {
-                let chakracoreReleases = JSON.parse(body);
-                for (var record in chakracoreReleases) {
-                  if (chakracoreReleases.hasOwnProperty(record)) {
-                    let chakra = chakracoreReleases[record];
-                    let version = chakra.version;
-                    let major = version.split('.')[0]
-                    if (supportedChakracoreVersions.indexOf(major) != -1) {
-                      // First hit should be the latests, so pop it off
-                      // and look for the next latest major release
-                      supportedChakracoreVersions.pop();
-                      updateDockerFile(chakra, yarn, 'chakracore');
-                    }
-                  }
-                }
-
-                // Update the travis.yml with the now updated Dockerfile details
-                updateTravisYml();
-              }
-            })
-          }
-        })
-      }
-    });
+    getNodeJsReleaseSchedule();
   }
 });
 
-function updateDockerFile(nodejs, yarn, root = '') {
+// Check the NodeJS schedule data to find what releases have valid start/end dates
+function getNodeJsReleaseSchedule() {
+  request('https://raw.githubusercontent.com/nodejs/Release/master/schedule.json', function (error, response, body) {
+    let supportedNodeJSVersions = [];
+    if (!error && response.statusCode == 200) {
+      let schedule = JSON.parse(body);
+      const now = Date.now();
+      for (var version in schedule) {
+        if (schedule.hasOwnProperty(version)) {
+          let details = schedule[version];
+          let start = new Date(details.start);
+          let end = new Date(details.end);
+          if (now >= start && now <= end) {
+            supportedNodeJSVersions.push(version);
+          } else {
+            removeDockerFile(version);
+          }
+        }
+      }
+      getNodeJsIndexJson(supportedNodeJSVersions);
+    }
+  });
+}
+
+// Get the full release information from the NodeJS index.json
+function getNodeJsIndexJson(supportedNodeJSVersions) {
+  let supportedChakracoreVersions = Array.from(supportedNodeJSVersions);
+  request('https://nodejs.org/dist/index.json', function (error, response, body) {
+    if (!error && response.statusCode == 200) {
+      let nodejsReleases = JSON.parse(body);
+      for (var record in nodejsReleases) {
+        if (nodejsReleases.hasOwnProperty(record)) {
+          let nodejs = nodejsReleases[record];
+          let version = nodejs.version;
+          let major = version.split('.')[0];
+          if (supportedNodeJSVersions.indexOf(major) != -1) {
+            // First hit should be the latests, so pop it off
+            // and look for the next latest major release
+            supportedNodeJSVersions.pop();
+            updateDockerFile(nodejs);
+          }
+        }
+      }
+      getChakraCoreIndexJson(supportedChakracoreVersions);
+    }
+  });
+}
+
+// Get the full release information from the Chakracore index.json
+function getChakraCoreIndexJson(supportedChakracoreVersions) {
+  request('https://nodejs.org/download/chakracore-release/index.json', function (error, response, body) {
+    if (!error && response.statusCode == 200) {
+      let chakracoreReleases = JSON.parse(body);
+      for (var record in chakracoreReleases) {
+        if (chakracoreReleases.hasOwnProperty(record)) {
+          let chakra = chakracoreReleases[record];
+          let version = chakra.version;
+          let major = version.split('.')[0];
+          if (supportedChakracoreVersions.indexOf(major) != -1) {
+            // First hit should be the latests, so pop it off
+            // and look for the next latest major release
+            supportedChakracoreVersions.pop();
+            updateDockerFile(chakra, 'chakracore');
+          }
+        }
+      }
+      // Update the travis.yml with the now updated Dockerfile details
+      updateTravisYml();
+    }
+  });
+}
+
+function updateDockerFile(nodejs, root = '') {
   let nodeNext = nodejs.version.replace('v', '');
   let nodeMajor = nodeNext.split('.')[0];
   let nodeNextMinor = nodeNext.split('.')[1];
-  let versions = JSON.parse(fs.readFileSync(path.join(root, nodeMajor, 'versions.json')));
+  let config = JSON.parse(fs.readFileSync(path.join(root, nodeMajor, 'config.json')));
 
   // // Check for current version
-  let nodePrevious = versions.nodejs;
+  let nodePrevious = config.nodejs;
   let nodePreviousMinor = nodePrevious.split('.')[1];
 
   if (nodePrevious === nodeNext) {
@@ -99,13 +112,15 @@ function updateDockerFile(nodejs, yarn, root = '') {
     return;
   } else if (nodePreviousMinor !== nodeNextMinor) {
     // Minor patch will bump Yarn
-    versions.yarn = yarn;
-    // Alpine doesn't have a direct latest endpoint, but parsing git-tags is possible
+    config.yarn = globalConfig.yarn;
+    if (config.alpine) {
+      config.alpine = globalConfig.alpine;
+    }
   }
 
   // Update version file
-  versions.nodejs = nodeNext
-  fs.writeFileSync(path.join(root, nodeMajor, 'versions.json'), JSON.stringify(versions, null, '  ') + '\n')
+  config.nodejs = nodeNext
+  fs.writeFileSync(path.join(root, nodeMajor, 'config.json'), JSON.stringify(config, null, '  ') + '\n')
 
   // Find and update templates
   let pattern = `${nodeMajor}/**/Dockerfile`
@@ -125,10 +140,10 @@ function updateDockerFile(nodejs, yarn, root = '') {
         template = fs.readFileSync(`Dockerfile-${variant}.template`).toString();
       }
 
-      template = template.replace('ENV NODE_VERSION 0.0.0', `ENV NODE_VERSION ${versions.nodejs}`)
-      template = template.replace('ENV YARN_VERSION 0.0.0', `ENV YARN_VERSION ${versions.yarn}`)
-      template = template.replace('FROM alpine:0.0', `FROM alpine:${versions.alpine}`)
-      template = template.replace('FROM node:0.0.0-jessie', `FROM node:${versions.nodejs}-jessie`)
+      template = template.replace('ENV NODE_VERSION 0.0.0', `ENV NODE_VERSION ${config.nodejs}`)
+      template = template.replace('ENV YARN_VERSION 0.0.0', `ENV YARN_VERSION ${config.yarn}`)
+      template = template.replace('FROM alpine:0.0', `FROM alpine:${config.alpine}`)
+      template = template.replace('FROM node:0.0.0-jessie', `FROM node:${config.nodejs}-jessie`)
 
       template = template.replace('"${NODE_KEYS[@]}"\n', `${nodeKeys}\n`)
       template = template.replace('"${YARN_KEYS[@]}"', `${yarnKeys}`)

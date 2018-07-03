@@ -23,16 +23,6 @@ jobs:
         - 'find . -name "*.md" -exec markdown-link-check {} \;'
     - stage: Test
       env:
-        - TEST: Editor Config check
-      language: node_js
-      node_js:
-        - lts/*
-      install:
-        - npm i -g eclint
-      script:
-        - eclint check
-    - stage: Test
-      env:
         - TEST: Doc Toc Check
       language: node_js
       node_js:
@@ -57,12 +47,12 @@ jobs:
       script: shellcheck *.sh
     - stage: Test
       env:
-        - TEST: .travis.yml and Docker consistency
+        - TEST: NPM test
       language: node_js
       node_js:
         - '10'
       script:
-        - node update.js
+        - npm test
         - git diff --stat --exit-code
     - stage: Deploy
       script: ./generate-stackbrew-pr.sh

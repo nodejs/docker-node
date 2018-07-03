@@ -8,7 +8,9 @@
     "doc": "docs"
   },
   "scripts": {
-    "test": "node update.js"
+    "lint-eclint": "eclint check",
+    "test": "npm run updateDockerfiles && npm run lint-eclint",
+    "updateDockerfiles": "node update.js"
   },
   "repository": {
     "type": "git",
@@ -21,6 +23,7 @@
   },
   "homepage": "https://github.com/nodejs/docker-node#readme",
   "devDependencies": {
+    "eclint": "^2.8.0",
     "glob": "^7.1.2",
     "js-yaml": "^3.12.0",
     "markdown-link-check": "^3.6.2",

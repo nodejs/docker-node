@@ -53,9 +53,11 @@ function test_image() {
   full_tag=$(get_full_tag "${variant}" "${tag}")
 
   info "Testing ${full_tag}"
-  export full_version=${full_version}
-  export full_tag=${full_tag}
-  bats test-image.bats
+  (
+    export full_version=${full_version}
+    export full_tag=${full_tag}
+    bats test-image.bats
+  )
 }
 
 cd "$(cd "${0%/*}" && pwd -P)" || exit

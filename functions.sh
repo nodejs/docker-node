@@ -180,6 +180,24 @@ function get_fork_name() {
   fi
 }
 
+function get_full_tag() {
+  local variant
+  local tag
+  local full_tag
+  variant="$1"
+  shift
+  tag="$1"
+  shift
+  if [ -z "${variant}" ]; then
+    full_tag="${tag}"
+  elif [ "${variant}" = "default" ]; then
+    full_tag="${tag}"
+  else
+    full_tag="${tag}-${variant}"
+  fi
+  echo "${full_tag}"
+}
+
 function get_full_version() {
   local version
   version=$1
@@ -204,6 +222,25 @@ function get_major_minor_version() {
   fullversion=$(get_full_version "${version}")
 
   echo "$(echo "${fullversion}" | cut -d'.' -f1).$(echo "${fullversion}" | cut -d'.' -f2)"
+}
+
+function get_path() {
+  local version
+  local variant
+  local path
+  version="$1"
+  shift
+  variant="$1"
+  shift
+
+  if [ -z "${variant}" ]; then
+    path="${version}/${variant}"
+  elif [ "${variant}" = "default" ]; then
+    path="${version}"
+  else
+    path="${version}/${variant}"
+  fi
+  echo "${path}"
 }
 
 function get_tag() {

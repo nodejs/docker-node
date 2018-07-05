@@ -21,7 +21,7 @@ RUN set -ex \
     gpg --keyserver hkp://pgp.mit.edu:80 --recv-keys "$key" ; \
   done
 
-ENV NODE_VERSION 10.5.0
+ENV NODE_VERSION 10.6.0
 
 RUN buildDeps='ca-certificates curl xz-utils' \
   ARCH= && dpkgArch="$(dpkg --print-architecture)" \

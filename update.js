@@ -64,7 +64,12 @@ function getNodeJsIndexJson(supportedNodeJSVersions) {
             // First hit should be the latests, so pop it off
             // and look for the next latest major release
             supportedNodeJSVersions.pop();
-            updateDockerFile(nodejs);
+
+            if (fs.existsSync(path.join(__dirname, major.replace('v', '')))) {
+              updateDockerFile(nodejs);
+            } else {
+              createNewMajorVersion(nodejs)
+            }
           }
         }
       }
@@ -87,7 +92,12 @@ function getChakraCoreIndexJson(supportedChakracoreVersions) {
             // First hit should be the latests, so pop it off
             // and look for the next latest major release
             supportedChakracoreVersions.pop();
-            updateDockerFile(chakra, 'chakracore');
+
+            if (fs.existsSync(path.join(__dirname, 'chakracore', major.replace('v', '')))) {
+              updateDockerFile(chakra, 'chakracore');
+            } else {
+              createNewMajorVersion(chakra, 'chakracore')
+            }
           }
         }
       }
@@ -139,16 +149,47 @@ function updateDockerFile(nodejs, root = '') {
       } else {
         template = fs.readFileSync(`Dockerfile-${variant}.template`).toString();
       }
-
-      template = template.replace('ENV NODE_VERSION 0.0.0', `ENV NODE_VERSION ${config.nodejs}`)
-      template = template.replace('ENV YARN_VERSION 0.0.0', `ENV YARN_VERSION ${config.yarn}`)
-      template = template.replace('FROM alpine:0.0', `FROM alpine:${config.alpine}`)
-      template = template.replace('FROM node:0.0.0-jessie', `FROM node:${config.nodejs}-jessie`)
-
-      template = template.replace('"${NODE_KEYS[@]}"\n', `${nodeKeys}\n`)
-      template = template.replace('"${YARN_KEYS[@]}"', `${yarnKeys}`)
-
+      template = updateVariant(template, config);
       fs.writeFileSync(file, template);
+    });
+  });
+}
+
+function updateVariant(template, config) {
+  return template.replace('ENV NODE_VERSION 0.0.0', `ENV NODE_VERSION ${config.nodejs}`)
+    .replace('ENV YARN_VERSION 0.0.0', `ENV YARN_VERSION ${config.yarn}`)
+    .replace('FROM alpine:0.0', `FROM alpine:${config.alpine}`)
+    .replace('FROM node:0.0.0-jessie', `FROM node:${config.nodejs}-jessie`)
+    .replace('"${NODE_KEYS[@]}"\n', `${nodeKeys}\n`)
+    .replace('"${YARN_KEYS[@]}"', `${yarnKeys}`)
+}
+
+function createNewMajorVersion(nodejs, root = '') {
+  let nodeNext = nodejs.version.replace('v', '');
+  let nodeMajor = nodeNext.split('.')[0];
+
+  let config = globalConfig;
+  config.nodejs = nodeNext;
+
+  fs.mkdirSync(path.join(__dirname, root, nodeMajor));
+  fs.writeFileSync(path.join(root, nodeMajor, 'config.json'), JSON.stringify(config, null, '  ') + '\n')
+
+  let pattern = `Dockerfile*.template`
+  if (root) {
+    pattern = root + '/' + pattern;
+  }
+  glob(pattern, {
+    ignore: "*onbuild*"
+  }, function (err, files) {
+    files.forEach(file => {
+      let variant = path.basename(file, '.template').replace('Dockerfile', '').replace('-', '');
+      let variantFolder = path.join(root, nodeMajor, variant);
+      let template = fs.readFileSync(file).toString();
+      if (!fs.existsSync(variantFolder)) {
+        fs.mkdirSync(variantFolder);
+      }
+      template = updateVariant(template, config);
+      fs.writeFileSync(path.join(variantFolder, "Dockerfile"), template)
     });
   });
 }

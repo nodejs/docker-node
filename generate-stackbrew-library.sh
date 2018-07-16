@@ -3,7 +3,7 @@
 set -e
 . functions.sh
 
-hash git 2>/dev/null || { echo >&2 "git not found, exiting."; }
+hash git 2> /dev/null || { echo >&2 "git not found, exiting."; }
 
 # Used dynamically: print "$array_" $1
 # shellcheck disable=SC2034
@@ -23,8 +23,8 @@ cd "$(cd "${0%/*}" && pwd -P)"
 
 self="$(basename "${BASH_SOURCE[0]}")"
 
-IFS=' ' read -ra versions <<<"$(get_versions)"
-IFS=' ' read -ra versions <<<"$(sort_versions "${versions[@]}")"
+IFS=' ' read -ra versions <<< "$(get_versions)"
+IFS=' ' read -ra versions <<< "$(sort_versions "${versions[@]}")"
 url='https://github.com/nodejs/docker-node'
 
 # get the most recent commit which modified any of "$@"
@@ -50,7 +50,7 @@ join() {
 get_stub() {
   local version="${1}"
   shift
-  IFS='/' read -ra versionparts <<<"${version}"
+  IFS='/' read -ra versionparts <<< "${version}"
   local stub
   eval stub="$(join '_' "${versionparts[@]}" | awk -F. '{ print "$array_" $1 }')"
   echo "${stub}"
@@ -65,11 +65,11 @@ for version in "${versions[@]}"; do
   fullVersion="$(get_tag "${version}" full)"
   majorMinorVersion="$(get_tag "${version}" majorminor)"
 
-  IFS=' ' read -ra versionAliases <<<"$fullVersion $majorMinorVersion $stub"
+  IFS=' ' read -ra versionAliases <<< "$fullVersion $majorMinorVersion $stub"
 
   if [ -f "${version}/Dockerfile" ]; then
     # Get supported architectures for a specific version. See details in function.sh
-    IFS=' ' read -ra supportedArches <<<"$(get_supported_arches "${version}" "default")"
+    IFS=' ' read -ra supportedArches <<< "$(get_supported_arches "${version}" "default")"
 
     echo "Tags: $(join ', ' "${versionAliases[@]}")"
     echo "Architectures: $(join ', ' "${supportedArches[@]}")"
@@ -80,7 +80,7 @@ for version in "${versions[@]}"; do
 
   # Get supported variants according to the target architecture.
   # See details in function.sh
-  IFS=' ' read -ra variants <<<"$(get_variants "$(dirname "${version}")")"
+  IFS=' ' read -ra variants <<< "$(get_variants "$(dirname "${version}")")"
   for variant in "${variants[@]}"; do
     # Skip non-docker directories
     [ -f "${version}/${variant}/Dockerfile" ] || continue
@@ -96,7 +96,7 @@ for version in "${versions[@]}"; do
 
     # Get supported architectures for a specific version and variant.
     # See details in function.sh
-    IFS=' ' read -ra supportedArches <<<"$(get_supported_arches "${version}" "${variant}")"
+    IFS=' ' read -ra supportedArches <<< "$(get_supported_arches "${version}" "${variant}")"
 
     echo "Tags: $(join ', ' "${variantAliases[@]}")"
     echo "Architectures: $(join ', ' "${supportedArches[@]}")"

@@ -96,19 +96,19 @@ if images_updated "${COMMIT_ID}"; then
   setup_git_author
 
   info "Cloning..."
-  git clone --depth 50 "https://github.com/${UPSTREAM_SLUG}.git" ${gitpath} 2>/dev/null
+  git clone --depth 50 "https://github.com/${UPSTREAM_SLUG}.git" ${gitpath} 2> /dev/null
 
   stackbrew="$(./generate-stackbrew-library.sh)"
 
   cd ${gitpath}
 
-  echo "${stackbrew}" >"${IMAGES_FILE}"
+  echo "${stackbrew}" > "${IMAGES_FILE}"
   git checkout -b "${BRANCH_NAME}"
   git add "${IMAGES_FILE}"
   git commit -m "$(message)"
 
   info "Pushing..."
-  git push "https://${GITHUB_API_TOKEN}:x-oauth-basic@github.com/${ORIGIN_SLUG}.git" -f "${BRANCH_NAME}" 2>/dev/null || fatal "Error pushing the updated stackbrew"
+  git push "https://${GITHUB_API_TOKEN}:x-oauth-basic@github.com/${ORIGIN_SLUG}.git" -f "${BRANCH_NAME}" 2> /dev/null || fatal "Error pushing the updated stackbrew"
 
   cd - && rm -rf ${gitpath}
 

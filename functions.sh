@@ -62,7 +62,7 @@ function get_variants() {
 
   arch=$(get_arch)
   variantsfilter=("$@")
-  IFS=' ' read -ra availablevariants <<<"$(grep "^${arch}" "${dir}/architectures" | sed -E 's/'"${arch}"'[[:space:]]*//' | sed -E 's/,/ /g')"
+  IFS=' ' read -ra availablevariants <<< "$(grep "^${arch}" "${dir}/architectures" | sed -E 's/'"${arch}"'[[:space:]]*//' | sed -E 's/,/ /g')"
 
   if [ ${#variantsfilter[@]} -gt 0 ]; then
     for variant1 in "${availablevariants[@]}"; do
@@ -100,16 +100,16 @@ function get_supported_arches() {
   shift
 
   # Get default supported arches
-  lines=$(grep "${variant}" "$(dirname "${version}")"/architectures 2>/dev/null | cut -d' ' -f1)
+  lines=$(grep "${variant}" "$(dirname "${version}")"/architectures 2> /dev/null | cut -d' ' -f1)
 
   # Get version specific supported architectures if there is specialized information
   if [ -a "${version}"/architectures ]; then
-    lines=$(grep "${variant}" "${version}"/architectures 2>/dev/null | cut -d' ' -f1)
+    lines=$(grep "${variant}" "${version}"/architectures 2> /dev/null | cut -d' ' -f1)
   fi
 
   while IFS='' read -r line; do
     arches+=("${line}")
-  done <<<"${lines}"
+  done <<< "${lines}"
 
   echo "${arches[@]}"
 }
@@ -149,13 +149,13 @@ function get_versions() {
   local default_variant
   default_variant=$(get_config "./" "default_variant")
   if [ ${#dirs[@]} -eq 0 ]; then
-    IFS=' ' read -ra dirs <<<"$(echo "${prefix%/}/"*/)"
+    IFS=' ' read -ra dirs <<< "$(echo "${prefix%/}/"*/)"
   fi
 
   for dir in "${dirs[@]}"; do
     if [ -a "${dir}/config" ]; then
       local subdirs
-      IFS=' ' read -ra subdirs <<<"$(get_versions "${dir#./}")"
+      IFS=' ' read -ra subdirs <<< "$(get_versions "${dir#./}")"
       for subdir in "${subdirs[@]}"; do
         versions+=("${subdir}")
       done
@@ -174,7 +174,7 @@ function get_fork_name() {
   version=$1
   shift
 
-  IFS='/' read -ra versionparts <<<"${version}"
+  IFS='/' read -ra versionparts <<< "${version}"
   if [ ${#versionparts[@]} -gt 1 ]; then
     echo "${versionparts[0]}"
   fi
@@ -260,7 +260,7 @@ function get_tag() {
   fi
 
   local tagparts
-  IFS=' ' read -ra tagparts <<<"$(get_fork_name "${version}") ${tagversion}"
+  IFS=' ' read -ra tagparts <<< "$(get_fork_name "${version}") ${tagversion}"
   IFS='-'
   echo "${tagparts[*]}"
   unset IFS
@@ -278,11 +278,11 @@ function sort_versions() {
 
   while IFS='' read -r line; do
     sorted+=("${line}")
-  done <<<"$(echo "${lines}" | grep "^[0-9]" | sort -r)"
+  done <<< "$(echo "${lines}" | grep "^[0-9]" | sort -r)"
 
   while IFS='' read -r line; do
     sorted+=("${line}")
-  done <<<"$(echo "${lines}" | grep -v "^[0-9]" | sort -r)"
+  done <<< "$(echo "${lines}" | grep -v "^[0-9]" | sort -r)"
 
   echo "${sorted[@]}"
 }
@@ -312,7 +312,7 @@ function images_updated() {
 
   commit_range="$(commit_range "$@")"
 
-  IFS=' ' read -ra versions <<<"$(
+  IFS=' ' read -ra versions <<< "$(
     IFS=','
     get_versions
   )"

@@ -9,8 +9,8 @@ set -euo pipefail
 # Convert comma delimited cli arguments to arrays
 # E.g. ./test-build.sh 8,10 slim,onbuild
 # "8,10" becomes "8 10" and "slim,onbuild" becomes "slim onbuild"
-IFS=',' read -ra versions_arg <<<"${1:-}"
-IFS=',' read -ra variant_arg <<<"${2:-}"
+IFS=',' read -ra versions_arg <<< "${1:-}"
+IFS=',' read -ra variant_arg <<< "${2:-}"
 
 default_variant=$(get_config "./" "default_variant")
 
@@ -62,7 +62,7 @@ function test_image() {
 
 cd "$(cd "${0%/*}" && pwd -P)" || exit
 
-IFS=' ' read -ra versions <<<"$(get_versions . "${versions_arg[@]}")"
+IFS=' ' read -ra versions <<< "$(get_versions . "${versions_arg[@]}")"
 if [ ${#versions[@]} -eq 0 ]; then
   fatal "No valid versions found!"
 fi
@@ -82,7 +82,7 @@ for version in "${versions[@]}"; do
 
   # Get supported variants according to the target architecture.
   # See details in function.sh
-  IFS=' ' read -ra variants <<<"$(get_variants "$(dirname "${version}")" "${variant_arg[@]}")"
+  IFS=' ' read -ra variants <<< "$(get_variants "$(dirname "${version}")" "${variant_arg[@]}")"
 
   for variant in "${variants[@]}"; do
     # Skip non-docker directories

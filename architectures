@@ -6,3 +6,4 @@ amd64    jessie,alpine,onbuild,slim,stretch
 i386     jessie,alpine,onbuild,slim,stretch
 ppc64le  jessie,alpine,onbuild,slim,stretch
 s390x    jessie,alpine,onbuild,slim,stretch
+windows-amd64 windowsservercore

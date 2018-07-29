@@ -11,7 +11,7 @@ The official Node.js docker image, made with love by the node community.
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 ## Table of Contents
 
-  - [What is Node.js?](#what-is-nodejs)
+- [What is Node.js?](#what-is-nodejs)
 - [How to use this image](#how-to-use-this-image)
   - [Create a `Dockerfile` in your Node.js app project](#create-a-dockerfile-in-your-nodejs-app-project)
   - [Best Practices](#best-practices)
@@ -42,9 +42,9 @@ real-time applications that run across distributed devices.
 
 See: http://nodejs.org
 
-# How to use this image
+## How to use this image
 
-## Create a `Dockerfile` in your Node.js app project
+### Create a `Dockerfile` in your Node.js app project
 
 ```dockerfile
 # specify the node base image with your desired version node:<version>
@@ -88,11 +88,11 @@ Docker Compose example copies your current directory (including node_modules) to
 It assumes that your application has a file named [`package.json`](https://docs.npmjs.com/files/package.json)
 defining [start script](https://docs.npmjs.com/misc/scripts#default-values).
 
-## Best Practices
+### Best Practices
 
 We have assembled a [Best Practices Guide](./docs/BestPractices.md) for those using these images on a daily basis.
 
-## Run a single Node.js script
+### Run a single Node.js script
 
 For many simple, single file projects, you may find it inconvenient to write a
 complete `Dockerfile`. In such cases, you can run a Node.js script by using the
@@ -102,7 +102,7 @@ Node.js Docker image directly:
 $ docker run -it --rm --name my-running-script -v "$PWD":/usr/src/app -w /usr/src/app node:8 node your-daemon-or-script.js
 ```
 
-## Verbosity
+### Verbosity
 
 Prior to 8.7.0 and 6.11.4 the docker images overrode the default npm log
 level from `warn` to `info`. However due to improvements to npm and new Docker
@@ -110,7 +110,7 @@ patterns (e.g. multi-stage builds) the working group reached a [consensus](https
 to revert the log level to npm defaults. If you need more verbose output, please
 use one of the following methods to change the verbosity level.
 
-### Dockerfile
+#### Dockerfile
 
 If you create your own `Dockerfile` which inherits from the `node` image you can
 simply use `ENV` to override `NPM_CONFIG_LOGLEVEL`.
@@ -121,25 +121,25 @@ ENV NPM_CONFIG_LOGLEVEL info
 ...
 ```
 
-### Docker Run
+#### Docker Run
 
 If you run the node image using `docker run` you can use the `-e` flag to
 override `NPM_CONFIG_LOGLEVEL`.
 
-```
+```console
 $ docker run -e NPM_CONFIG_LOGLEVEL=info node ...
 ```
 
-### NPM run
+#### NPM run
 
 If you are running npm commands you can use `--loglevel` to control the
 verbosity of the output.
 
-```
+```console
 $ docker run node npm --loglevel=warn ...
 ```
 
-# Image Variants
+## Image Variants
 
 The `node` images come in many flavors, each designed for a specific use case.
 All of the images contain pre-installed versions of `node`,
@@ -148,7 +148,7 @@ supported architecture, the supported variants are different. In the file:
 [architectures](./architectures), it lists all supported variants for all of
 the architectures that we support now.
 
-## `node:<version>`
+### `node:<version>`
 
 This is the defacto image. If you are unsure about what your needs are, you
 probably want to use this one. It is designed to be used both as a throw away
@@ -160,7 +160,7 @@ on their system. It, by design, has a large number of extremely common Debian
 packages. This reduces the number of packages that images that derive from it
 need to install, thus reducing the overall size of all images on your system.
 
-## `node:alpine`
+### `node:alpine`
 
 This image is based on the popular
 [Alpine Linux project](http://alpinelinux.org), available in
@@ -188,8 +188,7 @@ image as a base, add the things you need in your own Dockerfile
 (see the [`alpine` image description](https://hub.docker.com/_/alpine/) for
 examples of how to install packages if you are unfamiliar).
 
-
-## `node:onbuild`
+### `node:onbuild`
 
 The `ONBUILD` image variants are deprecated, and their usage is discouraged. For more details, see [docker-library/official-images#2076](https://github.com/docker-library/official-images/issues/2076).
 
@@ -230,11 +229,9 @@ script](https://docs.npmjs.com/misc/scripts#default-values).
 
 It also assumes that you have a file named [`.dockerignore`](https://docs.docker.com/engine/reference/builder/#/dockerignore-file) otherwise it will copy your local npm modules:
 
-```
-node_modules
-```
+`node_modules`
 
-## `node:slim`
+### `node:slim`
 
 This image does not contain the common packages contained in the default tag and
 only contains the minimal packages needed to run `node`. Unless you are working
@@ -242,14 +239,14 @@ in an environment where *only* the Node.js image will be deployed and you have
 space constraints, we highly recommend using the default image of this
 repository.
 
-# License
+## License
 
 [License information](https://github.com/nodejs/node/blob/master/LICENSE) for
 the software contained in this image. [License
 information](https://github.com/nodejs/docker-node/blob/master/LICENSE) for the
 Node.js Docker project.
 
-# Supported Docker versions
+## Supported Docker versions
 
 This image is officially supported on Docker version 1.9.1.
 
@@ -259,24 +256,24 @@ Please see [the Docker installation
 documentation](https://docs.docker.com/installation/) for details on how to
 upgrade your Docker daemon.
 
-# Governance and Current Members
+## Governance and Current Members
 
 The Node.js Docker Image is governed by the Docker Working Group. See
 [GOVERNANCE.md](https://github.com/nodejs/docker-node/blob/master/GOVERNANCE.md)
 to learn more about the group's structure and [CONTRIBUTING.md](CONTRIBUTING.md) for guidance
 about the expectations for all contributors to this project.
 
-## Docker Working Group Members
+### Docker Working Group Members
 
-  * Christopher Horrell ([chorrell](https://github.com/chorrell))
-  * Hans Kristian Flaatten ([starefossen](https://github.com/starefossen))
-  * Hugues Malphettes ([hmalphettes](https://github.com/hmalphettes))
-  * John Mitchell ([jlmitch5](https://github.com/jlmitch5))
-  * Peter Petrov ([pesho](https://github.com/pesho))
+- Christopher Horrell ([chorrell](https://github.com/chorrell))
+- Hans Kristian Flaatten ([starefossen](https://github.com/starefossen))
+- Hugues Malphettes ([hmalphettes](https://github.com/hmalphettes))
+- John Mitchell ([jlmitch5](https://github.com/jlmitch5))
+- Peter Petrov ([pesho](https://github.com/pesho))
 
-## Docker Working Group Collaborators
+### Docker Working Group Collaborators
 
-  * Mikeal Rogers ([mikeal](https://github.com/mikeal))
-  * Laurent Goderre ([LaurentGoderre](https://github.com/LaurentGoderre))
-  * Simen Bekkhus ([SimenB](https://github.com/SimenB))
-  * Peter Dave Hello ([PeterDaveHello](https://github.com/PeterDaveHello))
+- Mikeal Rogers ([mikeal](https://github.com/mikeal))
+- Laurent Goderre ([LaurentGoderre](https://github.com/LaurentGoderre))
+- Simen Bekkhus ([SimenB](https://github.com/SimenB))
+- Peter Dave Hello ([PeterDaveHello](https://github.com/PeterDaveHello))

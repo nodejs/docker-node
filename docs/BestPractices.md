@@ -62,6 +62,7 @@ By default, Docker runs container as root which inside of the container can pose
 ```
 -u "node"
 ```
+
 Alternatively, the user can be activated in the `Dockerfile`:
 
 ```Dockerfile
@@ -96,6 +97,7 @@ RUN usermod -d /home/myapp -l myapp node
 ```
 
 For alpine based images, you do not have `groupmod` nor `usermod`, so to change the uid/gid you have to delete the previous user:
+
 ```Dockerfile
 RUN deluser --remove-home node \
   && delgroup node \

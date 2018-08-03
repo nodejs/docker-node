@@ -15,6 +15,10 @@ stages:
     if: branch = master AND type IN (push)
 
 jobs:
+  allow_failures:
+    script:
+      - find . -name "*.md" -exec markdown-link-check {} \;
+
   include:
     - stage: Test
       env:

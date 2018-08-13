@@ -1,6 +1,7 @@
 FROM alpine:0.0
 
 LABEL name=node
+LABEL version=
 
 ENV NODE_VERSION 0.0.0
 

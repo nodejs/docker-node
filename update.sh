@@ -161,6 +161,13 @@ function update_node_version() {
         alpine_version=$(grep "FROM" "${dockerfile}" | cut -d':' -f2)
       fi
       sed -Ei -e "s/(alpine:)0.0/\\1${alpine_version}/" "${dockerfile}-tmp"
+      sed -Ei -e 's/^LABEL version=$/LABEL version=-alpine/' "${dockerfile}-tmp"
+    fi
+
+    sed -Ei -e 's/^LABEL version=/LABEL version='"${nodeVersion}"'/' "${dockerfile}-tmp"
+
+    if [ "${dockerfile%%/*}" = "chakracore" ]; then
+      sed -Ei -e 's/^LABEL version=/LABEL version=chakracore-/' "${dockerfile}-tmp"
     fi
 
     # Required for POSIX sed

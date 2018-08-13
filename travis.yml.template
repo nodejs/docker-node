@@ -1,10 +1,12 @@
+---
+
 dist: trusty
 sudo: false
 
 language: generic
 
 services:
-    - docker
+  - docker
 
 script: ./test-build.sh $NODE_VERSION $VARIANT
 

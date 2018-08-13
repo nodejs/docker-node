@@ -1,5 +1,8 @@
 FROM buildpack-deps:stretch
 
+LABEL name=node
+LABEL version=10.8.0
+
 RUN groupadd --gid 1000 node \
   && useradd --uid 1000 --gid node --shell /bin/bash --create-home node
 

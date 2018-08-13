@@ -1,5 +1,8 @@
 FROM alpine:3.8
 
+LABEL name=node
+LABEL version=10.8.0-alpine
+
 ENV NODE_VERSION 10.8.0
 
 RUN addgroup -g 1000 node \

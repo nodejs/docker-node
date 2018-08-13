@@ -1,5 +1,8 @@
 FROM buildpack-deps:jessie
 
+LABEL name=node
+LABEL version=chakracore-8.11.1
+
 RUN groupadd --gid 1000 node \
   && useradd --uid 1000 --gid node --shell /bin/bash --create-home node
 

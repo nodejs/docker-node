@@ -29,7 +29,7 @@ jobs:
       install:
         - npm i -g markdown-link-check
       script:
-        - find . -name "*.md" -exec markdown-link-check {} \;
+        - find . -name "*.md" | xargs -n 1 markdown-link-check
 
     - stage: Test
       env:

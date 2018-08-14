@@ -16,6 +16,7 @@ RUN addgroup -g 1000 node \
         linux-headers \
         make \
         python \
+        paxctl \
   # gpg keys listed at https://github.com/nodejs/node#release-team
   && for key in \
     94AE36675C464D64BAFA68DD7434390BDBE9B9C5 \
@@ -41,6 +42,7 @@ RUN addgroup -g 1000 node \
     && ./configure \
     && make -j$(getconf _NPROCESSORS_ONLN) \
     && make install \
+    && paxctl -mc $(which node) \
     && apk del .build-deps \
     && cd .. \
     && rm -Rf "node-v$NODE_VERSION" \

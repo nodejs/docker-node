@@ -1,3 +1,4 @@
 baseuri     https://nodejs.org/dist
 default_variant stretch
 alpine_version  3.8
+debian_versions jessie stretch

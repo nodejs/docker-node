@@ -183,6 +183,20 @@ function is_debian() {
   return 1
 }
 
+function is_debian_slim() {
+  local variant
+  variant=$1
+  shift
+
+  IFS=' ' read -ra debianVersions <<< "$(get_config "./" "debian_versions")"
+  for d in "${debianVersions[@]}"; do
+    if [ "${d}-slim" = "${variant}" ]; then
+      return 0
+    fi
+  done
+  return 1
+}
+
 function get_fork_name() {
   local version
   version=$1

@@ -1,7 +1,7 @@
 bashbrew-arch   variants
-arm32v7  jessie,onbuild,slim,stretch
+arm32v7  jessie,jessie-slim,onbuild,stretch,stretch-slim
 arm64v8  stretch
-amd64    jessie,alpine,onbuild,slim,stretch
-i386     jessie,onbuild,slim,stretch
+amd64    jessie,jessie-slim,alpine,onbuild,stretch,stretch-slim
+i386     jessie,jessie-slim,onbuild,stretch,stretch-slim
 ppc64le  stretch
 s390x    stretch

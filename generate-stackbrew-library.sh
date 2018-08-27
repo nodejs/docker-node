@@ -91,6 +91,9 @@ for version in "${versions[@]}"; do
 
     slash='/'
     variantAliases=("${versionAliases[@]/%/-${variant//${slash}/-}}")
+    if [ "${variant}" = "${default_variant}-slim" ]; then
+      variantAliases+=("${versionAliases[@]/%/-slim}")
+    fi
     variantAliases=("${variantAliases[@]//latest-/}")
     if [ "${variant}" = "${default_variant}" ]; then
       variantAliases+=("${versionAliases[@]}")

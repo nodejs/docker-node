@@ -21,7 +21,7 @@ RUN set -ex \
     gpg --keyserver hkp://pgp.mit.edu:80 --recv-keys "$key" ; \
   done
 
-ENV NODE_VERSION 10.9.0
+ENV NODE_VERSION 10.10.0
 
 RUN buildDeps='xz-utils' \
     && ARCH= && dpkgArch="$(dpkg --print-architecture)" \
@@ -46,7 +46,7 @@ RUN buildDeps='xz-utils' \
     && apt-get purge -y --auto-remove $buildDeps \
     && ln -s /usr/local/bin/node /usr/local/bin/nodejs
 
-ENV YARN_VERSION 1.9.2
+ENV YARN_VERSION 1.9.4
 
 RUN set -ex \
   && for key in \

@@ -100,9 +100,8 @@ For alpine based images, you do not have `groupmod` nor `usermod`, so to change 
 
 ```Dockerfile
 RUN deluser --remove-home node \
-  && delgroup node \
   && addgroup -S node -g 999 \
-  && adduser -S -g node -u 999 node
+  && adduser -S -G node -u 999 node
 ```
 
 ## Memory

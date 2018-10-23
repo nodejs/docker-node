@@ -102,6 +102,26 @@ jobs:
 
     - stage: Build
       env:
+        - NODE_VERSION: "11"
+        - VARIANT: "jessie"
+
+    - stage: Build
+      env:
+        - NODE_VERSION: "11"
+        - VARIANT: "alpine"
+
+    - stage: Build
+      env:
+        - NODE_VERSION: "11"
+        - VARIANT: "slim"
+
+    - stage: Build
+      env:
+        - NODE_VERSION: "11"
+        - VARIANT: "stretch"
+
+    - stage: Build
+      env:
         - NODE_VERSION: "6"
         - VARIANT: "jessie"
 

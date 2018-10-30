@@ -3,6 +3,6 @@ arm32v6  alpine
 arm32v7  jessie,onbuild,slim,stretch
 arm64v8  jessie,alpine,onbuild,slim,stretch
 amd64    jessie,alpine,onbuild,slim,stretch
-i386     alpine
+i386     jessie,alpine,onbuild,slim,stretch
 ppc64le  jessie,alpine,onbuild,slim,stretch
 s390x    jessie,alpine,onbuild,slim,stretch

@@ -103,11 +103,6 @@ jobs:
     - stage: Build
       env:
         - NODE_VERSION: "11"
-        - VARIANT: "jessie"
-
-    - stage: Build
-      env:
-        - NODE_VERSION: "11"
         - VARIANT: "alpine"
 
     - stage: Build

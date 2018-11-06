@@ -10,6 +10,22 @@ language: generic
 services:
   - docker
 
+.before_script: &auto_skip
+- |
+    if [ "false" != "$TRAVIS_PULL_REQUEST" ]; then
+      TRAVIS_COMMIT_RANGE="$TRAVIS_BRANCH..$TRAVIS_PULL_REQUEST_SHA"
+    fi
+    if [ "" = "$TRAVIS_COMMIT_RANGE" ]; then
+      echo "This is a new branch"
+    elif ! git diff --name-only "$TRAVIS_COMMIT_RANGE" -- &> /dev/null; then
+      echo "Change range not recognized"
+    elif git diff --name-only "$TRAVIS_COMMIT_RANGE" -- | grep -Eq "^$NODE_VERSION\/$VARIANT\/Dockerfile"; then
+      echo "Change of $NODE_VERSION\\$VARIANT\Dockerfile detected."
+    else
+      echo "Skip build of $NODE_VERSION\\$VARIANT\Dockerfile as it's not changed."
+      exit
+    fi
+
 script: ./test-build.sh $NODE_VERSION $VARIANT
 
 stages:
@@ -81,96 +97,115 @@ jobs:
     # Docker Build #
 
     - stage: Build
+      before_script: *auto_skip
       env:
         - NODE_VERSION: "10"
         - VARIANT: "jessie"
 
     - stage: Build
+      before_script: *auto_skip
       env:
         - NODE_VERSION: "10"
         - VARIANT: "alpine"
 
     - stage: Build
+      before_script: *auto_skip
       env:
         - NODE_VERSION: "10"
         - VARIANT: "slim"
 
     - stage: Build
+      before_script: *auto_skip
       env:
         - NODE_VERSION: "10"
         - VARIANT: "stretch"
 
     - stage: Build
+      before_script: *auto_skip
       env:
         - NODE_VERSION: "11"
         - VARIANT: "alpine"
 
     - stage: Build
+      before_script: *auto_skip
       env:
         - NODE_VERSION: "11"
         - VARIANT: "slim"
 
     - stage: Build
+      before_script: *auto_skip
       env:
         - NODE_VERSION: "11"
         - VARIANT: "stretch"
 
     - stage: Build
+      before_script: *auto_skip
       env:
         - NODE_VERSION: "6"
         - VARIANT: "jessie"
 
     - stage: Build
+      before_script: *auto_skip
       env:
         - NODE_VERSION: "6"
         - VARIANT: "alpine"
 
     - stage: Build
+      before_script: *auto_skip
       env:
         - NODE_VERSION: "6"
         - VARIANT: "onbuild"
 
     - stage: Build
+      before_script: *auto_skip
       env:
         - NODE_VERSION: "6"
         - VARIANT: "slim"
 
     - stage: Build
+      before_script: *auto_skip
       env:
         - NODE_VERSION: "6"
         - VARIANT: "stretch"
 
     - stage: Build
+      before_script: *auto_skip
       env:
         - NODE_VERSION: "8"
         - VARIANT: "jessie"
 
     - stage: Build
+      before_script: *auto_skip
       env:
         - NODE_VERSION: "8"
         - VARIANT: "alpine"
 
     - stage: Build
+      before_script: *auto_skip
       env:
         - NODE_VERSION: "8"
         - VARIANT: "onbuild"
 
     - stage: Build
+      before_script: *auto_skip
       env:
         - NODE_VERSION: "8"
         - VARIANT: "slim"
 
     - stage: Build
+      before_script: *auto_skip
       env:
         - NODE_VERSION: "8"
         - VARIANT: "stretch"
 
     - stage: Build
+      before_script: *auto_skip
       env:
         - NODE_VERSION: "chakracore/10"
         - VARIANT: "default"
 
     - stage: Build
+      before_script: *auto_skip
       env:
         - NODE_VERSION: "chakracore/8"
         - VARIANT: "default"

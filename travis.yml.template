@@ -8,6 +8,22 @@ language: generic
 services:
   - docker
 
+.before_script: &auto_skip
+- |
+    if [ "false" != "$TRAVIS_PULL_REQUEST" ]; then
+      TRAVIS_COMMIT_RANGE="$TRAVIS_BRANCH..$TRAVIS_PULL_REQUEST_SHA"
+    fi
+    if [ "" = "$TRAVIS_COMMIT_RANGE" ]; then
+      echo "This is a new branch"
+    elif ! git diff --name-only "$TRAVIS_COMMIT_RANGE" -- &> /dev/null; then
+      echo "Change range not recognized"
+    elif git diff --name-only "$TRAVIS_COMMIT_RANGE" -- | grep -Eq "^$NODE_VERSION\/$VARIANT\/Dockerfile"; then
+      echo "Change of $NODE_VERSION\\$VARIANT\Dockerfile detected."
+    else
+      echo "Skip build of $NODE_VERSION\\$VARIANT\Dockerfile as it's not changed."
+      exit
+    fi
+
 script: ./test-build.sh $NODE_VERSION $VARIANT
 
 stages:

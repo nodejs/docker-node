@@ -181,6 +181,7 @@ function add_stage() {
 
   echo '
     - stage: Build
+      before_script: *auto_skip
       env:
         - NODE_VERSION: "'"${version}"'"
         - VARIANT: "'"${variant}"'"' >> .travis.yml

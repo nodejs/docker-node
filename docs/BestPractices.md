@@ -45,6 +45,22 @@ RUN curl -fSLO --compressed "https://yarnpkg.com/downloads/$YARN_VERSION/yarn-v$
     && rm yarn-v$YARN_VERSION.tar.gz
 ```
 
+If you're using an Alpine-based image, `curl` won't be present, so you'll need to make sure it's installed while using it:
+
+```Dockerfile
+FROM node:6-alpine
+
+ENV YARN_VERSION 1.5.1
+
+RUN apk add --no-cache --virtual .build-deps-yarn curl \
+    && curl -fSLO --compressed "https://yarnpkg.com/downloads/$YARN_VERSION/yarn-v$YARN_VERSION.tar.gz" \
+    && tar -xzf yarn-v$YARN_VERSION.tar.gz -C /opt/ \
+    && ln -snf /opt/yarn-v$YARN_VERSION/bin/yarn /usr/local/bin/yarn \
+    && ln -snf /opt/yarn-v$YARN_VERSION/bin/yarnpkg /usr/local/bin/yarnpkg \
+    && rm yarn-v$YARN_VERSION.tar.gz \
+    && apk del .build-deps-yarn
+```
+
 ## Handling Kernel Signals
 
 Node.js was not designed to run as PID 1 which leads to unexpected behaviour when running inside of Docker. For example, a Node.js process running as PID 1 will not respond to `SIGTERM` (`CTRL-C`) and similar signals. As of Docker 1.13, you can use the `--init` flag to wrap your Node.js process with a [lightweight init system](https://github.com/krallin/tini) that properly handles running as PID 1.

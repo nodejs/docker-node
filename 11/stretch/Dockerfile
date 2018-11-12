@@ -15,7 +15,7 @@ RUN ARCH= && dpkgArch="$(dpkg --print-architecture)" \
     i386) ARCH='x86';; \
     *) echo "unsupported architecture"; exit 1 ;; \
   esac \
-  # gpg keys listed at https://github.com/nodejs/node#release-team
+  # gpg keys listed at https://github.com/nodejs/node#release-keys
   && set -ex \
   && for key in \
     94AE36675C464D64BAFA68DD7434390BDBE9B9C5 \

@@ -18,7 +18,7 @@ services:
     if [ "" = "$TRAVIS_COMMIT_RANGE" ]; then
       echo "This is a new branch"
     elif ! git diff --name-only "$TRAVIS_COMMIT_RANGE" -- &> /dev/null; then
-      echo "Change range not recognized"
+      echo "Change range not recognized: '$TRAVIS_COMMIT_RANGE'"
     elif git diff --name-only "$TRAVIS_COMMIT_RANGE" -- | grep -Eq "^$NODE_VERSION\/$VARIANT\/Dockerfile"; then
       echo "Change of $NODE_VERSION\\$VARIANT\Dockerfile detected."
     else

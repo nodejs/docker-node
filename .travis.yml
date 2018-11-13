@@ -2,7 +2,7 @@
 
 ---
 
-dist: trusty
+dist: xenial
 sudo: false
 
 language: generic

@@ -84,7 +84,6 @@ jobs:
     - stage: Test
       env:
         - TEST: .travis.yml and travis.yml.template consistency
-      language: generic
       script:
         - ./update.sh
         - git diff --stat --exit-code .travis.yml

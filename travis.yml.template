@@ -3,7 +3,7 @@
 dist: xenial
 sudo: false
 
-language: generic
+language: minimal
 
 services:
   - docker

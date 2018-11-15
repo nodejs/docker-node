@@ -1,9 +1,9 @@
 ---
 
-dist: trusty
+dist: xenial
 sudo: false
 
-language: generic
+language: minimal
 
 services:
   - docker
@@ -84,7 +84,6 @@ jobs:
     - stage: Test
       env:
         - TEST: .travis.yml and travis.yml.template consistency
-      language: generic
       script:
         - ./update.sh
         - git diff --stat --exit-code .travis.yml

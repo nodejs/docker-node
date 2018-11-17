@@ -15,14 +15,19 @@ services:
     if [ "false" != "$TRAVIS_PULL_REQUEST" ]; then
       TRAVIS_COMMIT_RANGE="$TRAVIS_BRANCH..$TRAVIS_PULL_REQUEST_SHA"
     fi
+    if [ "default" = "$VARIANT" ]; then
+      Dockerfile="$NODE_VERSION/Dockerfile"
+    else
+      Dockerfile="$NODE_VERSION/$VARIANT/Dockerfile"
+    fi
     if [ "" = "$TRAVIS_COMMIT_RANGE" ]; then
       echo "This is a new branch"
     elif ! git diff --name-only "$TRAVIS_COMMIT_RANGE" -- &> /dev/null; then
       echo "Change range not recognized: '$TRAVIS_COMMIT_RANGE'"
-    elif git diff --name-only "$TRAVIS_COMMIT_RANGE" -- | grep -Eq "^$NODE_VERSION\/$VARIANT\/Dockerfile"; then
-      echo "Change of $NODE_VERSION\\$VARIANT\Dockerfile detected."
+    elif git diff --name-only "$TRAVIS_COMMIT_RANGE" -- | grep -Eq "^$Dockerfile$"; then
+      echo "Change of $Dockerfile detected."
     else
-      echo "Skip build of $NODE_VERSION\\$VARIANT\Dockerfile as it's not changed."
+      echo "Skip build of $Dockerfile as it's not changed."
       exit
     fi
 

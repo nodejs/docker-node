@@ -18,9 +18,9 @@ services:
     elif ! git diff --name-only "$TRAVIS_COMMIT_RANGE" -- &> /dev/null; then
       echo "Change range not recognized: '$TRAVIS_COMMIT_RANGE'"
     elif git diff --name-only "$TRAVIS_COMMIT_RANGE" -- | grep -Eq "^$NODE_VERSION\/$VARIANT\/Dockerfile"; then
-      echo "Change of $NODE_VERSION\\$VARIANT\Dockerfile detected."
+      echo "Change of $NODE_VERSION\/$VARIANT\/Dockerfile detected."
     else
-      echo "Skip build of $NODE_VERSION\\$VARIANT\Dockerfile as it's not changed."
+      echo "Skip build of $NODE_VERSION\/$VARIANT\/Dockerfile as it's not changed."
       exit
     fi
 

@@ -1,9 +1,9 @@
-FROM buildpack-deps:jessie
+FROM buildpack-deps:stretch
 
 RUN groupadd --gid 1000 node \
   && useradd --uid 1000 --gid node --shell /bin/bash --create-home node
 
-ENV NODE_VERSION 10.6.0
+ENV NODE_VERSION 10.13.0
 
 RUN ARCH= && dpkgArch="$(dpkg --print-architecture)" \
   && case "${dpkgArch##*-}" in \
@@ -17,7 +17,7 @@ RUN ARCH= && dpkgArch="$(dpkg --print-architecture)" \
   && rm "node-v$NODE_VERSION-linux-$ARCH.tar.xz" SHASUMS256.txt \
   && ln -s /usr/local/bin/node /usr/local/bin/nodejs
 
-ENV YARN_VERSION 1.7.0
+ENV YARN_VERSION 1.12.3
 
 RUN set -ex \
   && for key in \

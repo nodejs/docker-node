@@ -150,6 +150,7 @@ function get_versions() {
   default_variant=$(get_config "./" "default_variant")
   if [ ${#dirs[@]} -eq 0 ]; then
     IFS=' ' read -ra dirs <<< "$(echo "${prefix%/}/"*/)"
+    IFS=$'\n' dirs=($(sort -Vr <<< "${dirs[*]}"))
   fi
 
   for dir in "${dirs[@]}"; do

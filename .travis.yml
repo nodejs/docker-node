@@ -102,6 +102,41 @@ jobs:
 
     - stage: Build
       before_script: *auto_skip
+      name: chakracore/10 on default
+      env:
+        - NODE_VERSION="chakracore/10"
+        - VARIANT="default"
+
+    - stage: Build
+      before_script: *auto_skip
+      name: chakracore/8 on default
+      env:
+        - NODE_VERSION="chakracore/8"
+        - VARIANT="default"
+
+    - stage: Build
+      before_script: *auto_skip
+      name: 11 on alpine
+      env:
+        - NODE_VERSION="11"
+        - VARIANT="alpine"
+
+    - stage: Build
+      before_script: *auto_skip
+      name: 11 on stretch
+      env:
+        - NODE_VERSION="11"
+        - VARIANT="stretch"
+
+    - stage: Build
+      before_script: *auto_skip
+      name: 11 on stretch-slim
+      env:
+        - NODE_VERSION="11"
+        - VARIANT="stretch-slim"
+
+    - stage: Build
+      before_script: *auto_skip
       name: 10 on jessie
       env:
         - NODE_VERSION="10"
@@ -133,69 +168,6 @@ jobs:
       name: 10 on stretch-slim
       env:
         - NODE_VERSION="10"
-        - VARIANT="stretch-slim"
-
-    - stage: Build
-      before_script: *auto_skip
-      name: 11 on alpine
-      env:
-        - NODE_VERSION="11"
-        - VARIANT="alpine"
-
-    - stage: Build
-      before_script: *auto_skip
-      name: 11 on stretch
-      env:
-        - NODE_VERSION="11"
-        - VARIANT="stretch"
-
-    - stage: Build
-      before_script: *auto_skip
-      name: 11 on stretch-slim
-      env:
-        - NODE_VERSION="11"
-        - VARIANT="stretch-slim"
-
-    - stage: Build
-      before_script: *auto_skip
-      name: 6 on jessie
-      env:
-        - NODE_VERSION="6"
-        - VARIANT="jessie"
-
-    - stage: Build
-      before_script: *auto_skip
-      name: 6 on jessie-slim
-      env:
-        - NODE_VERSION="6"
-        - VARIANT="jessie-slim"
-
-    - stage: Build
-      before_script: *auto_skip
-      name: 6 on alpine
-      env:
-        - NODE_VERSION="6"
-        - VARIANT="alpine"
-
-    - stage: Build
-      before_script: *auto_skip
-      name: 6 on onbuild
-      env:
-        - NODE_VERSION="6"
-        - VARIANT="onbuild"
-
-    - stage: Build
-      before_script: *auto_skip
-      name: 6 on stretch
-      env:
-        - NODE_VERSION="6"
-        - VARIANT="stretch"
-
-    - stage: Build
-      before_script: *auto_skip
-      name: 6 on stretch-slim
-      env:
-        - NODE_VERSION="6"
         - VARIANT="stretch-slim"
 
     - stage: Build
@@ -242,14 +214,42 @@ jobs:
 
     - stage: Build
       before_script: *auto_skip
-      name: chakracore/10 on default
+      name: 6 on jessie
       env:
-        - NODE_VERSION="chakracore/10"
-        - VARIANT="default"
+        - NODE_VERSION="6"
+        - VARIANT="jessie"
 
     - stage: Build
       before_script: *auto_skip
-      name: chakracore/8 on default
+      name: 6 on jessie-slim
       env:
-        - NODE_VERSION="chakracore/8"
-        - VARIANT="default"
+        - NODE_VERSION="6"
+        - VARIANT="jessie-slim"
+
+    - stage: Build
+      before_script: *auto_skip
+      name: 6 on alpine
+      env:
+        - NODE_VERSION="6"
+        - VARIANT="alpine"
+
+    - stage: Build
+      before_script: *auto_skip
+      name: 6 on onbuild
+      env:
+        - NODE_VERSION="6"
+        - VARIANT="onbuild"
+
+    - stage: Build
+      before_script: *auto_skip
+      name: 6 on stretch
+      env:
+        - NODE_VERSION="6"
+        - VARIANT="stretch"
+
+    - stage: Build
+      before_script: *auto_skip
+      name: 6 on stretch-slim
+      env:
+        - NODE_VERSION="6"
+        - VARIANT="stretch-slim"

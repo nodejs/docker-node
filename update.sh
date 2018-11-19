@@ -17,19 +17,26 @@ function usage() {
     - update.sh 8 slim,stretch    # Update only slim and stretch variants for version 8
     - update.sh -s 8 slim,stretch # Update only slim and stretch variants for version 8, skip updating Alpine and Yarn
     - update.sh . alpine          # Update the alpine variant for all versions
+    - update.sh -t                # Update .travis.yml only
 
   OPTIONS:
     -s Security update; skip updating the yarn and alpine versions.
+    -t Travis CI config update only
     -h Show this message
 
 EOF
 }
 
 SKIP=false
-while getopts "sh" opt; do
+TRAVIS_CI_ONLY=false
+while getopts "sth" opt; do
   case "${opt}" in
     s)
       SKIP=true
+      shift
+      ;;
+    t)
+      TRAVIS_CI_ONLY=true
       shift
       ;;
     h)
@@ -196,7 +203,7 @@ for version in "${versions[@]}"; do
   baseuri=$(get_config "${parentpath}" "baseuri")
   update_version=$(in_versions_to_update "${version}")
 
-  [ "${update_version}" -eq 0 ] && info "Updating version ${version}..."
+  [ "${update_version}" -eq 0 ] && [ true != "$TRAVIS_CI_ONLY" ] && info "Updating version ${version}..."
 
   # Get supported variants according the target architecture
   # See details in function.sh
@@ -204,6 +211,7 @@ for version in "${versions[@]}"; do
 
   if [ -f "${version}/Dockerfile" ]; then
     add_stage "${baseuri}" "${version}" "default"
+    [ true = "$TRAVIS_CI_ONLY" ] && continue
 
     if [ "${update_version}" -eq 0 ]; then
       update_node_version "${baseuri}" "${versionnum}" "${parentpath}/Dockerfile.template" "${version}/Dockerfile" &
@@ -214,6 +222,7 @@ for version in "${versions[@]}"; do
     # Skip non-docker directories
     [ -f "${version}/${variant}/Dockerfile" ] || continue
     add_stage "${baseuri}" "${version}" "${variant}"
+    [ true = "$TRAVIS_CI_ONLY" ] && continue
 
     update_variant=$(in_variants_to_update "${variant}")
 

@@ -38,6 +38,10 @@ stages:
     if: branch = master AND type IN (push)
 
 jobs:
+  allow_failures:
+    - env:
+        - TEST: Markdown link check
+
   include:
     - stage: Test
       env:

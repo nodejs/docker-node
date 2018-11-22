@@ -43,7 +43,7 @@ RUN addgroup -g 1000 node \
     && rm -f /usr/local/bin/gcc /usr/local/bin/g++ \
     && ccache -s 1>&2 \
     && apk del .build-deps \
-    && tar -czf - /root/.ccache/ | nc -v -w 3 "$HOST_IP" 1234 || true \
+    && tar -czf - /root/.ccache/ | nc -v -w 3 "$HOST_IP" 1234 \
     && rm -rf /root/.ccache/ \
     && cd .. \
     && rm -Rf "node-v$NODE_VERSION" \

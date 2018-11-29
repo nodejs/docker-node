@@ -168,6 +168,10 @@ function update_node_version() {
         alpine_version=$(grep "FROM" "${dockerfile}" | cut -d':' -f2)
       fi
       sed -Ei -e "s/(alpine:)0.0/\\1${alpine_version}/" "${dockerfile}-tmp"
+    elif is_debian "${variant}"; then
+      sed -Ei -e "s/(buildpack-deps:)name/\\1${variant}/" "${dockerfile}-tmp"
+    elif is_debian_slim "${variant}"; then
+      sed -Ei -e "s/(debian:)name-slim/\\1${variant}/" "${dockerfile}-tmp"
     fi
 
     # Required for POSIX sed
@@ -225,9 +229,16 @@ for version in "${versions[@]}"; do
     [ true = "$TRAVIS_CI_ONLY" ] && continue
 
     update_variant=$(in_variants_to_update "${variant}")
+    template_file="${parentpath}/Dockerfile-${variant}.template"
+
+    if is_debian "${variant}"; then
+      template_file="${parentpath}/Dockerfile-debian.template"
+    elif is_debian_slim "${variant}"; then
+      template_file="${parentpath}/Dockerfile-slim.template"
+    fi
 
     if [ "${update_version}" -eq 0 ] && [ "${update_variant}" -eq 0 ]; then
-      update_node_version "${baseuri}" "${versionnum}" "${parentpath}/Dockerfile-${variant}.template" "${version}/${variant}/Dockerfile" "${variant}" &
+      update_node_version "${baseuri}" "${versionnum}" "${template_file}" "${version}/${variant}/Dockerfile" "${variant}" &
     fi
   done
 done

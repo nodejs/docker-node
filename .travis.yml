@@ -114,13 +114,13 @@ jobs:
       before_script: *auto_skip
       env:
         - NODE_VERSION: "10"
-        - VARIANT: "alpine"
+        - VARIANT: "jessie-slim"
 
     - stage: Build
       before_script: *auto_skip
       env:
         - NODE_VERSION: "10"
-        - VARIANT: "slim"
+        - VARIANT: "alpine"
 
     - stage: Build
       before_script: *auto_skip
@@ -131,6 +131,12 @@ jobs:
     - stage: Build
       before_script: *auto_skip
       env:
+        - NODE_VERSION: "10"
+        - VARIANT: "stretch-slim"
+
+    - stage: Build
+      before_script: *auto_skip
+      env:
         - NODE_VERSION: "11"
         - VARIANT: "alpine"
 
@@ -138,19 +144,25 @@ jobs:
       before_script: *auto_skip
       env:
         - NODE_VERSION: "11"
-        - VARIANT: "slim"
+        - VARIANT: "stretch"
 
     - stage: Build
       before_script: *auto_skip
       env:
         - NODE_VERSION: "11"
-        - VARIANT: "stretch"
+        - VARIANT: "stretch-slim"
 
     - stage: Build
       before_script: *auto_skip
       env:
         - NODE_VERSION: "6"
         - VARIANT: "jessie"
+
+    - stage: Build
+      before_script: *auto_skip
+      env:
+        - NODE_VERSION: "6"
+        - VARIANT: "jessie-slim"
 
     - stage: Build
       before_script: *auto_skip
@@ -168,19 +180,25 @@ jobs:
       before_script: *auto_skip
       env:
         - NODE_VERSION: "6"
-        - VARIANT: "slim"
+        - VARIANT: "stretch"
 
     - stage: Build
       before_script: *auto_skip
       env:
         - NODE_VERSION: "6"
-        - VARIANT: "stretch"
+        - VARIANT: "stretch-slim"
 
     - stage: Build
       before_script: *auto_skip
       env:
         - NODE_VERSION: "8"
         - VARIANT: "jessie"
+
+    - stage: Build
+      before_script: *auto_skip
+      env:
+        - NODE_VERSION: "8"
+        - VARIANT: "jessie-slim"
 
     - stage: Build
       before_script: *auto_skip
@@ -198,13 +216,13 @@ jobs:
       before_script: *auto_skip
       env:
         - NODE_VERSION: "8"
-        - VARIANT: "slim"
+        - VARIANT: "stretch"
 
     - stage: Build
       before_script: *auto_skip
       env:
         - NODE_VERSION: "8"
-        - VARIANT: "stretch"
+        - VARIANT: "stretch-slim"
 
     - stage: Build
       before_script: *auto_skip

@@ -10,6 +10,7 @@
 - [CMD](#cmd)
 - [Docker Run](#docker-run)
 - [Security](#security)
+- [node-gyp in apline variant](#node-gyp-alpine)
 
 ## Environment Variables
 
@@ -153,3 +154,30 @@ $ docker run \
 ## Security
 
 The Docker team has provided a tool to analyze your running containers for potential security issues. You can download and run this tool from here: https://github.com/docker/docker-bench-security
+
+## node-gyp alpine
+
+Here is an example of how you would install dependencies for packages that require node-gyp support on the alpine variant:
+
+```Dockerfile
+FROM node:alpine
+
+RUN apk add --no-cache --virtual .gyp python make g++ \
+    && npm install [ your npm dependencies here ] \
+    && apk del .gyp
+```
+
+And Here's a multistage build example
+
+```Dockerfile
+FROM node:alpine as builder
+
+## Install build toolchain, install node deps and compile native add-ons
+RUN apk add --no-cache --virtual .gyp python make g++ \
+RUN npm install [ your npm dependencies here ]
+
+FROM node:alpine as app
+
+## Copy built node modules and binaries without including the toolchain
+COPY --from=builder node_modules .
+```

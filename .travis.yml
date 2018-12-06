@@ -42,12 +42,13 @@ stages:
 jobs:
   allow_failures:
     - env:
-        - TEST: Markdown link check
+        - TEST=mardown_lint
 
   include:
     - stage: Test
+      name: Markdown link check
       env:
-        - TEST: Markdown link check
+        - TEST=mardown_lint
       language: node_js
       node_js:
         - lts/*
@@ -57,8 +58,7 @@ jobs:
         - find . -name "*.md" | xargs -n 1 markdown-link-check
 
     - stage: Test
-      env:
-        - TEST: Editor Config check
+      name: Editor Config check
       language: node_js
       node_js:
         - lts/*
@@ -68,8 +68,7 @@ jobs:
         - eclint check
 
     - stage: Test
-      env:
-        - TEST: Doc Toc Check
+      name: Doc Toc Check
       language: node_js
       node_js:
         - lts/*
@@ -80,21 +79,18 @@ jobs:
           diff -q README.md README.md.tmp
 
     - stage: Test
-      env:
-        - TEST: shfmt check
+      name: shfmt check
       script:
         - docker run -it --rm -v "$(pwd)":/sh -w /sh peterdavehello/shfmt:2.6.1 shfmt -sr -i 2 -l -w -ci .
         - git diff --color
         - git diff --stat=220 --color --exit-code
 
     - stage: Test
-      env:
-        - TEST: Shell Check
+      name: Shell Check
       script: shellcheck *.sh
 
     - stage: Test
-      env:
-        - TEST: .travis.yml and travis.yml.template consistency
+      name: .travis.yml and travis.yml.template consistency
       script:
         - ./update.sh
         - git diff --stat --exit-code .travis.yml
@@ -106,132 +102,154 @@ jobs:
 
     - stage: Build
       before_script: *auto_skip
+      name: 10 on jessie
       env:
-        - NODE_VERSION: "10"
-        - VARIANT: "jessie"
+        - NODE_VERSION="10"
+        - VARIANT="jessie"
 
     - stage: Build
       before_script: *auto_skip
+      name: 10 on jessie-slim
       env:
-        - NODE_VERSION: "10"
-        - VARIANT: "jessie-slim"
+        - NODE_VERSION="10"
+        - VARIANT="jessie-slim"
 
     - stage: Build
       before_script: *auto_skip
+      name: 10 on alpine
       env:
-        - NODE_VERSION: "10"
-        - VARIANT: "alpine"
+        - NODE_VERSION="10"
+        - VARIANT="alpine"
 
     - stage: Build
       before_script: *auto_skip
+      name: 10 on stretch
       env:
-        - NODE_VERSION: "10"
-        - VARIANT: "stretch"
+        - NODE_VERSION="10"
+        - VARIANT="stretch"
 
     - stage: Build
       before_script: *auto_skip
+      name: 10 on stretch-slim
       env:
-        - NODE_VERSION: "10"
-        - VARIANT: "stretch-slim"
+        - NODE_VERSION="10"
+        - VARIANT="stretch-slim"
 
     - stage: Build
       before_script: *auto_skip
+      name: 11 on alpine
       env:
-        - NODE_VERSION: "11"
-        - VARIANT: "alpine"
+        - NODE_VERSION="11"
+        - VARIANT="alpine"
 
     - stage: Build
       before_script: *auto_skip
+      name: 11 on stretch
       env:
-        - NODE_VERSION: "11"
-        - VARIANT: "stretch"
+        - NODE_VERSION="11"
+        - VARIANT="stretch"
 
     - stage: Build
       before_script: *auto_skip
+      name: 11 on stretch-slim
       env:
-        - NODE_VERSION: "11"
-        - VARIANT: "stretch-slim"
+        - NODE_VERSION="11"
+        - VARIANT="stretch-slim"
 
     - stage: Build
       before_script: *auto_skip
+      name: 6 on jessie
       env:
-        - NODE_VERSION: "6"
-        - VARIANT: "jessie"
+        - NODE_VERSION="6"
+        - VARIANT="jessie"
 
     - stage: Build
       before_script: *auto_skip
+      name: 6 on jessie-slim
       env:
-        - NODE_VERSION: "6"
-        - VARIANT: "jessie-slim"
+        - NODE_VERSION="6"
+        - VARIANT="jessie-slim"
 
     - stage: Build
       before_script: *auto_skip
+      name: 6 on alpine
       env:
-        - NODE_VERSION: "6"
-        - VARIANT: "alpine"
+        - NODE_VERSION="6"
+        - VARIANT="alpine"
 
     - stage: Build
       before_script: *auto_skip
+      name: 6 on onbuild
       env:
-        - NODE_VERSION: "6"
-        - VARIANT: "onbuild"
+        - NODE_VERSION="6"
+        - VARIANT="onbuild"
 
     - stage: Build
       before_script: *auto_skip
+      name: 6 on stretch
       env:
-        - NODE_VERSION: "6"
-        - VARIANT: "stretch"
+        - NODE_VERSION="6"
+        - VARIANT="stretch"
 
     - stage: Build
       before_script: *auto_skip
+      name: 6 on stretch-slim
       env:
-        - NODE_VERSION: "6"
-        - VARIANT: "stretch-slim"
+        - NODE_VERSION="6"
+        - VARIANT="stretch-slim"
 
     - stage: Build
       before_script: *auto_skip
+      name: 8 on jessie
       env:
-        - NODE_VERSION: "8"
-        - VARIANT: "jessie"
+        - NODE_VERSION="8"
+        - VARIANT="jessie"
 
     - stage: Build
       before_script: *auto_skip
+      name: 8 on jessie-slim
       env:
-        - NODE_VERSION: "8"
-        - VARIANT: "jessie-slim"
+        - NODE_VERSION="8"
+        - VARIANT="jessie-slim"
 
     - stage: Build
       before_script: *auto_skip
+      name: 8 on alpine
       env:
-        - NODE_VERSION: "8"
-        - VARIANT: "alpine"
+        - NODE_VERSION="8"
+        - VARIANT="alpine"
 
     - stage: Build
       before_script: *auto_skip
+      name: 8 on onbuild
       env:
-        - NODE_VERSION: "8"
-        - VARIANT: "onbuild"
+        - NODE_VERSION="8"
+        - VARIANT="onbuild"
 
     - stage: Build
       before_script: *auto_skip
+      name: 8 on stretch
       env:
-        - NODE_VERSION: "8"
-        - VARIANT: "stretch"
+        - NODE_VERSION="8"
+        - VARIANT="stretch"
 
     - stage: Build
       before_script: *auto_skip
+      name: 8 on stretch-slim
       env:
-        - NODE_VERSION: "8"
-        - VARIANT: "stretch-slim"
+        - NODE_VERSION="8"
+        - VARIANT="stretch-slim"
 
     - stage: Build
       before_script: *auto_skip
+      name: chakracore/10 on default
       env:
-        - NODE_VERSION: "chakracore/10"
-        - VARIANT: "default"
+        - NODE_VERSION="chakracore/10"
+        - VARIANT="default"
 
     - stage: Build
       before_script: *auto_skip
+      name: chakracore/8 on default
       env:
-        - NODE_VERSION: "chakracore/8"
-        - VARIANT: "default"
+        - NODE_VERSION="chakracore/8"
+        - VARIANT="default"

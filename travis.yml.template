@@ -40,12 +40,13 @@ stages:
 jobs:
   allow_failures:
     - env:
-        - TEST: Markdown link check
+        - TEST=mardown_lint
 
   include:
     - stage: Test
+      name: Markdown link check
       env:
-        - TEST: Markdown link check
+        - TEST=mardown_lint
       language: node_js
       node_js:
         - lts/*
@@ -55,8 +56,7 @@ jobs:
         - find . -name "*.md" | xargs -n 1 markdown-link-check
 
     - stage: Test
-      env:
-        - TEST: Editor Config check
+      name: Editor Config check
       language: node_js
       node_js:
         - lts/*
@@ -66,8 +66,7 @@ jobs:
         - eclint check
 
     - stage: Test
-      env:
-        - TEST: Doc Toc Check
+      name: Doc Toc Check
       language: node_js
       node_js:
         - lts/*
@@ -78,21 +77,18 @@ jobs:
           diff -q README.md README.md.tmp
 
     - stage: Test
-      env:
-        - TEST: shfmt check
+      name: shfmt check
       script:
         - docker run -it --rm -v "$(pwd)":/sh -w /sh peterdavehello/shfmt:2.6.1 shfmt -sr -i 2 -l -w -ci .
         - git diff --color
         - git diff --stat=220 --color --exit-code
 
     - stage: Test
-      env:
-        - TEST: Shell Check
+      name: Shell Check
       script: shellcheck *.sh
 
     - stage: Test
-      env:
-        - TEST: .travis.yml and travis.yml.template consistency
+      name: .travis.yml and travis.yml.template consistency
       script:
         - ./update.sh
         - git diff --stat --exit-code .travis.yml

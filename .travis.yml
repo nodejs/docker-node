@@ -102,6 +102,13 @@ jobs:
 
     - stage: Build
       before_script: *auto_skip
+      name: 10 on core
+      env:
+        - NODE_VERSION="10"
+        - VARIANT="core"
+
+    - stage: Build
+      before_script: *auto_skip
       name: 10 on jessie
       env:
         - NODE_VERSION="10"
@@ -137,6 +144,13 @@ jobs:
 
     - stage: Build
       before_script: *auto_skip
+      name: 11 on core
+      env:
+        - NODE_VERSION="11"
+        - VARIANT="core"
+
+    - stage: Build
+      before_script: *auto_skip
       name: 11 on alpine
       env:
         - NODE_VERSION="11"
@@ -155,6 +169,13 @@ jobs:
       env:
         - NODE_VERSION="11"
         - VARIANT="stretch-slim"
+
+    - stage: Build
+      before_script: *auto_skip
+      name: 6 on core
+      env:
+        - NODE_VERSION="6"
+        - VARIANT="core"
 
     - stage: Build
       before_script: *auto_skip
@@ -197,6 +218,13 @@ jobs:
       env:
         - NODE_VERSION="6"
         - VARIANT="stretch-slim"
+
+    - stage: Build
+      before_script: *auto_skip
+      name: 8 on core
+      env:
+        - NODE_VERSION="8"
+        - VARIANT="core"
 
     - stage: Build
       before_script: *auto_skip

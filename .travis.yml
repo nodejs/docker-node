@@ -92,7 +92,7 @@ jobs:
     - stage: Test
       name: .travis.yml and travis.yml.template consistency
       script:
-        - ./update.sh
+        - ./update.sh -t
         - git diff --stat --exit-code .travis.yml
 
     - stage: Deploy

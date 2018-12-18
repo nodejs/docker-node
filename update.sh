@@ -178,6 +178,13 @@ function update_node_version() {
     if [ -f "${dockerfile}-tmp-e" ]; then
       rm "${dockerfile}-tmp-e"
     fi
+
+    if diff -q "${dockerfile}-tmp" "${dockerfile}" > /dev/null; then
+      echo "${dockerfile} is already up to date!"
+    else
+      echo "${dockerfile} updated!"
+    fi
+
     mv -f "${dockerfile}-tmp" "${dockerfile}"
   )
 }

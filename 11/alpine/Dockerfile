@@ -28,6 +28,7 @@ RUN addgroup -g 1000 node \
     8FCCA13FEF1D0C2E91008E09770F7A9A5AE15600 \
     4ED778F539E3634C779C87C6D7062848A1AB005C \
     A48C2BEE680E841632CD4E44F07496B3EB3C1762 \
+    B9E2F5981AA6E0CD28160D9FF13993A75599653C \
   ; do \
     gpg --batch --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys "$key" || \
     gpg --batch --keyserver hkp://ipv4.pool.sks-keyservers.net --recv-keys "$key" || \

@@ -10,7 +10,7 @@
 - [CMD](#cmd)
 - [Docker Run](#docker-run)
 - [Security](#security)
-- [node-gyp in apline variant](#node-gyp-alpine)
+- [node-gyp in alpine variant](#node-gyp-alpine)
 
 ## Environment Variables
 

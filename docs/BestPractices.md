@@ -173,7 +173,7 @@ And Here's a multistage build example
 FROM node:alpine as builder
 
 ## Install build toolchain, install node deps and compile native add-ons
-RUN apk add --no-cache --virtual .gyp python make g++ \
+RUN apk add --no-cache --virtual .gyp python make g++
 RUN npm install [ your npm dependencies here ]
 
 FROM node:alpine as app

@@ -6,7 +6,7 @@ set -e
 COMMIT_RANGE="${1}"
 COMMIT_ID="$(git show -s --format="%H" "${COMMIT_RANGE}" | head -n 1)"
 
-if [ ! -z "$TRAVIS" ]; then
+if [ -n "$TRAVIS" ]; then
   COMMIT_MESSAGE="${TRAVIS_COMMIT_MESSAGE}"
   BRANCH_NAME="travis-${TRAVIS_BUILD_ID}"
   GITHUB_USERNAME="${AUTOPR_GITHUB_USERNAME:-nodejs-github-bot}"
@@ -77,7 +77,7 @@ function pr_payload() {
 
   escaped_message="$(echo "${COMMIT_MESSAGE}" | sed -E -e "s/\"/\\\\\"/g")"
 
-  if [ ! -z "${PR_NUMBER}" ]; then
+  if [ -n "${PR_NUMBER}" ]; then
     body="Pull Request: ${DOCKER_SLUG}#${PR_NUMBER}"
   else
     body="Commit: https://github.com/${DOCKER_SLUG}/compare/${COMMIT_RANGE}"
@@ -135,7 +135,7 @@ if images_updated "${COMMIT_RANGE}"; then
   if [ "${url}" != "null" ]; then
     info "Pull request created at ${url}"
 
-    if [ ! -z "${PR_NUMBER}" ]; then
+    if [ -n "${PR_NUMBER}" ]; then
       comment_endpoint="https://api.github.com/repos/${DOCKER_SLUG}/issues/${PR_NUMBER}/comments"
     else
       comment_endpoint="https://api.github.com/repos/${DOCKER_SLUG}/commits/${COMMIT_ID}/comments"

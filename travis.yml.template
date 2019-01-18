@@ -94,10 +94,6 @@ jobs:
 
     - stage: Deploy
       script:
-        - |
-          if [ "false" != "$TRAVIS_PULL_REQUEST" ]; then
-            TRAVIS_COMMIT_RANGE="$TRAVIS_BRANCH..$TRAVIS_PULL_REQUEST_SHA"
-          fi
         - ./generate-stackbrew-pr.sh "$TRAVIS_COMMIT_RANGE"
 
     # Docker Build #

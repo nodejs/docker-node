@@ -104,7 +104,7 @@ if images_updated "${COMMIT_RANGE}"; then
   permission_check
 
   # Set Git User Info
-  [ -z "$(git config user.name)" ] && [ -z "$GIT_AUTHOR_NAME" ] && setup_git_author
+  [ -z "$GIT_AUTHOR_NAME" ] && setup_git_author
 
   info "Cloning..."
   git clone --depth 50 "https://github.com/${UPSTREAM_SLUG}.git" ${gitpath} 2> /dev/null

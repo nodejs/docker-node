@@ -60,9 +60,9 @@ function permission_check() {
 function setup_git_author() {
   # Set Git User Info
   GIT_AUTHOR_NAME="Node.js GitHub Bot"
-  GIT_AUTHOR_EMAIL="gh_bot@nodejs.org"
+  GIT_AUTHOR_EMAIL="github-bot@iojs.org"
   GIT_COMMITTER_NAME="Node.js GitHub Bot"
-  GIT_COMMITTER_EMAIL="gh_bot@nodejs.org"
+  GIT_COMMITTER_EMAIL="github-bot@iojs.org"
 
   export GIT_AUTHOR_NAME GIT_AUTHOR_EMAIL GIT_COMMITTER_NAME GIT_COMMITTER_EMAIL
 }

@@ -88,12 +88,12 @@ function pr_payload() {
     maintainers="$maintainers @$maintainer"
   done
 
-  echo "{
-    \"title\": \"Node: ${escaped_message}\",
-    \"body\" : \"${body}.\n cc ${maintainers}\",
-    \"head\" : \"${GITHUB_USERNAME}:${BRANCH_NAME}\",
+  printf "{
+    \"title\": \"Node: %s\",
+    \"body\" : \"%s.\n cc %s\",
+    \"head\" : \"%s\",
     \"base\": \"master\"
-  }"
+  }" "${escaped_message}" "${body}" "${maintainers}" "${GITHUB_USERNAME}:${BRANCH_NAME}"
 }
 
 function comment_payload() {

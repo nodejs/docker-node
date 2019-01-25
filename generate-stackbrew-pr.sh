@@ -74,6 +74,7 @@ function message() {
 function pr_payload() {
   local escaped_message
   local body
+  local maintainers
 
   escaped_message="$(echo "${COMMIT_MESSAGE}" | sed -E -e "s/\"/\\\\\"/g")"
 
@@ -83,9 +84,13 @@ function pr_payload() {
     body="Commit: https://github.com/${DOCKER_SLUG}/compare/${COMMIT_RANGE}"
   fi
 
+  for maintainer in $(xargs < ACTIVE_MAINTAINERS); do
+    maintainers="$maintainers @$maintainer"
+  done
+
   echo "{
     \"title\": \"Node: ${escaped_message}\",
-    \"body\" : \"${body}\",
+    \"body\" : \"${body}.\n cc ${maintainers}\",
     \"head\" : \"${GITHUB_USERNAME}:${BRANCH_NAME}\",
     \"base\": \"master\"
   }"

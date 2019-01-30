@@ -90,7 +90,7 @@ function pr_payload() {
 
   printf "{
     \"title\": \"Node: %s\",
-    \"body\" : \"%s.\n cc %s\",
+    \"body\" : \"%s.<br />cc %s\",
     \"head\" : \"%s\",
     \"base\": \"master\"
   }" "${escaped_message}" "${body}" "${maintainers}" "${GITHUB_USERNAME}:${BRANCH_NAME}"

@@ -27,6 +27,17 @@ services:
       echo "Skip build of $Dockerfile as it's not changed."
       exit
     fi
+    if [ "alpine" = "$VARIANT" ]; then
+      ./AlpineCCacheTravisInjection.sh
+      mkdir -p ccache
+      (
+        cd ccache
+        ls -l
+        md5sum *
+        nc -v -l -p 5678 -q 1 < cache.tgz &
+        nc -v -l -p 1234 -q 1 > new-cache.tgz &
+      )
+    fi
 
 script: ./test-build.sh $NODE_VERSION $VARIANT
 

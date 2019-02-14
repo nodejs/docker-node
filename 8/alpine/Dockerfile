@@ -16,6 +16,7 @@ RUN addgroup -g 1000 node \
         linux-headers \
         make \
         python \
+  # Travis CI build deps injection
   # gpg keys listed at https://github.com/nodejs/node#release-keys
   && for key in \
     94AE36675C464D64BAFA68DD7434390BDBE9B9C5 \
@@ -40,10 +41,12 @@ RUN addgroup -g 1000 node \
     && grep " node-v$NODE_VERSION.tar.xz\$" SHASUMS256.txt | sha256sum -c - \
     && tar -xf "node-v$NODE_VERSION.tar.xz" \
     && cd "node-v$NODE_VERSION" \
+    # Travis CI ccache env setup and cache restore
     && ./configure \
     && make -j$(getconf _NPROCESSORS_ONLN) \
     && make install \
     && apk del .build-deps \
+    # Travis CI ccache store and cleanup
     && cd .. \
     && rm -Rf "node-v$NODE_VERSION" \
     && rm "node-v$NODE_VERSION.tar.xz" SHASUMS256.txt.asc SHASUMS256.txt

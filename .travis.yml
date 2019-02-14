@@ -29,6 +29,17 @@ services:
       echo "Skip build of $Dockerfile as it's not changed."
       exit
     fi
+    if [ "alpine" = "$VARIANT" ]; then
+      ./AlpineCCacheTravisInjection.sh
+      mkdir -p ccache
+      (
+        cd ccache
+        ls -l
+        md5sum *
+        nc -v -l -p 5678 -q 1 < cache.tgz &
+        nc -v -l -p 1234 -q 1 > new-cache.tgz &
+      )
+    fi
 
 script: ./test-build.sh $NODE_VERSION $VARIANT
 
@@ -125,6 +136,16 @@ jobs:
         - NODE_VERSION="10"
         - VARIANT="alpine"
 
+      before_cache:
+        - ls -hl ccache/
+        - ls -l ccache/
+        - file ccache/*
+        - md5sum ccache/*
+        - mv ccache/new-cache.tgz ccache/cache.tgz
+      cache:
+        directories:
+          - ccache/
+
     - stage: Build
       before_script: *auto_skip
       name: 10 on stretch
@@ -145,6 +166,16 @@ jobs:
       env:
         - NODE_VERSION="11"
         - VARIANT="alpine"
+
+      before_cache:
+        - ls -hl ccache/
+        - ls -l ccache/
+        - file ccache/*
+        - md5sum ccache/*
+        - mv ccache/new-cache.tgz ccache/cache.tgz
+      cache:
+        directories:
+          - ccache/
 
     - stage: Build
       before_script: *auto_skip
@@ -180,6 +211,16 @@ jobs:
       env:
         - NODE_VERSION="6"
         - VARIANT="alpine"
+
+      before_cache:
+        - ls -hl ccache/
+        - ls -l ccache/
+        - file ccache/*
+        - md5sum ccache/*
+        - mv ccache/new-cache.tgz ccache/cache.tgz
+      cache:
+        directories:
+          - ccache/
 
     - stage: Build
       before_script: *auto_skip
@@ -222,6 +263,16 @@ jobs:
       env:
         - NODE_VERSION="8"
         - VARIANT="alpine"
+
+      before_cache:
+        - ls -hl ccache/
+        - ls -l ccache/
+        - file ccache/*
+        - md5sum ccache/*
+        - mv ccache/new-cache.tgz ccache/cache.tgz
+      cache:
+        directories:
+          - ccache/
 
     - stage: Build
       before_script: *auto_skip

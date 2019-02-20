@@ -95,11 +95,13 @@ jobs:
         - git diff --stat --exit-code .travis.yml
 
     - stage: Deploy
-      script:
+      before_script:
         - |
-          if [ "false" != "$TRAVIS_PULL_REQUEST" ]; then
-            TRAVIS_COMMIT_RANGE="$TRAVIS_BRANCH..$TRAVIS_PULL_REQUEST_SHA"
+          if ! git diff --name-only "$TRAVIS_COMMIT_RANGE" -- | grep -Eq "Dockerfile$"; then
+            echo "Skip deployment as none of the Dockerfiles has been changed."
+            exit
           fi
+      script:
         - ./generate-stackbrew-pr.sh "$TRAVIS_COMMIT_RANGE"
 
     # Docker Build #

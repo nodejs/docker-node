@@ -39,6 +39,7 @@ stages:
     if: branch = master AND type IN (push)
 
 jobs:
+  fast_finish: true
   allow_failures:
     - env:
         - TEST=mardown_lint

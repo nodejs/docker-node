@@ -1,12 +1,32 @@
 ---
 
-dist: trusty
-sudo: false
+dist: xenial
 
-language: generic
+language: minimal
 
 services:
   - docker
+
+.before_script: &auto_skip
+- |
+    if [ "false" != "$TRAVIS_PULL_REQUEST" ]; then
+      TRAVIS_COMMIT_RANGE="$TRAVIS_BRANCH..$TRAVIS_PULL_REQUEST_SHA"
+    fi
+    if [ "default" = "$VARIANT" ]; then
+      Dockerfile="$NODE_VERSION/Dockerfile"
+    else
+      Dockerfile="$NODE_VERSION/$VARIANT/Dockerfile"
+    fi
+    if [ "" = "$TRAVIS_COMMIT_RANGE" ]; then
+      echo "This is a new branch"
+    elif ! git diff --name-only "$TRAVIS_COMMIT_RANGE" -- &> /dev/null; then
+      echo "Change range not recognized: '$TRAVIS_COMMIT_RANGE'"
+    elif git diff --name-only "$TRAVIS_COMMIT_RANGE" -- | grep -Eq "^$Dockerfile$"; then
+      echo "Change of $Dockerfile detected."
+    else
+      echo "Skip build of $Dockerfile as it's not changed."
+      exit
+    fi
 
 script: ./test-build.sh $NODE_VERSION $VARIANT
 
@@ -17,10 +37,16 @@ stages:
     if: branch = master AND type IN (push)
 
 jobs:
+  fast_finish: true
+  allow_failures:
+    - env:
+        - TEST=mardown_lint
+
   include:
     - stage: Test
+      name: Markdown link check
       env:
-        - TEST: Markdown link check
+        - TEST=mardown_lint
       language: node_js
       node_js:
         - lts/*
@@ -30,8 +56,7 @@ jobs:
         - find . -name "*.md" | xargs -n 1 markdown-link-check
 
     - stage: Test
-      env:
-        - TEST: Editor Config check
+      name: Editor Config check
       language: node_js
       node_js:
         - lts/*
@@ -41,8 +66,7 @@ jobs:
         - eclint check
 
     - stage: Test
-      env:
-        - TEST: Doc Toc Check
+      name: Doc Toc Check
       language: node_js
       node_js:
         - lts/*
@@ -53,27 +77,30 @@ jobs:
           diff -q README.md README.md.tmp
 
     - stage: Test
-      env:
-        - TEST: shfmt check
+      name: shfmt check
       script:
-        - docker run -it --rm -v "$(pwd)":/sh -w /sh peterdavehello/shfmt:2.5.1 shfmt -sr -i 2 -l -w -ci .
+        - docker run -it --rm -v "$(pwd)":/sh -w /sh peterdavehello/shfmt:2.6.3 shfmt -sr -i 2 -l -w -ci .
         - git diff --color
         - git diff --stat=220 --color --exit-code
 
     - stage: Test
-      env:
-        - TEST: Shell Check
+      name: Shell Check
       script: shellcheck *.sh
 
     - stage: Test
-      env:
-        - TEST: .travis.yml and travis.yml.template consistency
-      language: generic
+      name: .travis.yml and travis.yml.template consistency
       script:
-        - ./update.sh
+        - ./update.sh -t
         - git diff --stat --exit-code .travis.yml
 
     - stage: Deploy
-      script: ./generate-stackbrew-pr.sh
+      before_script:
+        - |
+          if ! git diff --name-only "$TRAVIS_COMMIT_RANGE" -- | grep -Eq "Dockerfile$"; then
+            echo "Skip deployment as none of the Dockerfiles has been changed."
+            exit
+          fi
+      script:
+        - ./generate-stackbrew-pr.sh "$TRAVIS_COMMIT_RANGE"
 
     # Docker Build #

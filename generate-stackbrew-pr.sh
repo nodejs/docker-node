@@ -3,15 +3,16 @@
 set -e
 . functions.sh
 
-if [ -z "${1}" ]; then
-  COMMIT_ID="${TRAVIS_COMMIT}"
+COMMIT_RANGE="${1}"
+COMMIT_ID="$(git show -s --format="%H" "${COMMIT_RANGE}" | head -n 1)"
+
+if [ -n "$TRAVIS" ]; then
   COMMIT_MESSAGE="${TRAVIS_COMMIT_MESSAGE}"
   BRANCH_NAME="travis-${TRAVIS_BUILD_ID}"
-  GITHUB_USERNAME="nodejs-github-bot"
+  GITHUB_USERNAME="${AUTOPR_GITHUB_USERNAME:-nodejs-github-bot}"
 else
-  COMMIT_ID="${1}"
   COMMIT_MESSAGE="$(git show -s --format=%B "${COMMIT_ID}")"
-  BRANCH_NAME="travis-$(date +%s)"
+  BRANCH_NAME="autopr-$(date +%s)"
   if [[ "$(git remote get-url origin)" =~ github.com/([^/]*)/docker-node.git ]]; then
     GITHUB_USERNAME="${BASH_REMATCH[1]}"
   fi
@@ -27,8 +28,8 @@ fi
 IMAGES_FILE="library/node"
 REPO_NAME="official-images"
 ORIGIN_SLUG="${GITHUB_USERNAME}/${REPO_NAME}"
-UPSTREAM_SLUG="docker-library/${REPO_NAME}"
-DOCKER_SLUG="nodejs/docker-node"
+UPSTREAM_SLUG="${AUTOPR_UPSTREAM:-docker-library}/${REPO_NAME}"
+DOCKER_SLUG="${TRAVIS_REPO_SLUG:-nodejs/docker-node}"
 gitpath="../${REPO_NAME}"
 
 function auth_header() {
@@ -57,10 +58,11 @@ function permission_check() {
 }
 
 function setup_git_author() {
-  GIT_AUTHOR_NAME="$(git show -s --format="%aN" "${COMMIT_ID}")"
-  GIT_AUTHOR_EMAIL="$(git show -s --format="%aE" "${COMMIT_ID}")"
-  GIT_COMMITTER_NAME="$(git show -s --format="%cN" "${COMMIT_ID}")"
-  GIT_COMMITTER_EMAIL="$(git show -s --format="%cN" "${COMMIT_ID}")"
+  # Set Git User Info
+  GIT_AUTHOR_NAME="Node.js GitHub Bot"
+  GIT_AUTHOR_EMAIL="github-bot@iojs.org"
+  GIT_COMMITTER_NAME="Node.js GitHub Bot"
+  GIT_COMMITTER_EMAIL="github-bot@iojs.org"
 
   export GIT_AUTHOR_NAME GIT_AUTHOR_EMAIL GIT_COMMITTER_NAME GIT_COMMITTER_EMAIL
 }
@@ -71,29 +73,43 @@ function message() {
 
 function pr_payload() {
   local escaped_message
+  local body
+  local maintainers
+
   escaped_message="$(echo "${COMMIT_MESSAGE}" | sed -E -e "s/\"/\\\\\"/g")"
-  echo "{
-    'title': 'Node: ${escaped_message}',
-    'body': 'Commit: nodejs/docker-node@${COMMIT_ID}',
-    'head': '${GITHUB_USERNAME}:${BRANCH_NAME}',
-    'base': 'master'
-  }"
+
+  if [ -n "${PR_NUMBER}" ]; then
+    body="Pull Request: ${DOCKER_SLUG}#${PR_NUMBER}"
+  else
+    body="Commit: https://github.com/${DOCKER_SLUG}/compare/${COMMIT_RANGE}"
+  fi
+
+  for maintainer in $(xargs < ACTIVE_MAINTAINERS); do
+    maintainers="$maintainers @$maintainer"
+  done
+
+  printf "{
+    \"title\": \"Node: %s\",
+    \"body\" : \"%s.<br />cc %s\",
+    \"head\" : \"%s\",
+    \"base\": \"master\"
+  }" "${escaped_message}" "${body}" "${maintainers}" "${GITHUB_USERNAME}:${BRANCH_NAME}"
 }
 
 function comment_payload() {
   local pr_url
   pr_url="${1}"
   echo "{
-    'body': 'Created PR to the ${REPO_NAME} repo (${pr_url})'
+    \"body\": \"Created PR to the ${REPO_NAME} repo (${pr_url})\"
   }"
 }
 
-if images_updated "${COMMIT_ID}"; then
+if images_updated "${COMMIT_RANGE}"; then
 
   permission_check
 
   # Set Git User Info
-  setup_git_author
+  [ -z "$GIT_AUTHOR_NAME" ] && setup_git_author
 
   info "Cloning..."
   git clone --depth 50 "https://github.com/${UPSTREAM_SLUG}.git" ${gitpath} 2> /dev/null
@@ -108,7 +124,8 @@ if images_updated "${COMMIT_ID}"; then
   git commit -m "$(message)"
 
   info "Pushing..."
-  git push "https://${GITHUB_API_TOKEN}:x-oauth-basic@github.com/${ORIGIN_SLUG}.git" -f "${BRANCH_NAME}" 2> /dev/null || fatal "Error pushing the updated stackbrew"
+  git fetch --unshallow "https://github.com/${ORIGIN_SLUG}.git"
+  git push "https://${GITHUB_API_TOKEN}:x-oauth-basic@github.com/${ORIGIN_SLUG}.git" -f "${BRANCH_NAME}" || fatal "Error pushing the updated stackbrew"
 
   cd - && rm -rf ${gitpath}
 
@@ -123,7 +140,7 @@ if images_updated "${COMMIT_ID}"; then
   if [ "${url}" != "null" ]; then
     info "Pull request created at ${url}"
 
-    if [ ! -z "${PR_NUMBER}" ]; then
+    if [ -n "${PR_NUMBER}" ]; then
       comment_endpoint="https://api.github.com/repos/${DOCKER_SLUG}/issues/${PR_NUMBER}/comments"
     else
       comment_endpoint="https://api.github.com/repos/${DOCKER_SLUG}/commits/${COMMIT_ID}/comments"

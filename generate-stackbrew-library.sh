@@ -11,7 +11,9 @@ array_6='6 boron'
 # shellcheck disable=SC2034
 array_8='8 carbon'
 # shellcheck disable=SC2034
-array_10='10 latest'
+array_10='10 dubnium lts'
+# shellcheck disable=SC2034
+array_11='11 current latest'
 # shellcheck disable=SC2034
 array_chakracore_8='chakracore-8'
 # shellcheck disable=SC2034
@@ -89,6 +91,9 @@ for version in "${versions[@]}"; do
 
     slash='/'
     variantAliases=("${versionAliases[@]/%/-${variant//${slash}/-}}")
+    if [ "${variant}" = "${default_variant}-slim" ]; then
+      variantAliases+=("${versionAliases[@]/%/-slim}")
+    fi
     variantAliases=("${variantAliases[@]//latest-/}")
     if [ "${variant}" = "${default_variant}" ]; then
       variantAliases+=("${versionAliases[@]}")

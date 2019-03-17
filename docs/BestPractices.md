@@ -10,6 +10,7 @@
 - [CMD](#cmd)
 - [Docker Run](#docker-run)
 - [Security](#security)
+- [node-gyp in alpine variant](#node-gyp-alpine)
 
 ## Environment Variables
 
@@ -43,6 +44,22 @@ RUN curl -fSLO --compressed "https://yarnpkg.com/downloads/$YARN_VERSION/yarn-v$
     && ln -snf /opt/yarn-v$YARN_VERSION/bin/yarn /usr/local/bin/yarn \
     && ln -snf /opt/yarn-v$YARN_VERSION/bin/yarnpkg /usr/local/bin/yarnpkg \
     && rm yarn-v$YARN_VERSION.tar.gz
+```
+
+If you're using an Alpine-based image, `curl` won't be present, so you'll need to make sure it's installed while using it:
+
+```Dockerfile
+FROM node:6-alpine
+
+ENV YARN_VERSION 1.5.1
+
+RUN apk add --no-cache --virtual .build-deps-yarn curl \
+    && curl -fSLO --compressed "https://yarnpkg.com/downloads/$YARN_VERSION/yarn-v$YARN_VERSION.tar.gz" \
+    && tar -xzf yarn-v$YARN_VERSION.tar.gz -C /opt/ \
+    && ln -snf /opt/yarn-v$YARN_VERSION/bin/yarn /usr/local/bin/yarn \
+    && ln -snf /opt/yarn-v$YARN_VERSION/bin/yarnpkg /usr/local/bin/yarnpkg \
+    && rm yarn-v$YARN_VERSION.tar.gz \
+    && apk del .build-deps-yarn
 ```
 
 ## Handling Kernel Signals
@@ -100,9 +117,8 @@ For alpine based images, you do not have `groupmod` nor `usermod`, so to change 
 
 ```Dockerfile
 RUN deluser --remove-home node \
-  && delgroup node \
   && addgroup -S node -g 999 \
-  && adduser -S -g node -u 999 node
+  && adduser -S -G node -u 999 node
 ```
 
 ## Memory
@@ -138,3 +154,30 @@ $ docker run \
 ## Security
 
 The Docker team has provided a tool to analyze your running containers for potential security issues. You can download and run this tool from here: https://github.com/docker/docker-bench-security
+
+## node-gyp alpine
+
+Here is an example of how you would install dependencies for packages that require node-gyp support on the alpine variant:
+
+```Dockerfile
+FROM node:alpine
+
+RUN apk add --no-cache --virtual .gyp python make g++ \
+    && npm install [ your npm dependencies here ] \
+    && apk del .gyp
+```
+
+And Here's a multistage build example
+
+```Dockerfile
+FROM node:alpine as builder
+
+## Install build toolchain, install node deps and compile native add-ons
+RUN apk add --no-cache --virtual .gyp python make g++
+RUN npm install [ your npm dependencies here ]
+
+FROM node:alpine as app
+
+## Copy built node modules and binaries without including the toolchain
+COPY --from=builder node_modules .
+```

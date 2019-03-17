@@ -1,4 +1,4 @@
-FROM node:8.11.3-jessie
+FROM node:8.15.1-stretch
 
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app

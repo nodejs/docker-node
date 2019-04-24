@@ -1,5 +1,7 @@
 FROM alpine:0.0
 
+ARG CHECKSUM=
+
 ENV NODE_VERSION 0.0.0
 
 RUN addgroup -g 1000 node \
@@ -7,8 +9,24 @@ RUN addgroup -g 1000 node \
     && apk add --no-cache \
         libstdc++ \
     && apk add --no-cache --virtual .build-deps \
-        binutils-gold \
         curl \
+    && ARCH= && alpineArch="$(arch)" \
+      && case "${alpineArch##*-}" in \
+        x86_64) ARCH='x64';; \
+        i386) ARCH='x86';; \
+        *) ;; \
+      esac \
+  && if [ -n "${CHECKSUM}" ]; then \
+    set -eu; \
+    curl -fsSLO --compressed "https://unofficial-builds.nodejs.org/download/release/v$NODE_VERSION/node-v$NODE_VERSION-linux-$ARCH-musl.tar.xz"; \
+    echo "$CHECKSUM  node-v$NODE_VERSION-linux-$ARCH-musl.tar.xz" | sha256sum -c - \
+      && tar -xJf "node-v$NODE_VERSION-linux-$ARCH-musl.tar.xz" -C /usr/local --strip-components=1 --no-same-owner \
+      && ln -s /usr/local/bin/node /usr/local/bin/nodejs; \
+  else \
+    echo "Building from source" \
+    # backup build
+    && apk add --no-cache --virtual .build-deps-full \
+        binutils-gold \
         g++ \
         gcc \
         gnupg \
@@ -16,14 +34,14 @@ RUN addgroup -g 1000 node \
         linux-headers \
         make \
         python \
-  # gpg keys listed at https://github.com/nodejs/node#release-keys
-  && for key in \
-    "${NODE_KEYS[@]}"
-  ; do \
-    gpg --batch --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys "$key" || \
-    gpg --batch --keyserver hkp://ipv4.pool.sks-keyservers.net --recv-keys "$key" || \
-    gpg --batch --keyserver hkp://pgp.mit.edu:80 --recv-keys "$key" ; \
-  done \
+    # gpg keys listed at https://github.com/nodejs/node#release-keys
+    && for key in \
+      "${NODE_KEYS[@]}"
+    ; do \
+      gpg --batch --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys "$key" || \
+      gpg --batch --keyserver hkp://ipv4.pool.sks-keyservers.net --recv-keys "$key" || \
+      gpg --batch --keyserver hkp://pgp.mit.edu:80 --recv-keys "$key" ; \
+    done \
     && curl -fsSLO --compressed "https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION.tar.xz" \
     && curl -fsSLO --compressed "https://nodejs.org/dist/v$NODE_VERSION/SHASUMS256.txt.asc" \
     && gpg --batch --decrypt --output SHASUMS256.txt SHASUMS256.txt.asc \
@@ -33,10 +51,13 @@ RUN addgroup -g 1000 node \
     && ./configure \
     && make -j$(getconf _NPROCESSORS_ONLN) V= \
     && make install \
-    && apk del .build-deps \
+    && apk del .build-deps-full \
     && cd .. \
     && rm -Rf "node-v$NODE_VERSION" \
-    && rm "node-v$NODE_VERSION.tar.xz" SHASUMS256.txt.asc SHASUMS256.txt
+    && rm "node-v$NODE_VERSION.tar.xz" SHASUMS256.txt.asc SHASUMS256.txt; \
+  fi \
+  && rm -f "node-v$NODE_VERSION-linux-$ARCH-musl.tar.xz" \
+  && apk del .build-deps
 
 ENV YARN_VERSION 0.0.0
 

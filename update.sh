@@ -245,6 +245,7 @@ for version in "${versions[@]}"; do
       template_file="${parentpath}/Dockerfile-slim.template"
     fi
 
+    [ "$variant" != "onbuild" ] && cp "${parentpath}/docker-entrypoint.sh" "${version}/${variant}/docker-entrypoint.sh"
     if [ "${update_version}" -eq 0 ] && [ "${update_variant}" -eq 0 ]; then
       update_node_version "${baseuri}" "${versionnum}" "${template_file}" "${version}/${variant}/Dockerfile" "${variant}" &
     fi

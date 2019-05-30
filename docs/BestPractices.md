@@ -36,7 +36,7 @@ ENV PATH=$PATH:/home/node/.npm-global/bin # optionally if you want to run npm gl
 
 If you need to upgrade/downgrade `yarn` for a local install, you can do so by issuing the following commands in your `Dockerfile`:
 
-> Note that if you create some other directory which is not a descendant one from where you ran the command, you'll end up using the global (dated) version. If you wish to upgrade `yarn` globablly follow the instruction in the next section.
+> Note that if you create some other directory which is not a descendant one from where you ran the command, you will end up using the global (dated) version. If you wish to upgrade `yarn` globally follow the instructions in the next section.
 
 ```Dockerfile
 FROM node:6

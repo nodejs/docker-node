@@ -32,7 +32,11 @@ ENV PATH=$PATH:/home/node/.npm-global/bin # optionally if you want to run npm gl
 
 ## Upgrading/downgrading Yarn
 
-If you need to upgrade/downgrade `yarn`, you can do so by issuing the following commands in your `Dockerfile`:
+### Local
+
+If you need to upgrade/downgrade `yarn` for a local install, you can do so by issuing the following commands in your `Dockerfile`:
+
+> Note that if you create some other directory which is not a descendant one from where you ran the command, you'll end up using the global (dated) version. If you wish to upgrade `yarn` globablly follow the instruction in the next section.
 
 ```Dockerfile
 FROM node:6
@@ -40,6 +44,32 @@ FROM node:6
 ENV YARN_VERSION 1.16.0
 
 RUN yarn policies set-version $YARN_VERSION
+```
+
+### Global
+
+```Dockerfile
+FROM node:6
+ENV YARN_VERSION 1.16.0
+RUN curl -fSLO --compressed "https://yarnpkg.com/downloads/$YARN_VERSION/yarn-v$YARN_VERSION.tar.gz" \	
+    && tar -xzf yarn-v$YARN_VERSION.tar.gz -C /opt/ \	
+    && ln -snf /opt/yarn-v$YARN_VERSION/bin/yarn /usr/local/bin/yarn \	
+    && ln -snf /opt/yarn-v$YARN_VERSION/bin/yarnpkg /usr/local/bin/yarnpkg \	
+    && rm yarn-v$YARN_VERSION.tar.gz	
+```	
+
+ If you're using an Alpine-based image, `curl` won't be present, so you'll need to make sure it's installed while using it:	
+
+ ```Dockerfile	
+FROM node:6-alpine	
+ ENV YARN_VERSION 1.5.1	
+ RUN apk add --no-cache --virtual .build-deps-yarn curl \	
+    && curl -fSLO --compressed "https://yarnpkg.com/downloads/$YARN_VERSION/yarn-v$YARN_VERSION.tar.gz" \	
+    && tar -xzf yarn-v$YARN_VERSION.tar.gz -C /opt/ \	
+    && ln -snf /opt/yarn-v$YARN_VERSION/bin/yarn /usr/local/bin/yarn \	
+    && ln -snf /opt/yarn-v$YARN_VERSION/bin/yarnpkg /usr/local/bin/yarnpkg \	
+    && rm yarn-v$YARN_VERSION.tar.gz \	
+    && apk del .build-deps-yarn	
 ```
 
 ## Handling Kernel Signals

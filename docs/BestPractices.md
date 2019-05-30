@@ -51,25 +51,25 @@ RUN yarn policies set-version $YARN_VERSION
 ```Dockerfile
 FROM node:6
 ENV YARN_VERSION 1.16.0
-RUN curl -fSLO --compressed "https://yarnpkg.com/downloads/$YARN_VERSION/yarn-v$YARN_VERSION.tar.gz" \	
-    && tar -xzf yarn-v$YARN_VERSION.tar.gz -C /opt/ \	
-    && ln -snf /opt/yarn-v$YARN_VERSION/bin/yarn /usr/local/bin/yarn \	
-    && ln -snf /opt/yarn-v$YARN_VERSION/bin/yarnpkg /usr/local/bin/yarnpkg \	
-    && rm yarn-v$YARN_VERSION.tar.gz	
-```	
+RUN curl -fSLO --compressed "https://yarnpkg.com/downloads/$YARN_VERSION/yarn-v$YARN_VERSION.tar.gz" \
+  && tar -xzf yarn-v$YARN_VERSION.tar.gz -C /opt/ \
+  && ln -snf /opt/yarn-v$YARN_VERSION/bin/yarn /usr/local/bin/yarn \
+  && ln -snf /opt/yarn-v$YARN_VERSION/bin/yarnpkg /usr/local/bin/yarnpkg \
+  && rm yarn-v$YARN_VERSION.tar.gz
+```
 
- If you're using an Alpine-based image, `curl` won't be present, so you'll need to make sure it's installed while using it:	
+ If you're using an Alpine-based image, `curl` won't be present, so you'll need to make sure it's installed while using it:
 
- ```Dockerfile	
-FROM node:6-alpine	
- ENV YARN_VERSION 1.5.1	
- RUN apk add --no-cache --virtual .build-deps-yarn curl \	
-    && curl -fSLO --compressed "https://yarnpkg.com/downloads/$YARN_VERSION/yarn-v$YARN_VERSION.tar.gz" \	
-    && tar -xzf yarn-v$YARN_VERSION.tar.gz -C /opt/ \	
-    && ln -snf /opt/yarn-v$YARN_VERSION/bin/yarn /usr/local/bin/yarn \	
-    && ln -snf /opt/yarn-v$YARN_VERSION/bin/yarnpkg /usr/local/bin/yarnpkg \	
-    && rm yarn-v$YARN_VERSION.tar.gz \	
-    && apk del .build-deps-yarn	
+ ```Dockerfile
+FROM node:6-alpine
+ENV YARN_VERSION 1.5.1
+RUN apk add --no-cache --virtual .build-deps-yarn curl \
+  && curl -fSLO --compressed "https://yarnpkg.com/downloads/$YARN_VERSION/yarn-v$YARN_VERSION.tar.gz" \
+  && tar -xzf yarn-v$YARN_VERSION.tar.gz -C /opt/ \
+  && ln -snf /opt/yarn-v$YARN_VERSION/bin/yarn /usr/local/bin/yarn \
+  && ln -snf /opt/yarn-v$YARN_VERSION/bin/yarnpkg /usr/local/bin/yarnpkg \
+  && rm yarn-v$YARN_VERSION.tar.gz \
+  && apk del .build-deps-yarn
 ```
 
 ## Handling Kernel Signals

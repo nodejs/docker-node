@@ -58,9 +58,9 @@ RUN curl -fSLO --compressed "https://yarnpkg.com/downloads/$YARN_VERSION/yarn-v$
   && rm yarn-v$YARN_VERSION.tar.gz
 ```
 
- If you're using an Alpine-based image, `curl` won't be present, so you'll need to make sure it's installed while using it:
+If you're using an Alpine-based image, `curl` won't be present, so you'll need to make sure it's installed while using it:
 
- ```Dockerfile
+```Dockerfile
 FROM node:6-alpine
 ENV YARN_VERSION 1.5.1
 RUN apk add --no-cache --virtual .build-deps-yarn curl \

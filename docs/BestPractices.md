@@ -38,6 +38,8 @@ If you need to upgrade/downgrade `yarn` for a local install, you can do so by is
 
 > Note that if you create some other directory which is not a descendant one from where you ran the command, you will end up using the global (dated) version. If you wish to upgrade `yarn` globally follow the instructions in the next section.
 
+> When following the local install instructions, due to duplicated yarn the image will end up being bigger.
+
 ```Dockerfile
 FROM node:6
 

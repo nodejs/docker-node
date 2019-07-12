@@ -1,9 +1,9 @@
-FROM debian:stretch-slim
+FROM debian:buster-slim
 
 RUN groupadd --gid 1000 node \
   && useradd --uid 1000 --gid node --shell /bin/bash --create-home node
 
-ENV NODE_VERSION 8.16.0
+ENV NODE_VERSION 12.6.0
 
 RUN buildDeps='xz-utils' \
     && ARCH= && dpkgArch="$(dpkg --print-architecture)" \

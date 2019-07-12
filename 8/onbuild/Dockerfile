@@ -1,4 +1,4 @@
-FROM node:8.16.0-stretch
+FROM node:8.16.0-buster
 
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app

@@ -1,4 +1,4 @@
 baseuri     https://nodejs.org/dist
-default_variant stretch
+default_variant buster
 alpine_version  3.9
-debian_versions jessie stretch
+debian_versions jessie stretch buster

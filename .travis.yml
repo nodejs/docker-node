@@ -144,24 +144,17 @@ jobs:
 
     - stage: Build
       before_script: *auto_skip
-      name: 11 on alpine
+      name: 10 on buster
       env:
-        - NODE_VERSION="11"
-        - VARIANT="alpine"
+        - NODE_VERSION="10"
+        - VARIANT="buster"
 
     - stage: Build
       before_script: *auto_skip
-      name: 11 on stretch
+      name: 10 on buster-slim
       env:
-        - NODE_VERSION="11"
-        - VARIANT="stretch"
-
-    - stage: Build
-      before_script: *auto_skip
-      name: 11 on stretch-slim
-      env:
-        - NODE_VERSION="11"
-        - VARIANT="stretch-slim"
+        - NODE_VERSION="10"
+        - VARIANT="buster-slim"
 
     - stage: Build
       before_script: *auto_skip
@@ -183,6 +176,20 @@ jobs:
       env:
         - NODE_VERSION="12"
         - VARIANT="stretch-slim"
+
+    - stage: Build
+      before_script: *auto_skip
+      name: 12 on buster
+      env:
+        - NODE_VERSION="12"
+        - VARIANT="buster"
+
+    - stage: Build
+      before_script: *auto_skip
+      name: 12 on buster-slim
+      env:
+        - NODE_VERSION="12"
+        - VARIANT="buster-slim"
 
     - stage: Build
       before_script: *auto_skip
@@ -225,6 +232,20 @@ jobs:
       env:
         - NODE_VERSION="8"
         - VARIANT="stretch-slim"
+
+    - stage: Build
+      before_script: *auto_skip
+      name: 8 on buster
+      env:
+        - NODE_VERSION="8"
+        - VARIANT="buster"
+
+    - stage: Build
+      before_script: *auto_skip
+      name: 8 on buster-slim
+      env:
+        - NODE_VERSION="8"
+        - VARIANT="buster-slim"
 
     - stage: Build
       before_script: *auto_skip

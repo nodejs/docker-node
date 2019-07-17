@@ -96,7 +96,7 @@ function in_versions_to_update() {
 function in_variants_to_update() {
   local variant=$1
 
-  if [ "${#update_variants[@]}" -eq 0 ]; then
+  if [ "${#variant_arg[@]}" -eq 0 ]; then
     echo 0
     return
   fi

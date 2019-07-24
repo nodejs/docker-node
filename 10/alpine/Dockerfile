@@ -4,9 +4,9 @@ ENV NODE_VERSION 10.16.0
 
 RUN addgroup -g 1000 node \
     && adduser -u 1000 -G node -s /bin/sh -D node \
-    && apk add --no-cache \
+    && apk add -q --no-cache \
         libstdc++ \
-    && apk add --no-cache --virtual .build-deps \
+    && apk add -q --no-cache --virtual .build-deps \
         binutils-gold \
         curl \
         g++ \
@@ -50,7 +50,7 @@ RUN addgroup -g 1000 node \
 
 ENV YARN_VERSION 1.16.0
 
-RUN apk add --no-cache --virtual .build-deps-yarn curl gnupg tar \
+RUN apk add -q --no-cache --virtual .build-deps-yarn curl gnupg tar \
   && for key in \
     6A010C5166006599AA17F08146C2130DFD2497F5 \
   ; do \

@@ -93,6 +93,13 @@ for version in "${versions[@]}"; do
       test_image "${full_version}" "${default_variant}" "$tag"
     fi
 
+    if [ "${variant}" != "onbuild" ]; then
+      variant_full_version=$(get_full_version "${version}" "${variant}")
+      if [ "${full_version}" != "${variant_full_version}" ]; then
+        fatal "${variant}'s version is ${variant_full_version}, but should be ${full_version}"
+      fi
+    fi
+
     build "${version}" "${variant}" "${tag}"
     test_image "${full_version}" "${variant}" "${tag}"
   done

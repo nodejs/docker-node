@@ -231,14 +231,18 @@ function get_full_version() {
   version=$1
   shift
 
-  local default_dockerfile
-  if [ -f "${version}/${default_variant}/Dockerfile" ]; then
-    default_dockerfile="${version}/${default_variant}/Dockerfile"
+  local variant
+  variant=${1:-${default_variant}}
+  shift
+
+  local dockerfile
+  if [ -f "${version}/${variant}/Dockerfile" ]; then
+    dockerfile="${version}/${variant}/Dockerfile"
   else
-    default_dockerfile="${version}/Dockerfile"
+    dockerfile="${version}/Dockerfile"
   fi
 
-  grep -m1 'ENV NODE_VERSION ' "${default_dockerfile}" | cut -d' ' -f3
+  grep -m1 'ENV NODE_VERSION ' "${dockerfile}" | cut -d' ' -f3
 }
 
 function get_major_minor_version() {

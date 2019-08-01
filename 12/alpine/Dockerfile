@@ -1,7 +1,5 @@
 FROM alpine:3.9
 
-ARG CHECKSUM=
-
 ENV NODE_VERSION 12.13.0
 
 RUN addgroup -g 1000 node \
@@ -12,8 +10,10 @@ RUN addgroup -g 1000 node \
         curl \
     && ARCH= && alpineArch="$(arch)" \
       && case "${alpineArch##*-}" in \
-        x86_64) ARCH='x64';; \
-        i386) ARCH='x86';; \
+        x86_64) \
+          ARCH='x64' \
+          CHECKSUM="f1c73636c4d345c4aefd65cc959f793d7bb795200d43e19e418d7811670b03dd" \
+          ;; \
         *) ;; \
       esac \
   && if [ -n "${CHECKSUM}" ]; then \

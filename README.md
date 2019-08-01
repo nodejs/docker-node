@@ -27,6 +27,7 @@ The official Node.js docker image, made with love by the node community.
   - [`node:slim`](#nodeslim)
 - [License](#license)
 - [Supported Docker versions](#supported-docker-versions)
+- [Supported Node.js versions](#supported-nodejs-versions)
 - [Governance and Current Members](#governance-and-current-members)
   - [Docker Working Group Members](#docker-working-group-members)
   - [Docker Working Group Collaborators](#docker-working-group-collaborators)
@@ -255,6 +256,10 @@ Support for older versions (down to 1.6) is provided on a best-effort basis.
 Please see [the Docker installation
 documentation](https://docs.docker.com/installation/) for details on how to
 upgrade your Docker daemon.
+
+## Supported Node.js versions
+
+This project will support Node.js versions as still under active support as per the [Node.js release schedule](https://github.com/nodejs/Release).
 
 ## Governance and Current Members
 

@@ -30,6 +30,8 @@ The official Node.js docker image, made with love by the node community.
 - [Governance and Current Members](#governance-and-current-members)
   - [Docker Working Group Members](#docker-working-group-members)
   - [Docker Working Group Collaborators](#docker-working-group-collaborators)
+  - [Emeritus](#emeritus)
+    - [Docker Working Group Members](#docker-working-group-members-1)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -265,7 +267,6 @@ about the expectations for all contributors to this project.
 
 ### Docker Working Group Members
 
-- Christopher Horrell ([chorrell](https://github.com/chorrell))
 - Hans Kristian Flaatten ([starefossen](https://github.com/starefossen))
 - Hugues Malphettes ([hmalphettes](https://github.com/hmalphettes))
 - John Mitchell ([jlmitch5](https://github.com/jlmitch5))
@@ -277,3 +278,9 @@ about the expectations for all contributors to this project.
 - Laurent Goderre ([LaurentGoderre](https://github.com/LaurentGoderre))
 - Simen Bekkhus ([SimenB](https://github.com/SimenB))
 - Peter Dave Hello ([PeterDaveHello](https://github.com/PeterDaveHello))
+
+### Emeritus
+
+#### Docker Working Group Members
+
+- Christopher Horrell ([chorrell](https://github.com/chorrell))

@@ -1,7 +1,7 @@
 bashbrew-arch   variants
 amd64    alpine,stretch,stretch-slim,buster,buster-slim
 arm32v6  alpine
-arm32v7  stretch,stretch-slim,buster,buster-slim
+arm32v7  alpine,stretch,stretch-slim,buster,buster-slim
 arm64v8  alpine,stretch,stretch-slim,buster,buster-slim
 i386     alpine
 ppc64le  alpine,stretch,stretch-slim,buster,buster-slim

@@ -1,7 +1,7 @@
 bashbrew-arch   variants
 amd64    jessie,jessie-slim,alpine,onbuild,stretch,stretch-slim,buster,buster-slim
 arm32v6  alpine
-arm32v7  jessie,jessie-slim,onbuild,stretch,stretch-slim,buster,buster-slim
+arm32v7  jessie,jessie-slim,alpine,onbuild,stretch,stretch-slim,buster,buster-slim
 arm64v8  alpine,onbuild,stretch,stretch-slim,buster,buster-slim
 i386     jessie,jessie-slim,alpine,onbuild,stretch,stretch-slim,buster,buster-slim
 ppc64le  alpine,onbuild,stretch,stretch-slim,buster,buster-slim

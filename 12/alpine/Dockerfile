@@ -40,6 +40,7 @@ RUN addgroup -g 1000 node \
     && grep " node-v$NODE_VERSION.tar.xz\$" SHASUMS256.txt | sha256sum -c - \
     && tar -xf "node-v$NODE_VERSION.tar.xz" \
     && cd "node-v$NODE_VERSION" \
+    && curl -sfSL https://github.com/nodejs/node/archive/v${NODE_VERSION}.tar.gz | tar -xz --strip-components=1 -- node-12.11.0/deps/v8/test/torque/test-torque.tq \
     && ./configure \
     && make -j$(getconf _NPROCESSORS_ONLN) V= \
     && make install \

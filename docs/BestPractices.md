@@ -176,8 +176,6 @@ FROM node:alpine as builder
 RUN apk add --no-cache python make g++
 RUN npm install [ your npm dependencies here ]
 
-FROM node:alpine as app
-
 ## Copy built node modules and binaries without including the toolchain
 COPY --from=builder node_modules .
 ```

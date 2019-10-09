@@ -130,13 +130,6 @@ jobs:
 
     - stage: Build
       before_script: *auto_skip
-      name: 10 on alpine
-      env:
-        - NODE_VERSION="10"
-        - VARIANT="alpine"
-
-    - stage: Build
-      before_script: *auto_skip
       name: 10 on stretch
       env:
         - NODE_VERSION="10"
@@ -165,10 +158,17 @@ jobs:
 
     - stage: Build
       before_script: *auto_skip
-      name: 12 on alpine
+      name: 10 on alpine3.9
       env:
-        - NODE_VERSION="12"
-        - VARIANT="alpine"
+        - NODE_VERSION="10"
+        - VARIANT="alpine3.9"
+
+    - stage: Build
+      before_script: *auto_skip
+      name: 10 on alpine3.10
+      env:
+        - NODE_VERSION="10"
+        - VARIANT="alpine3.10"
 
     - stage: Build
       before_script: *auto_skip
@@ -200,10 +200,17 @@ jobs:
 
     - stage: Build
       before_script: *auto_skip
-      name: 13 on alpine
+      name: 12 on alpine3.9
       env:
-        - NODE_VERSION="13"
-        - VARIANT="alpine"
+        - NODE_VERSION="12"
+        - VARIANT="alpine3.9"
+
+    - stage: Build
+      before_script: *auto_skip
+      name: 12 on alpine3.10
+      env:
+        - NODE_VERSION="12"
+        - VARIANT="alpine3.10"
 
     - stage: Build
       before_script: *auto_skip
@@ -235,6 +242,13 @@ jobs:
 
     - stage: Build
       before_script: *auto_skip
+      name: 13 on alpine3.10
+      env:
+        - NODE_VERSION="13"
+        - VARIANT="alpine3.10"
+
+    - stage: Build
+      before_script: *auto_skip
       name: 8 on jessie
       env:
         - NODE_VERSION="8"
@@ -246,20 +260,6 @@ jobs:
       env:
         - NODE_VERSION="8"
         - VARIANT="jessie-slim"
-
-    - stage: Build
-      before_script: *auto_skip
-      name: 8 on alpine
-      env:
-        - NODE_VERSION="8"
-        - VARIANT="alpine"
-
-    - stage: Build
-      before_script: *auto_skip
-      name: 8 on onbuild
-      env:
-        - NODE_VERSION="8"
-        - VARIANT="onbuild"
 
     - stage: Build
       before_script: *auto_skip
@@ -288,6 +288,20 @@ jobs:
       env:
         - NODE_VERSION="8"
         - VARIANT="buster-slim"
+
+    - stage: Build
+      before_script: *auto_skip
+      name: 8 on alpine3.9
+      env:
+        - NODE_VERSION="8"
+        - VARIANT="alpine3.9"
+
+    - stage: Build
+      before_script: *auto_skip
+      name: 8 on alpine3.10
+      env:
+        - NODE_VERSION="8"
+        - VARIANT="alpine3.10"
 
     - stage: Build
       before_script: *auto_skip

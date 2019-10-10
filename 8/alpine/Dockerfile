@@ -1,6 +1,6 @@
 FROM alpine:3.9
 
-ENV NODE_VERSION 8.16.1
+ENV NODE_VERSION 8.16.2
 
 RUN addgroup -g 1000 node \
     && adduser -u 1000 -G node -s /bin/sh -D node \
@@ -48,7 +48,7 @@ RUN addgroup -g 1000 node \
     && rm -Rf "node-v$NODE_VERSION" \
     && rm "node-v$NODE_VERSION.tar.xz" SHASUMS256.txt.asc SHASUMS256.txt
 
-ENV YARN_VERSION 1.15.2
+ENV YARN_VERSION 1.19.1
 
 RUN apk add --no-cache --virtual .build-deps-yarn curl gnupg tar \
   && for key in \

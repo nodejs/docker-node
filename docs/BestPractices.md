@@ -4,6 +4,7 @@
 
 - [Environment Variables](#environment-variables)
 - [Global npm dependencies](#global-npm-dependencies)
+- [Upgrading/downgrading Yarn](#upgradingdowngrading-yarn)
 - [Handling Kernel Signals](#handling-kernel-signals)
 - [Non-root User](#non-root-user)
 - [Memory](#memory)

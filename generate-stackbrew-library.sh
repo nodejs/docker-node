@@ -9,9 +9,9 @@ hash git 2> /dev/null || { echo >&2 "git not found, exiting."; }
 # shellcheck disable=SC2034
 array_8='8 carbon'
 # shellcheck disable=SC2034
-array_10='10 dubnium lts'
+array_10='10 dubnium'
 # shellcheck disable=SC2034
-array_12='12 current latest'
+array_12='12 erbium lts current latest'
 # shellcheck disable=SC2034
 array_chakracore_8='chakracore-8'
 # shellcheck disable=SC2034

@@ -193,6 +193,41 @@ jobs:
 
     - stage: Build
       before_script: *auto_skip
+      name: 13 on alpine
+      env:
+        - NODE_VERSION="13"
+        - VARIANT="alpine"
+
+    - stage: Build
+      before_script: *auto_skip
+      name: 13 on stretch
+      env:
+        - NODE_VERSION="13"
+        - VARIANT="stretch"
+
+    - stage: Build
+      before_script: *auto_skip
+      name: 13 on stretch-slim
+      env:
+        - NODE_VERSION="13"
+        - VARIANT="stretch-slim"
+
+    - stage: Build
+      before_script: *auto_skip
+      name: 13 on buster
+      env:
+        - NODE_VERSION="13"
+        - VARIANT="buster"
+
+    - stage: Build
+      before_script: *auto_skip
+      name: 13 on buster-slim
+      env:
+        - NODE_VERSION="13"
+        - VARIANT="buster-slim"
+
+    - stage: Build
+      before_script: *auto_skip
       name: 8 on jessie
       env:
         - NODE_VERSION="8"

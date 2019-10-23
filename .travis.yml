@@ -99,8 +99,15 @@ jobs:
       before_script:
         - |
           if ! git diff --name-only "$TRAVIS_COMMIT_RANGE" -- | grep -Eq "Dockerfile$"; then
-            echo "Skip deployment as none of the Dockerfiles has been changed."
-            exit
+            if git diff --name-only "$TRAVIS_COMMIT_RANGE" -- | grep -Eq "^generate-stackbrew-library.sh$"; then
+              if ! git diff "$TRAVIS_COMMIT_RANGE" -- generate-stackbrew-library.sh | grep -Eq '^[-+]array_[0-9]'; then
+                echo "Skip deployment as none of the Dockerfiles and version tag array in generate-stackbrew-library.sh has been changed."
+                exit
+              fi
+            else
+              echo "Skip deployment as none of the Dockerfiles and generate-stackbrew-library.sh has been changed."
+              exit
+            fi
           fi
       script:
         - ./generate-stackbrew-pr.sh "$TRAVIS_COMMIT_RANGE"

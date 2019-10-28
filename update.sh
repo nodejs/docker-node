@@ -166,8 +166,14 @@ function update_node_version() {
       if [ "${SKIP}" = true ]; then
         # Get the currently used Alpine version
         alpine_version=$(grep "FROM" "${dockerfile}" | cut -d':' -f2)
+        checksum=$(grep -o "CHECKSUM=\".*\"" "${dockerfile}" | cut -d'=' -f2)
+      else
+        checksum="\"$(
+          curl -sSL --compressed "https://unofficial-builds.nodejs.org/download/release/v${nodeVersion}/SHASUMS256.txt" | grep "node-v${nodeVersion}-linux-x64-musl.tar.xz" | cut -d' ' -f1
+        )\""
       fi
       sed -Ei -e "s/(alpine:)0.0/\\1${alpine_version}/" "${dockerfile}-tmp"
+      sed -Ei -e "s/CHECKSUM=CHECKSUM_x64/CHECKSUM=${checksum}/" "${dockerfile}-tmp"
     elif is_debian "${variant}"; then
       sed -Ei -e "s/(buildpack-deps:)name/\\1${variant}/" "${dockerfile}-tmp"
     elif is_debian_slim "${variant}"; then

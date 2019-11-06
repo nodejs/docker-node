@@ -1,6 +1,6 @@
 FROM alpine:3.10
 
-ENV NODE_VERSION 13.0.1
+ENV NODE_VERSION 13.1.0
 
 RUN addgroup -g 1000 node \
     && adduser -u 1000 -G node -s /bin/sh -D node \
@@ -8,11 +8,11 @@ RUN addgroup -g 1000 node \
         libstdc++ \
     && apk add --no-cache --virtual .build-deps \
         curl \
-    && ARCH= && alpineArch="$(arch)" \
+    && ARCH= && alpineArch="$(apk --print-arch)" \
       && case "${alpineArch##*-}" in \
         x86_64) \
           ARCH='x64' \
-          CHECKSUM="5f40392e14e81a566c06f4abcbe735575f2d7045709211eb7245ef8f67896bee" \
+          CHECKSUM="57cc9f7282e67c69b2ee986c71a490bc8750d426f04d458d20debde554a19505" \
           ;; \
         *) ;; \
       esac \

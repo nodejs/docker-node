@@ -305,6 +305,13 @@ jobs:
 
     - stage: Build
       before_script: *auto_skip
+      name: 8 on onbuild
+      env:
+        - NODE_VERSION="8"
+        - VARIANT="onbuild"
+
+    - stage: Build
+      before_script: *auto_skip
       name: chakracore/10 on default
       env:
         - NODE_VERSION="chakracore/10"

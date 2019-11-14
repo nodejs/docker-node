@@ -8,7 +8,7 @@ RUN addgroup -g 1000 node \
         libstdc++ \
     && apk add --no-cache --virtual .build-deps \
         curl \
-    && ARCH= && alpineArch="$(arch)" \
+    && ARCH= && alpineArch="$(apk --print-arch)" \
       && case "${alpineArch##*-}" in \
         x86_64) \
           ARCH='x64' \

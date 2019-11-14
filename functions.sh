@@ -169,6 +169,16 @@ function get_versions() {
   fi
 }
 
+function is_alpine() {
+  local variant
+  variant=${1}
+  shift
+
+  if [ "${variant}" = "${variant#alpine}" ]; then
+    return 1
+  fi
+}
+
 function is_debian() {
   local variant
   variant=$1

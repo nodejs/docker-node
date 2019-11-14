@@ -162,16 +162,11 @@ function update_node_version() {
       sed -Ei -e "/${pattern}/d" "${dockerfile}-tmp"
     done
 
-    if [ "${variant}" = "alpine" ]; then
-      if [ "${SKIP}" = true ]; then
-        # Get the currently used Alpine version
-        alpine_version=$(grep "FROM" "${dockerfile}" | cut -d':' -f2)
-        checksum=$(grep -o "CHECKSUM=\".*\"" "${dockerfile}" | cut -d'=' -f2)
-      else
-        checksum="\"$(
-          curl -sSL --compressed "https://unofficial-builds.nodejs.org/download/release/v${nodeVersion}/SHASUMS256.txt" | grep "node-v${nodeVersion}-linux-x64-musl.tar.xz" | cut -d' ' -f1
-        )\""
-      fi
+    if is_alpine "${variant}"; then
+      alpine_version="${variant#*alpine}"
+      checksum="\"$(
+        curl -sSL --compressed "https://unofficial-builds.nodejs.org/download/release/v${nodeVersion}/SHASUMS256.txt" | grep "node-v${nodeVersion}-linux-x64-musl.tar.xz" | cut -d' ' -f1
+      )\""
       sed -Ei -e "s/(alpine:)0.0/\\1${alpine_version}/" "${dockerfile}-tmp"
       sed -Ei -e "s/CHECKSUM=CHECKSUM_x64/CHECKSUM=${checksum}/" "${dockerfile}-tmp"
     elif is_debian "${variant}"; then
@@ -249,6 +244,8 @@ for version in "${versions[@]}"; do
       template_file="${parentpath}/Dockerfile-debian.template"
     elif is_debian_slim "${variant}"; then
       template_file="${parentpath}/Dockerfile-slim.template"
+    elif is_alpine "${variant}"; then
+      template_file="${parentpath}/Dockerfile-alpine.template"
     fi
 
     [ "$variant" != "onbuild" ] && cp "${parentpath}/docker-entrypoint.sh" "${version}/${variant}/docker-entrypoint.sh"

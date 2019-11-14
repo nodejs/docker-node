@@ -21,6 +21,8 @@ array_chakracore_10='chakracore-10 chakracore'
 
 default_variant=$(get_config "./" "default_variant")
 
+default_alpine=$(get_config "./" "alpine_version")
+
 cd "$(cd "${0%/*}" && pwd -P)"
 
 self="$(basename "${BASH_SOURCE[0]}")"
@@ -93,11 +95,12 @@ for version in "${versions[@]}"; do
     variantAliases=("${versionAliases[@]/%/-${variant//${slash}/-}}")
     if [ "${variant}" = "${default_variant}-slim" ]; then
       variantAliases+=("${versionAliases[@]/%/-slim}")
-    fi
-    variantAliases=("${variantAliases[@]//latest-/}")
-    if [ "${variant}" = "${default_variant}" ]; then
+    elif [ "${variant}" = "alpine${default_alpine}" ]; then
+      variantAliases+=("${versionAliases[@]/%/-alpine}")
+    elif [ "${variant}" = "${default_variant}" ]; then
       variantAliases+=("${versionAliases[@]}")
     fi
+    variantAliases=("${variantAliases[@]//latest-/}")
 
     # Get supported architectures for a specific version and variant.
     # See details in function.sh

@@ -100,7 +100,7 @@ function comment_payload() {
   local pr_url
   pr_url="${1}"
   echo "{
-    \"body\": \"Created PR to the ${REPO_NAME} repo (${pr_url})\"
+    \"body\": \"Created PR to the ${REPO_NAME} repo (${pr_url}). See https://github.com/docker-library/faq#an-images-source-changed-in-git-now-what if you are wondering when it will be available on the Docker Hub.\"
   }"
 }
 

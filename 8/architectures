@@ -3,6 +3,6 @@ amd64    jessie,jessie-slim,stretch,stretch-slim,buster,buster-slim,alpine3.9,al
 arm32v6  alpine3.9,alpine3.10
 arm32v7  jessie,jessie-slim,stretch,stretch-slim,buster,buster-slim,alpine3.9,alpine3.10,onbuild
 arm64v8  stretch,stretch-slim,buster,buster-slim,alpine3.9,alpine3.10,onbuild
-i386     jessie,jessie-slim,alpine,stretch-slim,buster,buster-slim,alpine3.9,alpine3.10,onbuild
+i386     jessie,jessie-slim,stretch,stretch-slim,buster,buster-slim,alpine3.9,alpine3.10,onbuild
 ppc64le  stretch,stretch-slim,buster,buster-slim,alpine3.9,alpine3.10,onbuild
 s390x    stretch,stretch-slim,buster,buster-slim,alpine3.9,alpine3.10,onbuild

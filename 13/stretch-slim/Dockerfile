@@ -3,7 +3,7 @@ FROM debian:stretch-slim
 RUN groupadd --gid 1000 node \
   && useradd --uid 1000 --gid node --shell /bin/bash --create-home node
 
-ENV NODE_VERSION 13.2.0
+ENV NODE_VERSION 13.3.0
 
 RUN buildDeps='xz-utils' \
     && ARCH= && dpkgArch="$(dpkg --print-architecture)" \
@@ -45,7 +45,7 @@ RUN buildDeps='xz-utils' \
     && apt-get purge -y --auto-remove $buildDeps \
     && ln -s /usr/local/bin/node /usr/local/bin/nodejs
 
-ENV YARN_VERSION 1.19.1
+ENV YARN_VERSION 1.19.2
 
 RUN set -ex \
   && for key in \

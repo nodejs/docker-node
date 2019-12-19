@@ -172,6 +172,13 @@ jobs:
 
     - stage: Build
       before_script: *auto_skip
+      name: 10 on alpine3.11
+      env:
+        - NODE_VERSION="10"
+        - VARIANT="alpine3.11"
+
+    - stage: Build
+      before_script: *auto_skip
       name: 12 on stretch
       env:
         - NODE_VERSION="12"
@@ -214,6 +221,13 @@ jobs:
 
     - stage: Build
       before_script: *auto_skip
+      name: 12 on alpine3.11
+      env:
+        - NODE_VERSION="12"
+        - VARIANT="alpine3.11"
+
+    - stage: Build
+      before_script: *auto_skip
       name: 13 on stretch
       env:
         - NODE_VERSION="13"
@@ -246,6 +260,13 @@ jobs:
       env:
         - NODE_VERSION="13"
         - VARIANT="alpine3.10"
+
+    - stage: Build
+      before_script: *auto_skip
+      name: 13 on alpine3.11
+      env:
+        - NODE_VERSION="13"
+        - VARIANT="alpine3.11"
 
     - stage: Build
       before_script: *auto_skip
@@ -302,6 +323,13 @@ jobs:
       env:
         - NODE_VERSION="8"
         - VARIANT="alpine3.10"
+
+    - stage: Build
+      before_script: *auto_skip
+      name: 8 on alpine3.11
+      env:
+        - NODE_VERSION="8"
+        - VARIANT="alpine3.11"
 
     - stage: Build
       before_script: *auto_skip

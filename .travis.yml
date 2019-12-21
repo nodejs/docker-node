@@ -256,6 +256,13 @@ jobs:
 
     - stage: Build
       before_script: *auto_skip
+      name: 13 on alpine3.9
+      env:
+        - NODE_VERSION="13"
+        - VARIANT="alpine3.9"
+
+    - stage: Build
+      before_script: *auto_skip
       name: 13 on alpine3.10
       env:
         - NODE_VERSION="13"

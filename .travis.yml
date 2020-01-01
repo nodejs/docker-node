@@ -58,17 +58,6 @@ jobs:
         - find . -name "*.md" | xargs -n 1 markdown-link-check
 
     - stage: Test
-      name: Doc Toc Check
-      language: node_js
-      node_js:
-        - lts/*
-      install: npm i -g doctoc
-      script:
-        - cp README.md README.md.tmp &&
-          doctoc --title='## Table of Contents' --github README.md &&
-          diff -q README.md README.md.tmp
-
-    - stage: Test
       name: shfmt check
       script:
         - docker run -it --rm -v "$(pwd)":/sh -w /sh peterdavehello/shfmt:2.6.3 shfmt -sr -i 2 -l -w -ci .

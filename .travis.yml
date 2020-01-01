@@ -40,23 +40,8 @@ stages:
 
 jobs:
   fast_finish: true
-  allow_failures:
-    - env:
-        - TEST=mardown_lint
 
   include:
-    - stage: Test
-      name: Markdown link check
-      env:
-        - TEST=mardown_lint
-      language: node_js
-      node_js:
-        - lts/*
-      install:
-        - npm i -g markdown-link-check
-      script:
-        - find . -name "*.md" | xargs -n 1 markdown-link-check
-
     - stage: Test
       name: .travis.yml and travis.yml.template consistency
       script:

@@ -58,17 +58,6 @@ jobs:
         - find . -name "*.md" | xargs -n 1 markdown-link-check
 
     - stage: Test
-      name: shfmt check
-      script:
-        - docker run -it --rm -v "$(pwd)":/sh -w /sh peterdavehello/shfmt:2.6.3 shfmt -sr -i 2 -l -w -ci .
-        - git diff --color
-        - git diff --stat=220 --color --exit-code
-
-    - stage: Test
-      name: Shell Check
-      script: shellcheck *.sh
-
-    - stage: Test
       name: .travis.yml and travis.yml.template consistency
       script:
         - ./update.sh -t

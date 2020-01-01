@@ -13,8 +13,6 @@ array_12='12 erbium lts current'
 # shellcheck disable=SC2034
 array_13='13 latest'
 # shellcheck disable=SC2034
-array_chakracore_8='chakracore-8'
-# shellcheck disable=SC2034
 array_chakracore_10='chakracore-10 chakracore'
 
 default_variant=$(get_config "./" "default_variant")

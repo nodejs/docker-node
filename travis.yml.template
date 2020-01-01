@@ -56,16 +56,6 @@ jobs:
         - find . -name "*.md" | xargs -n 1 markdown-link-check
 
     - stage: Test
-      name: Editor Config check
-      language: node_js
-      node_js:
-        - lts/*
-      install:
-        - npm i -g eclint
-      script:
-        - eclint check
-
-    - stage: Test
       name: Doc Toc Check
       language: node_js
       node_js:

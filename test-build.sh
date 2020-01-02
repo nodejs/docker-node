@@ -7,8 +7,8 @@ set -euo pipefail
 . functions.sh
 
 # Convert comma delimited cli arguments to arrays
-# E.g. ./test-build.sh 8,10 slim,onbuild
-# "8,10" becomes "8 10" and "slim,onbuild" becomes "slim onbuild"
+# E.g. ./test-build.sh 10,12 slim,alpine
+# "10,12" becomes "10 12" and "slim,alpine" becomes "slim alpine"
 IFS=',' read -ra versions_arg <<< "${1:-}"
 IFS=',' read -ra variant_arg <<< "${2:-}"
 
@@ -87,11 +87,6 @@ for version in "${versions[@]}"; do
   for variant in "${variants[@]}"; do
     # Skip non-docker directories
     [ -f "${version}/${variant}/Dockerfile" ] || continue
-
-    if [ "${variant}" = "onbuild" ]; then
-      build "${version}" "${default_variant}" "$tag"
-      test_image "${full_version}" "${default_variant}" "$tag"
-    fi
 
     build "${version}" "${variant}" "${tag}"
     test_image "${full_version}" "${variant}" "${tag}"

@@ -131,7 +131,7 @@ function update_node_version() {
   (
     cp "${template}" "${dockerfile}-tmp"
     local fromprefix=""
-    if [ "${arch}" != "amd64" ] && [ "${variant}" != "onbuild" ]; then
+    if [ "${arch}" != "amd64" ]; then
       fromprefix="${arch}\\/"
     fi
 
@@ -145,9 +145,6 @@ function update_node_version() {
       yarnVersion="$(grep "ENV YARN_VERSION" "${dockerfile}" | cut -d' ' -f3)"
     fi
     sed -Ei -e 's/^(ENV YARN_VERSION ).*/\1'"${yarnVersion}"'/' "${dockerfile}-tmp"
-
-    # Only for onbuild variant
-    sed -Ei -e 's/^(FROM .*node:)[^-]*(-.*)/\1'"${nodeVersion}"'\2/' "${dockerfile}-tmp"
 
     # shellcheck disable=SC1004
     new_line=' \\\
@@ -248,7 +245,7 @@ for version in "${versions[@]}"; do
       template_file="${parentpath}/Dockerfile-alpine.template"
     fi
 
-    [ "$variant" != "onbuild" ] && cp "${parentpath}/docker-entrypoint.sh" "${version}/${variant}/docker-entrypoint.sh"
+    cp "${parentpath}/docker-entrypoint.sh" "${version}/${variant}/docker-entrypoint.sh"
     if [ "${update_version}" -eq 0 ] && [ "${update_variant}" -eq 0 ]; then
       update_node_version "${baseuri}" "${versionnum}" "${template_file}" "${version}/${variant}/Dockerfile" "${variant}" &
     fi

@@ -23,7 +23,6 @@ The official Node.js docker image, made with love by the node community.
 - [Image Variants](#image-variants)
   - [`node:<version>`](#nodeversion)
   - [`node:alpine`](#nodealpine)
-  - [`node:onbuild`](#nodeonbuild)
   - [`node:slim`](#nodeslim)
 - [License](#license)
 - [Supported Docker versions](#supported-docker-versions)
@@ -190,49 +189,6 @@ To minimize image size, it's uncommon for additional related tools
 image as a base, add the things you need in your own Dockerfile
 (see the [`alpine` image description](https://hub.docker.com/_/alpine/) for
 examples of how to install packages if you are unfamiliar).
-
-### `node:onbuild`
-
-The `ONBUILD` image variants are deprecated, and their usage is discouraged. For more details, see [docker-library/official-images#2076](https://github.com/docker-library/official-images/issues/2076).
-
-This image makes building derivative images easier. For most use cases, creating
-a `Dockerfile` in the base of your project directory with the line `FROM
-node:onbuild` will be enough to create a stand-alone image for your project.
-
-While the `onbuild` variant is really useful for "getting off the ground
-running" (zero to Dockerized in a short period of time), it's not recommended
-for long-term usage within a project due to the lack of control over *when* the
-`ONBUILD` triggers fire (see also
-[`docker/docker#5714`](https://github.com/docker/docker/issues/5714),
-[`docker/docker#8240`](https://github.com/docker/docker/issues/8240),
-[`docker/docker#11917`](https://github.com/docker/docker/issues/11917)).
-
-Once you've got a handle on how your project functions within Docker, you'll
-probably want to adjust your `Dockerfile` to inherit from a non-`onbuild`
-variant and copy the commands from the `onbuild` variant `Dockerfile` (moving
-the `ONBUILD` lines to the end and removing the `ONBUILD` keywords) into your
-own file so that you have tighter control over them and more transparency for
-yourself and others looking at your `Dockerfile` as to what it does. This also
-makes it easier to add additional requirements as time goes on (such as
-installing more packages before performing the previously-`ONBUILD` steps).
-
-This `onbuild` variant will only install npm packages according to the
-`package.json` and *does not* adhere to the `npm-shrinkwrap.json` (see full
-discussion in
-[`nodejs/docker-node#65`](https://github.com/nodejs/docker-node/issues/65).
-
-Note that npm installs devDependencies by default, which is undesirable if
-you're building a production image. To avoid this pass NODE_ENV as a build
-argument i.e. `docker build --build-arg NODE_ENV=production …`.
-
-The image assumes that your application has a file named
-[`package.json`](https://docs.npmjs.com/files/package.json) listing its
-dependencies and defining its [start
-script](https://docs.npmjs.com/misc/scripts#default-values).
-
-It also assumes that you have a file named [`.dockerignore`](https://docs.docker.com/engine/reference/builder/#/dockerignore-file) otherwise it will copy your local npm modules:
-
-`node_modules`
 
 ### `node:slim`
 

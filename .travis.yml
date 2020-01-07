@@ -7,20 +7,11 @@ dist: xenial
 language: minimal
 
 stages:
-  - Test
   - name: Deploy
     if: branch = master AND type IN (push)
 
 jobs:
-  fast_finish: true
-
   include:
-    - stage: Test
-      name: .travis.yml and travis.yml.template consistency
-      script:
-        - ./update.sh -t
-        - git diff --stat --exit-code .travis.yml
-
     - stage: Deploy
       before_script:
         - |

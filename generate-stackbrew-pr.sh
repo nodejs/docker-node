@@ -76,7 +76,7 @@ function pr_payload() {
   local body
   local maintainers
 
-  escaped_message="$(echo "${COMMIT_MESSAGE}" | sed -E -e "s/\"/\\\\\"/g")"
+  escaped_message="$(echo "${COMMIT_MESSAGE}" | head -n 1 | sed -E -e "s/\"/\\\\\"/g")"
 
   if [ -n "${PR_NUMBER}" ]; then
     body="Pull Request: ${DOCKER_SLUG}#${PR_NUMBER}"

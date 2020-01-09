@@ -38,55 +38,8 @@ stages:
 
 jobs:
   fast_finish: true
-  allow_failures:
-    - env:
-        - TEST=mardown_lint
 
   include:
-    - stage: Test
-      name: Markdown link check
-      env:
-        - TEST=mardown_lint
-      language: node_js
-      node_js:
-        - lts/*
-      install:
-        - npm i -g markdown-link-check
-      script:
-        - find . -name "*.md" | xargs -n 1 markdown-link-check
-
-    - stage: Test
-      name: Editor Config check
-      language: node_js
-      node_js:
-        - lts/*
-      install:
-        - npm i -g eclint
-      script:
-        - eclint check
-
-    - stage: Test
-      name: Doc Toc Check
-      language: node_js
-      node_js:
-        - lts/*
-      install: npm i -g doctoc
-      script:
-        - cp README.md README.md.tmp &&
-          doctoc --title='## Table of Contents' --github README.md &&
-          diff -q README.md README.md.tmp
-
-    - stage: Test
-      name: shfmt check
-      script:
-        - docker run -it --rm -v "$(pwd)":/sh -w /sh peterdavehello/shfmt:2.6.3 shfmt -sr -i 2 -l -w -ci .
-        - git diff --color
-        - git diff --stat=220 --color --exit-code
-
-    - stage: Test
-      name: Shell Check
-      script: shellcheck *.sh
-
     - stage: Test
       name: .travis.yml and travis.yml.template consistency
       script:

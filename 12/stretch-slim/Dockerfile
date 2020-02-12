@@ -3,7 +3,7 @@ FROM debian:stretch-slim
 RUN groupadd --gid 1000 node \
   && useradd --uid 1000 --gid node --shell /bin/bash --create-home node
 
-ENV NODE_VERSION 12.15.0
+ENV NODE_VERSION 12.16.0
 
 RUN ARCH= && dpkgArch="$(dpkg --print-architecture)" \
     && case "${dpkgArch##*-}" in \
@@ -45,7 +45,7 @@ RUN ARCH= && dpkgArch="$(dpkg --print-architecture)" \
     && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
     && ln -s /usr/local/bin/node /usr/local/bin/nodejs
 
-ENV YARN_VERSION 1.21.1
+ENV YARN_VERSION 1.22.0
 
 RUN set -ex \
   && apt-get update && apt-get install -y ca-certificates curl wget gnupg dirmngr --no-install-recommends \

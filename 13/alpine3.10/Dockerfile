@@ -1,6 +1,6 @@
 FROM alpine:3.10
 
-ENV NODE_VERSION 13.8.0
+ENV NODE_VERSION 13.10.1
 
 RUN addgroup -g 1000 node \
     && adduser -u 1000 -G node -s /bin/sh -D node \
@@ -12,7 +12,7 @@ RUN addgroup -g 1000 node \
       && case "${alpineArch##*-}" in \
         x86_64) \
           ARCH='x64' \
-          CHECKSUM="3325ec0bff602d30222e0c6c6af81aefa04d7d20946bac65d55dbb09d7d7e1e0" \
+          CHECKSUM="b5b1af4f97bf8759e0de58e0d659ffa81db4857500e56e2b0b3f5948351a9bfa" \
           ;; \
         *) ;; \
       esac \
@@ -72,7 +72,7 @@ RUN addgroup -g 1000 node \
   && node --version \
   && npm --version
 
-ENV YARN_VERSION 1.21.1
+ENV YARN_VERSION 1.22.0
 
 RUN apk add --no-cache --virtual .build-deps-yarn curl gnupg tar \
   && for key in \

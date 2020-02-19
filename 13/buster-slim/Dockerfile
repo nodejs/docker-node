@@ -48,7 +48,7 @@ RUN ARCH= && dpkgArch="$(dpkg --print-architecture)" \
     && node --version \
     && npm --version
 
-ENV YARN_VERSION 1.21.1
+ENV YARN_VERSION 1.22.0
 
 RUN set -ex \
   && apt-get update && apt-get install -y ca-certificates curl wget gnupg dirmngr --no-install-recommends \

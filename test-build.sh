@@ -74,11 +74,8 @@ for version in "${versions[@]}"; do
   tag=$(get_tag "${version}")
   full_version=$(get_full_version "${version}")
 
-  # Required for chakracore
-  if [ -f "${version}/Dockerfile" ]; then
-    build "${version}" "default" "${tag}"
-    test_image "${full_version}" "default" "${tag}"
-  fi
+  build "${version}" "default" "${tag}"
+  test_image "${full_version}" "default" "${tag}"
 
   # Get supported variants according to the target architecture.
   # See details in function.sh

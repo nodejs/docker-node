@@ -3,7 +3,7 @@ FROM debian:buster-slim
 RUN groupadd --gid 1000 node \
   && useradd --uid 1000 --gid node --shell /bin/bash --create-home node
 
-ENV NODE_VERSION 12.16.1
+ENV NODE_VERSION 12.16.2
 
 RUN ARCH= && dpkgArch="$(dpkg --print-architecture)" \
     && case "${dpkgArch##*-}" in \
@@ -56,7 +56,7 @@ RUN ARCH= && dpkgArch="$(dpkg --print-architecture)" \
     && node --version \
     && npm --version
 
-ENV YARN_VERSION 1.22.0
+ENV YARN_VERSION 1.22.4
 
 RUN set -ex \
   && savedAptMark="$(apt-mark showmanual)" \

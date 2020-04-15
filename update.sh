@@ -146,6 +146,11 @@ function update_node_version() {
     fi
     sed -Ei -e 's/^(ENV YARN_VERSION ).*/\1'"${yarnVersion}"'/' "${dockerfile}-tmp"
 
+    # Remove Yarn for Node 14+
+    if [ "${version}" -gt 13 ]; then
+      sed -Ei -e '/ENV YARN_VERSION/,/yarn --version/d' "${dockerfile}-tmp"
+    fi
+
     # shellcheck disable=SC1004
     new_line=' \\\
 '

@@ -181,6 +181,13 @@ jobs:
 
     - stage: Build
       before_script: *auto_skip
+      name: 12 on alpine3.12
+      env:
+        - NODE_VERSION="12"
+        - VARIANT="alpine3.12"
+
+    - stage: Build
+      before_script: *auto_skip
       name: 14 on stretch
       env:
         - NODE_VERSION="14"
@@ -220,3 +227,10 @@ jobs:
       env:
         - NODE_VERSION="14"
         - VARIANT="alpine3.11"
+
+    - stage: Build
+      before_script: *auto_skip
+      name: 14 on alpine3.12
+      env:
+        - NODE_VERSION="14"
+        - VARIANT="alpine3.12"

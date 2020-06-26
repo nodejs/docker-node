@@ -70,7 +70,23 @@ RUN addgroup -g 1000 node \
   && apk del .build-deps \
   # smoke tests
   && node --version \
-  && npm --version
+  && npm --version \
+  # strip node binary
+  && apk add --no-cache \
+        binutils \
+  && strip /usr/local/bin/node \
+  && apk del binutils \
+  # remove unnecessary files
+  && rm -rf \
+    /usr/local/include/node \
+    /usr/local/lib/node_modules/npm/changelogs \
+    /usr/local/lib/node_modules/npm/man \
+    /usr/local/lib/node_modules/npm/docs \
+  && find . -type f \( \
+      -name "*.md" \
+      -name "LICENSE" \
+      -name "*.d.ts" \
+    \) -exec rm {} \;
 
 ENV YARN_VERSION 1.22.4
 
@@ -92,7 +108,12 @@ RUN apk add --no-cache --virtual .build-deps-yarn curl gnupg tar \
   && rm yarn-v$YARN_VERSION.tar.gz.asc yarn-v$YARN_VERSION.tar.gz \
   && apk del .build-deps-yarn \
   # smoke test
-  && yarn --version
+  && yarn --version \
+  # remove unnecessary files
+  && rm -rf \
+    /opt/yarn-*/LICENSE \
+    /opt/yarn-*/README.md \
+    /tmp/v8-compile-cache-*
 
 COPY docker-entrypoint.sh /usr/local/bin/
 ENTRYPOINT ["docker-entrypoint.sh"]

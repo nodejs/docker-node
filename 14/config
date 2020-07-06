@@ -1,0 +1,2 @@
+default_variant buster
+alpine_version  3.12

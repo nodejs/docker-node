@@ -55,8 +55,16 @@ get_stub() {
 }
 
 for version in "${versions[@]}"; do
+  if [ -f "./${version}/config" ]; then
+    version_default_variant=$(get_config "./${version}" "default_variant")
+    version_default_alpine=$(get_config "./${version}" "alpine_version")
+  else
+    version_default_variant="${default_variant}"
+    version_default_alpine="${default_alpine}"
+  fi
+
   # Skip "docs" and other non-docker directories
-  [ -f "${version}/Dockerfile" ] || [ -f "${version}/${default_variant}/Dockerfile" ] || continue
+  [ -f "${version}/Dockerfile" ] || [ -f "${version}/${version_default_variant}/Dockerfile" ] || continue
 
   stub=$(get_stub "${version}")
   commit="$(fileCommit "${version}")"
@@ -87,11 +95,11 @@ for version in "${versions[@]}"; do
 
     slash='/'
     variantAliases=("${versionAliases[@]/%/-${variant//${slash}/-}}")
-    if [ "${variant}" = "${default_variant}-slim" ]; then
+    if [ "${variant}" = "${version_default_variant}-slim" ]; then
       variantAliases+=("${versionAliases[@]/%/-slim}")
-    elif [ "${variant}" = "alpine${default_alpine}" ]; then
+    elif [ "${variant}" = "alpine${version_default_alpine}" ]; then
       variantAliases+=("${versionAliases[@]/%/-alpine}")
-    elif [ "${variant}" = "${default_variant}" ]; then
+    elif [ "${variant}" = "${version_default_variant}" ]; then
       variantAliases+=("${versionAliases[@]}")
     fi
     variantAliases=("${variantAliases[@]//latest-/}")

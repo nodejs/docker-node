@@ -150,6 +150,15 @@ supported architecture, the supported variants are different. In the file:
 [architectures](./architectures), it lists all supported variants for all of
 the architectures that we support now.
 
+Each image flavors is build on the stable release of the base operating system.
+Default operating system release is the latest stable release of given base
+operating system at the time of `node` entering LTS maintenance period or
+initial release, which one is latter.  During the maintenance period of given
+`node` version the base operating system release is not changed as long as
+there is security support.  However during LTS maintenance period of `node`
+it might necessary to change default tag of an image flavor and drop support
+for some operating system releases if the security support ends.
+
 ### `node:<version>`
 
 This is the defacto image. If you are unsure about what your needs are, you

@@ -1,6 +1,6 @@
 FROM alpine:3.11
 
-ENV NODE_VERSION 14.5.0
+ENV NODE_VERSION 14.6.0
 
 RUN addgroup -g 1000 node \
     && adduser -u 1000 -G node -s /bin/sh -D node \
@@ -12,7 +12,7 @@ RUN addgroup -g 1000 node \
       && case "${alpineArch##*-}" in \
         x86_64) \
           ARCH='x64' \
-          CHECKSUM="06cd37ebff802dda592aee08c2ca015650d8a134dd95e945b7bd78c4b73a8bd5" \
+          CHECKSUM="3bf72b8895b508f91880f816705428933aea44b1f57dbe3f1fef7d7595b64872" \
           ;; \
         *) ;; \
       esac \
@@ -47,6 +47,7 @@ RUN addgroup -g 1000 node \
       4ED778F539E3634C779C87C6D7062848A1AB005C \
       A48C2BEE680E841632CD4E44F07496B3EB3C1762 \
       B9E2F5981AA6E0CD28160D9FF13993A75599653C \
+      C82FA3AE1CBEDC6BE46B9360C43CEC45C17AB93C \
     ; do \
       gpg --batch --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys "$key" || \
       gpg --batch --keyserver hkp://ipv4.pool.sks-keyservers.net --recv-keys "$key" || \

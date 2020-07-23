@@ -69,20 +69,6 @@ jobs:
 
     - stage: Build
       before_script: *auto_skip
-      name: 10 on jessie
-      env:
-        - NODE_VERSION="10"
-        - VARIANT="jessie"
-
-    - stage: Build
-      before_script: *auto_skip
-      name: 10 on jessie-slim
-      env:
-        - NODE_VERSION="10"
-        - VARIANT="jessie-slim"
-
-    - stage: Build
-      before_script: *auto_skip
       name: 10 on stretch
       env:
         - NODE_VERSION="10"

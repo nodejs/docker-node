@@ -4,5 +4,5 @@ arm32v6  alpine3.9,alpine3.10,alpine3.11,alpine3.12
 arm32v7  stretch,stretch-slim,buster,buster-slim,alpine3.9,alpine3.10,alpine3.11,alpine3.12
 arm64v8  stretch,stretch-slim,buster,buster-slim,alpine3.9,alpine3.10,alpine3.11,alpine3.12
 i386     alpine3.9,alpine3.10,alpine3.11,alpine3.12
-ppc64le  stretch,stretch-slim,buster,buster-slim,alpine3.9,alpine3.10,alpine3.11,alpine3.12
-s390x    stretch,stretch-slim,buster,buster-slim,alpine3.9,alpine3.10,alpine3.11,alpine3.12
+ppc64le  buster,buster-slim,alpine3.9,alpine3.10,alpine3.11,alpine3.12
+s390x    buster,buster-slim,alpine3.9,alpine3.10,alpine3.11,alpine3.12

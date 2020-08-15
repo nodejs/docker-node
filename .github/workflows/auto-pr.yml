@@ -1,0 +1,26 @@
+name: Auto PR for new versions
+
+on:
+  schedule:
+  - cron: 0 0 * * *
+
+jobs:
+  update:
+    strategy:
+      matrix:
+        version:
+        - 10
+        - 12
+        - 14
+    runs-on: ubuntu-latest
+    steps:
+      - name: Update Docker images
+        uses: technote-space/create-pr-action@v2
+        with:
+          EXECUTE_COMMANDS: |
+            ./update.sh ${{ matrix.version }}
+          COMMIT_MESSAGE: 'chore: update ${{ matrix.version }}'
+          COMMIT_NAME: 'Node.js GitHub Bot'
+          COMMIT_EMAIL: 'github-bot@iojs.org'
+          PR_BRANCH_NAME: 'chore-update-${{ matrix.version }}'
+          PR_TITLE: 'chore: update ${{ matrix.version }}'

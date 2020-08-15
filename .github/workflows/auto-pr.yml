@@ -24,3 +24,4 @@ jobs:
           COMMIT_EMAIL: 'github-bot@iojs.org'
           PR_BRANCH_NAME: 'chore-update-${{ matrix.version }}'
           PR_TITLE: 'chore: update ${{ matrix.version }}'
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

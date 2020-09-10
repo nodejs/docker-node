@@ -1,0 +1,22 @@
+name: Check Alpine CHECKSUM
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/missing-checksum.yml"
+      - "**/alpine*/Dockerfile"
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Count number of Alpine Dockersfiles without CHECKSUM
+        run: |
+          if [ "$(find -path *alpine*/Dockerfile -exec grep -l CHECKSUM=\"\" {} \; | wc -l)" == 0 ]; then
+              exit 0
+          else
+              # echo "::error file=FILENAME,line=15,col=22::Missing pre-built checksum"
+              exit 1
+          fi

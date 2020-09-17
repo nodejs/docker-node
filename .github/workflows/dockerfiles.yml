@@ -1,0 +1,11 @@
+name: Check for out of sync YAML pipeline files
+
+on: [pull_request]
+
+jobs:
+  regen:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: ./update.sh -t
+      - run: git diff --color --exit-code

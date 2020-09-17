@@ -1,0 +1,24 @@
+name: 14 on alpine3.12
+
+on:
+  push:
+    paths:
+      - functions.sh
+      - test-build.sh
+      - test-image.bats
+      - 14/alpine3.12/Dockerfile
+  pull_request:
+    paths:
+      - functions.sh
+      - test-build.sh
+      - test-image.bats
+      - 14/alpine3.12/Dockerfile
+
+jobs:
+  build:
+    name: 14 on alpine3.12
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: sudo apt-get install bats
+      - run: ./test-build.sh 14 alpine3.12

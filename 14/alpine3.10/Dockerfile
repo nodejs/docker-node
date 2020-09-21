@@ -100,7 +100,7 @@ RUN apk add --no-cache --virtual .build-deps-yarn curl gnupg tar \
   && yarn --version \
   # remove unnecessary files
   && rm -rf \
-    /tmp/v8-compile-cache-*
+    /tmp/*
 
 COPY docker-entrypoint.sh /usr/local/bin/
 ENTRYPOINT ["docker-entrypoint.sh"]

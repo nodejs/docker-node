@@ -16,7 +16,7 @@ on:
 
 jobs:
   build:
-    name: 12 on stretch-slim
+    name: test build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2

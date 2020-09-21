@@ -16,7 +16,7 @@ on:
 
 jobs:
   build:
-    name: 10 on alpine3.9
+    name: test build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2

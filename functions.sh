@@ -359,3 +359,51 @@ function tests_updated() {
   fi
   return 0
 }
+
+function arch_to_buildx_platform() {
+  local arch
+  local platform
+  arch=$1
+  shift
+
+  case $arch in
+    amd64)
+      platform="amd64"
+      ;;
+    arm32v6)
+      platform="arm/v6"
+      ;;
+    arm32v7)
+      platform="arm/v7"
+      ;;
+    arm64v8)
+      platform="arm64"
+      ;;
+    i386)
+      platform="386"
+      ;;
+    ppc64le)
+      platform="ppc64le"
+      ;;
+    s390x)
+      platform="s390x"
+      ;;
+    *)
+      echo "$0 does not support architecture ${arch} ... aborting"
+      exit 1
+      ;;
+  esac
+
+  echo "${platform}"
+}
+
+function json_array() {
+  echo -n '['
+  while [ $# -gt 0 ]; do
+    x=${1//\\/\\\\}
+    echo -n \""${x//\"/\\\"}"\"
+    [ $# -gt 1 ] && echo -n ','
+    shift
+  done
+  echo ']'
+}

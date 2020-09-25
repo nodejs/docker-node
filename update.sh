@@ -18,7 +18,6 @@ function usage() {
     - update.sh 8 buster-slim,buster # Update only buster's slim and buster variants for version 8
     - update.sh -s 8 stretch         # Update only stretch variant for version 8, skip updating Alpine and Yarn
     - update.sh . alpine             # Update the alpine variant for all versions
-    - update.sh -b                   # Update CI files only
 
   OPTIONS:
     -s Security update; skip updating the yarn and alpine versions.
@@ -29,15 +28,10 @@ EOF
 }
 
 SKIP=false
-CI_ONLY=false
-while getopts "sbh" opt; do
+while getopts "sh" opt; do
   case "${opt}" in
     s)
       SKIP=true
-      shift
-      ;;
-    b)
-      CI_ONLY=true
       shift
       ;;
     h)
@@ -197,56 +191,19 @@ function update_node_version() {
   )
 }
 
-function add_stage() {
-  local baseuri=${1}
-  shift
-  local version=${1}
-  shift
-  local variant=${1}
-  shift
-
-  echo "name: ${version} on ${variant}
-
-on:
-  push:
-    paths:
-      - functions.sh
-      - test-build.sh
-      - test-image.bats
-      - ${version}/${variant}/Dockerfile
-  pull_request:
-    paths:
-      - functions.sh
-      - test-build.sh
-      - test-image.bats
-      - ${version}/${variant}/Dockerfile
-
-jobs:
-  build:
-    name: ${version} on ${variant}
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - run: sudo apt-get install bats
-      - run: ./test-build.sh ${version} ${variant}" > ".github/workflows/${version}-${variant}.yml"
-}
-
 for version in "${versions[@]}"; do
   parentpath=$(dirname "${version}")
   versionnum=$(basename "${version}")
   baseuri=$(get_config "${parentpath}" "baseuri")
   update_version=$(in_versions_to_update "${version}")
 
-  [ "${update_version}" -eq 0 ] && [ true != "$CI_ONLY" ] && info "Updating version ${version}..."
+  [ "${update_version}" -eq 0 ] && info "Updating version ${version}..."
 
   # Get supported variants according the target architecture
   # See details in function.sh
   IFS=' ' read -ra variants <<< "$(get_variants "${parentpath}")"
 
   if [ -f "${version}/Dockerfile" ]; then
-    add_stage "${baseuri}" "${version}" "default"
-    [ true = "$CI_ONLY" ] && continue
-
     if [ "${update_version}" -eq 0 ]; then
       update_node_version "${baseuri}" "${versionnum}" "${parentpath}/Dockerfile.template" "${version}/Dockerfile" &
     fi
@@ -255,8 +212,6 @@ for version in "${versions[@]}"; do
   for variant in "${variants[@]}"; do
     # Skip non-docker directories
     [ -f "${version}/${variant}/Dockerfile" ] || continue
-    add_stage "${baseuri}" "${version}" "${variant}"
-    [ true = "$CI_ONLY" ] && continue
 
     update_variant=$(in_variants_to_update "${variant}")
     template_file="${parentpath}/Dockerfile-${variant}.template"

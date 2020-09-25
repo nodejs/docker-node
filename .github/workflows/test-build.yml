@@ -1,0 +1,14 @@
+name: test-build
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build:
+    name: 10 on stretch
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: sudo apt-get install bats
+      - run: ./test-build.sh 10 stretch

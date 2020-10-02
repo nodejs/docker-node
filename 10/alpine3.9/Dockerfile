@@ -33,7 +33,7 @@ RUN addgroup -g 1000 node \
         libgcc \
         linux-headers \
         make \
-        python \
+        python2 \
     # gpg keys listed at https://github.com/nodejs/node#release-keys
     && for key in \
       4ED778F539E3634C779C87C6D7062848A1AB005C \

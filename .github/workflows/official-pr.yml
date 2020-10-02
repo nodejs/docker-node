@@ -42,8 +42,7 @@ jobs:
           token: ${{ secrets.GH_API_TOKEN }}
           push-to-fork: nodejs-github-bot/official-images
           path: official-images
-          branch: autopr
-          branch-suffix: short-commit-hash
+          branch: node
           commit-message: "Node: ${{ github.event.pull_request.title }}"
           title: "Node: ${{ github.event.pull_request.title }}"
           body: |

@@ -6,6 +6,7 @@ on:
       - closed
 
     paths:
+      - ".github/workflows/official-pr.yml"
       - "**/Dockerfile"
       - "**/architectures"
       - "**/docker-entrypoint.sh"

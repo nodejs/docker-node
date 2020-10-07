@@ -1,0 +1,15 @@
+name: lol
+
+on:
+  pull_request_target:
+    types:
+      - closed
+
+jobs:
+  pr:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: test
+        run: echo hi
+

@@ -1,0 +1,62 @@
+name: Create official images PR
+
+on:
+  pull_request_target:
+    types:
+      - closed
+
+    paths:
+      - "**/Dockerfile"
+      - "**/architectures"
+      - "**/docker-entrypoint.sh"
+      - "generate-stackbrew-library.sh"
+      - "functions.sh"
+
+jobs:
+  pr:
+    runs-on: ubuntu-latest
+    if: github.repository_owner == 'nodejs' && github.event.pull_request.merged_by != ''
+
+    steps:
+      - name: Checkout the docker-node repo
+        uses: actions/checkout@v2
+        with:
+          path: docker-node
+          fetch-depth: 50
+
+      - name: Checkout the official-images repo
+        uses: actions/checkout@v2
+        with:
+          path: official-images
+          repository: docker-library/official-images
+
+      - name: Generate Stackbrew for diff
+        run: |
+          cd docker-node
+          ./generate-stackbrew-library.sh > ../official-images/library/node
+
+      - name: Create PR in official-images
+        id: create-pr
+        uses: peter-evans/create-pull-request@v3
+        with:
+          token: ${{ secrets.GH_API_TOKEN }}
+          push-to-fork: nodejs-github-bot/official-images
+          path: official-images
+          branch: node
+          commit-message: "Node: ${{ github.event.pull_request.title }}"
+          title: "Node: ${{ github.event.pull_request.title }}"
+          body: |
+            Pull Request: ${{ github.event.pull_request.html_url }}
+            @LaurentGoderre @pesho @PeterDaveHello @SimenB @Starefossen
+
+      - name: PR details
+        run: |
+          echo "Pull Request Number - ${{ steps.create-pr.outputs.pull-request-number }}"
+          echo "Pull Request URL - ${{ steps.create-pr.outputs.pull-request-url }}"
+
+      - name: Create PR comment
+        uses: peter-evans/create-or-update-comment@v1
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          body: |
+            Created PR on the official-images repo (${{ steps.create-pr.outputs.pull-request-url }}). See https://github.com/docker-library/faq#an-images-source-changed-in-git-now-what if you are wondering when it will be available on the Docker Hub.

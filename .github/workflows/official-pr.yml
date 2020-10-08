@@ -62,3 +62,7 @@ jobs:
           issue-number: ${{ github.event.pull_request.number }}
           body: |
             Created PR on the official-images repo (${{ steps.create-pr.outputs.pull-request-url }}). See https://github.com/docker-library/faq#an-images-source-changed-in-git-now-what if you are wondering when it will be available on the Docker Hub.
+
+      - name: Dump context
+        if: always()
+        uses: crazy-max/ghaction-dump-context@v1

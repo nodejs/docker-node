@@ -11,6 +11,7 @@ set -euo pipefail
 # "10,12" becomes "10 12" and "slim,alpine" becomes "slim alpine"
 IFS=',' read -ra versions_arg <<< "${1:-}"
 IFS=',' read -ra variant_arg <<< "${2:-}"
+IFS=',' read -ra arches_arg <<< "${3:-}"
 
 default_variant=$(get_config "./" "default_variant")
 
@@ -18,6 +19,7 @@ function build() {
   local version
   local tag
   local variant
+  local platform
   local full_tag
   local path
   version="$1"
@@ -26,13 +28,15 @@ function build() {
   shift
   tag="$1"
   shift
+  platform="$1"
+  shift
 
   full_tag=$(get_full_tag "${variant}" "${tag}")
   path=$(get_path "${version}" "${variant}")
 
-  info "Building ${full_tag}..."
+  info "Building ${full_tag} on ${platform}..."
 
-  if ! docker build --cpuset-cpus="0,1" -t node:"${full_tag}" "${path}"; then
+  if ! docker buildx build --load --platform "${platform}" -t node:"${full_tag}" "${path}"; then
     fatal "Build of ${full_tag} failed!"
   fi
   info "Build of ${full_tag} succeeded."
@@ -41,6 +45,7 @@ function build() {
 function test_image() {
   local full_version
   local variant
+  local platform
   local tag
   local full_tag
   full_version="$1"
@@ -49,25 +54,23 @@ function test_image() {
   shift
   tag="$1"
   shift
+  platform="$1"
+  shift
 
   full_tag=$(get_full_tag "${variant}" "${tag}")
 
-  info "Testing ${full_tag}"
+  info "Testing ${full_tag} on ${platform}"
   (
     export full_version=${full_version}
     export full_tag=${full_tag}
+    export platform=${platform}
     bats test-image.bats
   )
 }
 
 cd "$(cd "${0%/*}" && pwd -P)" || exit
 
-IFS=' ' read -ra versions <<< "$(get_versions . "${versions_arg[@]}")"
-if [ ${#versions[@]} -eq 0 ]; then
-  fatal "No valid versions found!"
-fi
-
-for version in "${versions[@]}"; do
+for version in "${versions_arg[@]}"; do
   # Skip "docs" and other non-docker directories
   [ -f "${version}/Dockerfile" ] || [ -a "${version}/${default_variant}/Dockerfile" ] || continue
 
@@ -82,8 +85,13 @@ for version in "${versions[@]}"; do
     # Skip non-docker directories
     [ -f "${version}/${variant}/Dockerfile" ] || continue
 
-    build "${version}" "${variant}" "${tag}"
-    test_image "${full_version}" "${variant}" "${tag}"
+    for arch in "${arches_arg[@]}"; do
+      buildx_platform=$(arch_to_buildx_platform "${arch}")
+
+      build "${version}" "${variant}" "${tag}" "linux/${buildx_platform}"
+      test_image "${full_version}" "${variant}" "${tag}" "linux/${buildx_platform}"
+    done
+
   done
 
 done

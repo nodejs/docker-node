@@ -205,6 +205,9 @@ function add_stage() {
   local variant=${1}
   shift
 
+  IFS=' ' read -ra supportedArches <<< "$(get_supported_arches "${version}" "${variant}")"
+  read -r arch_json <<< "$(json_array "${supportedArches[@]}")"
+
   echo "name: ${version} on ${variant}
 
 on:
@@ -225,10 +228,31 @@ jobs:
   build:
     name: ${version} on ${variant}
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix: \${{fromJson('{\"arch\":${arch_json}}')}}
     steps:
-      - uses: actions/checkout@v2
-      - run: sudo apt-get install bats
-      - run: ./test-build.sh ${version} ${variant}" > ".github/workflows/${version}-${variant}.yml"
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Install bats
+        run: sudo apt-get install bats
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Write experimental docker flag
+        run: |
+          echo '{\"experimental\": true}' | sudo tee /etc/docker/daemon.json
+
+      - name: Restart docker daemon
+        run: sudo systemctl restart docker
+
+      - name: Build and test
+        run: ./test-build.sh ${version} ${variant} \${{ matrix.arch }}" > ".github/workflows/${version}-${variant}.yml"
 }
 
 for version in "${versions[@]}"; do

@@ -1,0 +1,14 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Need help with Node.js?
+    url: https://github.com/nodejs/help
+    about: Please file an issue in our help repo.
+  - name: Found a problem with Node.js beyond the API reference documentation?
+    url: https://github.com/nodejs/nodejs.org/issues/new/choose
+    about: Please file an issue in the Node.js website repository.
+  - name: Want to report security issues or vulnerabilites?
+    url: https://github.com/nodejs/docker-node/security/policy
+    about: Please go through our policy for reporting CVEs and security issues.
+  - name: Need help with common questions related to using Node.js with Docker?
+    url: https://stackoverflow.com/questions/tagged/node.js%2bdocker%2bdockerfile
+    about: Please visit Stack Overflow to explore related questions and answers.

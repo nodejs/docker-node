@@ -32,10 +32,23 @@ jobs:
           path: official-images
           repository: docker-library/official-images
 
+      - name: Track official images fork
+        run: |
+          cd official-images
+          git remote add fork https://github.com/nodejs-github-bot/official-images
+          git fetch fork
+          git checkout -b node --track fork/node
+
       - name: Generate Stackbrew for diff
         run: |
           cd docker-node
           ./generate-stackbrew-library.sh > ../official-images/library/node
+
+      - name: Commit Stackbrew changes
+        run: |
+          cd official-images
+          git add -A
+          git diff-index --quiet HEAD || git commit -m "Node: ${{ github.event.pull_request.title }}" --author="${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>"
 
       - name: Create PR in official-images
         id: create-pr
@@ -45,7 +58,6 @@ jobs:
           push-to-fork: nodejs-github-bot/official-images
           path: official-images
           branch: node
-          commit-message: "Node: ${{ github.event.pull_request.title }}"
           title: "Node: ${{ github.event.pull_request.title }}"
           body: |
             Pull Request: ${{ github.event.pull_request.html_url }}

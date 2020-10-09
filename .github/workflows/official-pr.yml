@@ -63,11 +63,6 @@ jobs:
             Pull Request: ${{ github.event.pull_request.html_url }}
             @LaurentGoderre @pesho @PeterDaveHello @SimenB @Starefossen
 
-      - name: PR details
-        run: |
-          echo "Pull Request Number - ${{ steps.create-pr.outputs.pull-request-number }}"
-          echo "Pull Request URL - ${{ steps.create-pr.outputs.pull-request-url }}"
-
       - name: Create PR comment
         uses: peter-evans/create-or-update-comment@v1
         with:
@@ -76,5 +71,5 @@ jobs:
             Created PR on the official-images repo (${{ steps.create-pr.outputs.pull-request-url }}). See https://github.com/docker-library/faq#an-images-source-changed-in-git-now-what if you are wondering when it will be available on the Docker Hub.
 
       - name: Dump context
-        if: always()
+        if: failure()
         uses: crazy-max/ghaction-dump-context@v1

@@ -153,44 +153,6 @@ function get_versions() {
   fi
 }
 
-function is_alpine() {
-  local variant
-  variant=${1}
-  shift
-
-  if [ "${variant}" = "${variant#alpine}" ]; then
-    return 1
-  fi
-}
-
-function is_debian() {
-  local variant
-  variant=$1
-  shift
-
-  IFS=' ' read -ra debianVersions <<< "$(get_config "./" "debian_versions")"
-  for d in "${debianVersions[@]}"; do
-    if [ "${d}" = "${variant}" ]; then
-      return 0
-    fi
-  done
-  return 1
-}
-
-function is_debian_slim() {
-  local variant
-  variant=$1
-  shift
-
-  IFS=' ' read -ra debianVersions <<< "$(get_config "./" "debian_versions")"
-  for d in "${debianVersions[@]}"; do
-    if [ "${d}-slim" = "${variant}" ]; then
-      return 0
-    fi
-  done
-  return 1
-}
-
 function get_fork_name() {
   local version
   version=$1
@@ -200,24 +162,6 @@ function get_fork_name() {
   if [ ${#versionparts[@]} -gt 1 ]; then
     echo "${versionparts[0]}"
   fi
-}
-
-function get_full_tag() {
-  local variant
-  local tag
-  local full_tag
-  variant="$1"
-  shift
-  tag="$1"
-  shift
-  if [ -z "${variant}" ]; then
-    full_tag="${tag}"
-  elif [ "${variant}" = "default" ]; then
-    full_tag="${tag}"
-  else
-    full_tag="${tag}-${variant}"
-  fi
-  echo "${full_tag}"
 }
 
 function get_full_version() {
@@ -244,25 +188,6 @@ function get_major_minor_version() {
   fullversion=$(get_full_version "${version}")
 
   echo "$(echo "${fullversion}" | cut -d'.' -f1).$(echo "${fullversion}" | cut -d'.' -f2)"
-}
-
-function get_path() {
-  local version
-  local variant
-  local path
-  version="$1"
-  shift
-  variant="$1"
-  shift
-
-  if [ -z "${variant}" ]; then
-    path="${version}/${variant}"
-  elif [ "${variant}" = "default" ]; then
-    path="${version}"
-  else
-    path="${version}/${variant}"
-  fi
-  echo "${path}"
 }
 
 function get_tag() {
@@ -307,55 +232,4 @@ function sort_versions() {
   done <<< "$(echo "${lines}" | grep -v "^[0-9]" | sort -r)"
 
   echo "${sorted[@]}"
-}
-
-function commit_range() {
-  local commit_id_end=${1}
-  shift
-  local commit_id_start=${1}
-
-  if [ -z "${commit_id_start}" ]; then
-    if [ -z "${commit_id_end}" ]; then
-      echo "HEAD~1..HEAD"
-    elif [[ "${commit_id_end}" =~ .. ]]; then
-      echo "${commit_id_end}"
-    else
-      echo "${commit_id_end}~1..${commit_id_end}"
-    fi
-  else
-    echo "${commit_id_end}..${commit_id_start}"
-  fi
-}
-
-function images_updated() {
-  local commit_range
-  local versions
-  local images_changed
-
-  commit_range="$(commit_range "$@")"
-
-  IFS=' ' read -ra versions <<< "$(
-    IFS=','
-    get_versions
-  )"
-  images_changed=$(git diff --name-only "${commit_range}" "${versions[@]}")
-
-  if [ -z "${images_changed}" ]; then
-    return 1
-  fi
-  return 0
-}
-
-function tests_updated() {
-  local commit_range
-  local test_changed
-
-  commit_range="$(commit_range "$@")"
-
-  test_changed=$(git diff --name-only "${commit_range}" test*)
-
-  if [ -z "${test_changed}" ]; then
-    return 1
-  fi
-  return 0
 }

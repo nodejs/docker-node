@@ -111,8 +111,6 @@ If an agenda item cannot reach a consensus a WG member can call for a
 closing vote.  The call for a vote must be seconded by a majority of
 the WG or else the discussion will continue.  Simple majority wins.
 
-<a id="developers-certificate-of-origin"></a>
-
 ## Developer's Certificate of Origin 1.1
 
 By making a contribution to this project, I certify that:

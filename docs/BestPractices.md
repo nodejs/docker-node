@@ -1,3 +1,24 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+## Table of Contents
+
+- [Docker and Node.js Best Practices](#docker-and-nodejs-best-practices)
+  - [Table of Contents](#table-of-contents)
+  - [Environment Variables](#environment-variables)
+  - [Global npm dependencies](#global-npm-dependencies)
+  - [Upgrading/downgrading Yarn](#upgradingdowngrading-yarn)
+    - [Local](#local)
+    - [Global](#global)
+  - [Handling Kernel Signals](#handling-kernel-signals)
+  - [Non-root User](#non-root-user)
+  - [Memory](#memory)
+  - [CMD](#cmd)
+  - [Docker Run](#docker-run)
+  - [Security](#security)
+  - [node-gyp alpine](#node-gyp-alpine)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 # Docker and Node.js Best Practices
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
@@ -21,31 +42,38 @@
 
 ## Environment Variables
 
-Run with `NODE_ENV` set to `production`. This is the way you would pass in secrets and other runtime configurations to your application as well.
+Run with `NODE_ENV` set to `production`. This is the way you would pass in
+secrets and other runtime configurations to your application as well.
 
-```
+```console
 -e "NODE_ENV=production"
 ```
 
 ## Global npm dependencies
 
-If you need to install global npm dependencies, it is recommended to place those dependencies in the [non-root user](#non-root-user) directory. To achieve this, add the following line to your `Dockerfile`
+If you need to install global npm dependencies, it is recommended to place those
+dependencies in the [non-root user](#non-root-user) directory. To achieve this,
+add the following line to your `Dockerfile`
 
 ```Dockerfile
 ENV NPM_CONFIG_PREFIX=/home/node/.npm-global
 
-ENV PATH=$PATH:/home/node/.npm-global/bin # optionally if you want to run npm global bin without specifying path
+# optionally if you want to run npm global bin without specifying path
+ENV PATH=$PATH:/home/node/.npm-global/bin
 ```
 
 ## Upgrading/downgrading Yarn
 
 ### Local
 
-If you need to upgrade/downgrade `yarn` for a local install, you can do so by issuing the following commands in your `Dockerfile`:
+If you need to upgrade/downgrade `yarn` for a local install, you can do so by
+issuing the following commands in your `Dockerfile`:
 
-> Note that if you create some other directory which is not a descendant one from where you ran the command, you will end up using the global (dated) version. If you wish to upgrade `yarn` globally follow the instructions in the next section.
-
-> When following the local install instructions, due to duplicated yarn the image will end up being bigger.
+> Note that if you create some other directory which is not a descendant one
+> from where you ran the command, you will end up using the global (dated)
+> version. If you wish to upgrade `yarn` globally follow the instructions in the
+> next section. When following the local install instructions, due to duplicated
+> yarn the image will end up being bigger.
 
 ```Dockerfile
 FROM node:6
@@ -62,14 +90,16 @@ FROM node:6
 
 ENV YARN_VERSION 1.16.0
 
-RUN curl -fSLO --compressed "https://yarnpkg.com/downloads/$YARN_VERSION/yarn-v$YARN_VERSION.tar.gz" \
+RUN curl -fSLO --compressed  \
+      "https://yarnpkg.com/downloads/$YARN_VERSION/yarn-v$YARN_VERSION.tar.gz" \
     && tar -xzf yarn-v$YARN_VERSION.tar.gz -C /opt/ \
     && ln -snf /opt/yarn-v$YARN_VERSION/bin/yarn /usr/local/bin/yarn \
     && ln -snf /opt/yarn-v$YARN_VERSION/bin/yarnpkg /usr/local/bin/yarnpkg \
     && rm yarn-v$YARN_VERSION.tar.gz
 ```
 
-If you're using an Alpine-based image, `curl` won't be present, so you'll need to make sure it's installed while using it:
+If you're using an Alpine-based image, `curl` won't be present, so you'll need
+to make sure it's installed while using it:
 
 ```Dockerfile
 FROM node:6-alpine
@@ -77,7 +107,8 @@ FROM node:6-alpine
 ENV YARN_VERSION 1.5.1
 
 RUN apk add --no-cache --virtual .build-deps-yarn curl \
-    && curl -fSLO --compressed "https://yarnpkg.com/downloads/$YARN_VERSION/yarn-v$YARN_VERSION.tar.gz" \
+    && curl -fSLO --compressed \
+      "https://yarnpkg.com/downloads/$YARN_VERSION/yarn-v$YARN_VERSION.tar.gz" \
     && tar -xzf yarn-v$YARN_VERSION.tar.gz -C /opt/ \
     && ln -snf /opt/yarn-v$YARN_VERSION/bin/yarn /usr/local/bin/yarn \
     && ln -snf /opt/yarn-v$YARN_VERSION/bin/yarnpkg /usr/local/bin/yarnpkg \
@@ -87,19 +118,29 @@ RUN apk add --no-cache --virtual .build-deps-yarn curl \
 
 ## Handling Kernel Signals
 
-Node.js was not designed to run as PID 1 which leads to unexpected behaviour when running inside of Docker. For example, a Node.js process running as PID 1 will not respond to `SIGINT` (`CTRL-C`) and similar signals. As of Docker 1.13, you can use the `--init` flag to wrap your Node.js process with a [lightweight init system](https://github.com/krallin/tini) that properly handles running as PID 1.
+Node.js was not designed to run as PID 1 which leads to unexpected behaviour
+when running inside of Docker. For example, a Node.js process running as PID 1
+will not respond to `SIGINT` (`CTRL-C`) and similar signals. As of Docker 1.13,
+you can use the `--init` flag to wrap your Node.js process with a [lightweight
+init system](https://github.com/krallin/tini) that properly handles running as
+PID 1.
 
-```
+```console
 docker run -it --init node
 ```
 
-You can also include Tini [directly in your Dockerfile](https://github.com/krallin/tini#using-tini), ensuring your process is always started with an init wrapper.
+You can also include Tini [directly in your
+Dockerfile](https://github.com/krallin/tini#using-tini), ensuring your process
+is always started with an init wrapper.
 
 ## Non-root User
 
-By default, Docker runs container as root which inside of the container can pose as a security issue. You would want to run the container as an unprivileged user wherever possible. The node images provide the `node` user for such purpose. The Docker Image can then be run with the `node` user in the following way:
+By default, Docker runs container as root which inside of the container can pose
+as a security issue. You would want to run the container as an unprivileged user
+wherever possible. The node images provide the `node` user for such purpose. The
+Docker Image can then be run with the `node` user in the following way:
 
-```
+```console
 -u "node"
 ```
 
@@ -112,9 +153,12 @@ FROM node:6.10.3
 USER node
 ```
 
-Note that the `node` user is neither a build-time nor a run-time dependency and it can be removed or altered, as long as the functionality of the application you want to add to the container does not depend on it.
+Note that the `node` user is neither a build-time nor a run-time dependency and
+it can be removed or altered, as long as the functionality of the application
+you want to add to the container does not depend on it.
 
-If you do not want nor need the user created in this image you can remove it with the following:
+If you do not want nor need the user created in this image you can remove it
+with the following:
 
 ```Dockerfile
 # For debian based images use:
@@ -136,7 +180,8 @@ If you need another name for the user (ex. `myapp`) execute:
 RUN usermod -d /home/myapp -l myapp node
 ```
 
-For alpine based images, you do not have `groupmod` nor `usermod`, so to change the uid/gid you have to delete the previous user:
+For alpine based images, you do not have `groupmod` nor `usermod`, so to change
+the uid/gid you have to delete the previous user:
 
 ```Dockerfile
 RUN deluser --remove-home node \
@@ -146,15 +191,21 @@ RUN deluser --remove-home node \
 
 ## Memory
 
-By default, any Docker Container may consume as much of the hardware such as CPU and RAM. If you are running multiple containers on the same host you should limit how much memory they can consume.
+By default, any Docker Container may consume as much of the hardware such as CPU
+and RAM. If you are running multiple containers on the same host you should
+limit how much memory they can consume.
 
-```
+```console
 -m "300M" --memory-swap "1G"
 ```
 
 ## CMD
 
-When creating an image, you can bypass the `package.json`'s `start` command and bake it directly into the image itself. First off this reduces the number of processes running inside of your container. Secondly it causes exit signals such as `SIGTERM` and `SIGINT` to be received by the Node.js process instead of npm swallowing them.
+When creating an image, you can bypass the `package.json`'s `start` command and
+bake it directly into the image itself. First off this reduces the number of
+processes running inside of your container. Secondly it causes exit signals such
+as `SIGTERM` and `SIGINT` to be received by the Node.js process instead of npm
+swallowing them.
 
 ```Dockerfile
 CMD ["node","index.js"]
@@ -162,10 +213,11 @@ CMD ["node","index.js"]
 
 ## Docker Run
 
-Here is an example of how you would run a default Node.JS Docker Containerized application:
+Here is an example of how you would run a default Node.JS Docker Containerized
+application:
 
-```
-$ docker run \
+```console
+docker run \
   -e "NODE_ENV=production" \
   -u "node" \
   -m "300M" --memory-swap "1G" \
@@ -176,11 +228,14 @@ $ docker run \
 
 ## Security
 
-The Docker team has provided a tool to analyze your running containers for potential security issues. You can download and run this tool from here: https://github.com/docker/docker-bench-security
+The Docker team has provided a tool to analyze your running containers for
+potential security issues. You can download and run this tool from here:
+<https://github.com/docker/docker-bench-security>
 
 ## node-gyp alpine
 
-Here is an example of how you would install dependencies for packages that require node-gyp support on the alpine variant:
+Here is an example of how you would install dependencies for packages that
+require node-gyp support on the alpine variant:
 
 ```Dockerfile
 FROM node:alpine

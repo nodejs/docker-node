@@ -2,8 +2,10 @@
 
 [![dockeri.co](http://dockeri.co/image/_/node)](https://registry.hub.docker.com/_/node/)
 
-[![GitHub issues](https://img.shields.io/github/issues/nodejs/docker-node.svg "GitHub issues")](https://github.com/nodejs/docker-node)
-[![GitHub stars](https://img.shields.io/github/stars/nodejs/docker-node.svg "GitHub stars")](https://github.com/nodejs/docker-node)
+[![GitHub issues](https://img.shields.io/github/issues/nodejs/docker-node.svg
+"GitHub issues")](https://github.com/nodejs/docker-node) [![GitHub
+stars](https://img.shields.io/github/stars/nodejs/docker-node.svg "GitHub
+stars")](https://github.com/nodejs/docker-node)
 
 The official Node.js docker image, made with love by the node community.
 
@@ -11,7 +13,7 @@ The official Node.js docker image, made with love by the node community.
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 ## Table of Contents
 
-- [What is Node.js?](#what-is-nodejs)
+- [What is Node.js](#what-is-nodejs)
 - [How to use this image](#how-to-use-this-image)
   - [Create a `Dockerfile` in your Node.js app project](#create-a-dockerfile-in-your-nodejs-app-project)
   - [Best Practices](#best-practices)
@@ -31,18 +33,18 @@ The official Node.js docker image, made with love by the node community.
   - [Docker Working Group Members](#docker-working-group-members)
   - [Docker Working Group Collaborators](#docker-working-group-collaborators)
   - [Emeritus](#emeritus)
-    - [Docker Working Group Members](#docker-working-group-members-1)
+    - [Emeritus Docker Working Group Members](#emeritus-docker-working-group-members)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## What is Node.js?
+## What is Node.js
 
 Node.js is a platform built on Chrome's JavaScript runtime for easily building
 fast, scalable network applications. Node.js uses an event-driven, non-blocking
 I/O model that makes it lightweight and efficient, perfect for data-intensive
 real-time applications that run across distributed devices.
 
-See: http://nodejs.org
+See: <http://nodejs.org>
 
 ## How to use this image
 
@@ -58,8 +60,8 @@ EXPOSE 8888
 You can then build and run the Docker image:
 
 ```console
-$ docker build -t my-nodejs-app .
-$ docker run -it --rm --name my-running-app my-nodejs-app
+docker build -t my-nodejs-app .
+docker run -it --rm --name my-running-app my-nodejs-app
 ```
 
 If you prefer Docker Compose:
@@ -83,16 +85,18 @@ services:
 You can then run using Docker Compose:
 
 ```console
-$ docker-compose up -d
+docker-compose up -d
 ```
 
-Docker Compose example copies your current directory (including node_modules) to the container.
-It assumes that your application has a file named [`package.json`](https://docs.npmjs.com/files/package.json)
-defining [start script](https://docs.npmjs.com/misc/scripts#default-values).
+Docker Compose example copies your current directory (including node_modules) to
+the container. It assumes that your application has a file named
+[`package.json`](https://docs.npmjs.com/files/package.json) defining [start
+script](https://docs.npmjs.com/misc/scripts#default-values).
 
 ### Best Practices
 
-We have assembled a [Best Practices Guide](./docs/BestPractices.md) for those using these images on a daily basis.
+We have assembled a [Best Practices Guide](./docs/BestPractices.md) for those
+using these images on a daily basis.
 
 ### Run a single Node.js script
 
@@ -101,16 +105,18 @@ complete `Dockerfile`. In such cases, you can run a Node.js script by using the
 Node.js Docker image directly:
 
 ```console
-$ docker run -it --rm --name my-running-script -v "$PWD":/usr/src/app -w /usr/src/app node:8 node your-daemon-or-script.js
+docker run -it --rm --name my-running-script -v "$PWD":/usr/src/app \
+  -w /usr/src/app node:8 node your-daemon-or-script.js
 ```
 
 ### Verbosity
 
-Prior to 8.7.0 and 6.11.4 the docker images overrode the default npm log
-level from `warn` to `info`. However due to improvements to npm and new Docker
-patterns (e.g. multi-stage builds) the working group reached a [consensus](https://github.com/nodejs/docker-node/issues/528)
-to revert the log level to npm defaults. If you need more verbose output, please
-use one of the following methods to change the verbosity level.
+Prior to 8.7.0 and 6.11.4 the docker images overrode the default npm log level
+from `warn` to `info`. However due to improvements to npm and new Docker
+patterns (e.g. multi-stage builds) the working group reached a
+[consensus](https://github.com/nodejs/docker-node/issues/528) to revert the log
+level to npm defaults. If you need more verbose output, please use one of the
+following methods to change the verbosity level.
 
 #### Dockerfile
 
@@ -129,7 +135,7 @@ If you run the node image using `docker run` you can use the `-e` flag to
 override `NPM_CONFIG_LOGLEVEL`.
 
 ```console
-$ docker run -e NPM_CONFIG_LOGLEVEL=info node ...
+docker run -e NPM_CONFIG_LOGLEVEL=info node ...
 ```
 
 #### NPM run
@@ -138,7 +144,7 @@ If you are running npm commands you can use `--loglevel` to control the
 verbosity of the output.
 
 ```console
-$ docker run node npm --loglevel=warn ...
+docker run node npm --loglevel=warn ...
 ```
 
 ## Image Variants
@@ -147,8 +153,8 @@ The `node` images come in many flavors, each designed for a specific use case.
 All of the images contain pre-installed versions of `node`,
 [`npm`](https://www.npmjs.com/), and [`yarn`](https://yarnpkg.com). For each
 supported architecture, the supported variants are different. In the file:
-[architectures](./architectures), it lists all supported variants for all of
-the architectures that we support now.
+[architectures](./architectures), it lists all supported variants for all of the
+architectures that we support now.
 
 ### `node:<version>`
 
@@ -164,31 +170,32 @@ need to install, thus reducing the overall size of all images on your system.
 
 ### `node:alpine`
 
-This image is based on the popular
-[Alpine Linux project](http://alpinelinux.org), available in
-[the `alpine` official image](https://hub.docker.com/_/alpine). Alpine Linux is
-much smaller than most distribution base images (~5MB), and thus leads to much
-slimmer images in general.
+This image is based on the popular [Alpine Linux
+project](http://alpinelinux.org), available in [the `alpine` official
+image](https://hub.docker.com/_/alpine). Alpine Linux is much smaller than most
+distribution base images (~5MB), and thus leads to much slimmer images in
+general.
 
 This variant is highly recommended when final image size being as small as
-possible is desired. The main caveat to note is that it does use
-[musl libc](http://www.musl-libc.org) instead of
-[glibc and friends](http://www.etalabs.net/compare_libcs.html), so certain
-software might run into issues depending on the depth of their libc
-requirements. However, most software doesn't have an issue with this, so this
-variant is usually a very safe choice. See
-[this Hacker News comment thread](https://news.ycombinator.com/item?id=10782897)
-for more discussion of the issues that might arise and some pro/con comparisons
-of using Alpine-based images. One common issue that may arise is a missing shared
-library required for use of `process.dlopen`. To add the missing shared libraries
-to your image, adding the [`libc6-compat`](https://pkgs.alpinelinux.org/package/edge/main/x86/libc6-compat)
+possible is desired. The main caveat to note is that it does use [musl
+libc](http://www.musl-libc.org) instead of [glibc and
+friends](http://www.etalabs.net/compare_libcs.html), so certain software might
+run into issues depending on the depth of their libc requirements. However, most
+software doesn't have an issue with this, so this variant is usually a very safe
+choice. See [this Hacker News comment
+thread](https://news.ycombinator.com/item?id=10782897) for more discussion of
+the issues that might arise and some pro/con comparisons of using Alpine-based
+images. One common issue that may arise is a missing shared library required for
+use of `process.dlopen`. To add the missing shared libraries to your image,
+adding the
+[`libc6-compat`](https://pkgs.alpinelinux.org/package/edge/main/x86/libc6-compat)
 package in your Dockerfile is recommended: `apk add --no-cache libc6-compat`
 
-To minimize image size, it's uncommon for additional related tools
-(such as `git` or `bash`) to be included in Alpine-based images. Using this
-image as a base, add the things you need in your own Dockerfile
-(see the [`alpine` image description](https://hub.docker.com/_/alpine/) for
-examples of how to install packages if you are unfamiliar).
+To minimize image size, it's uncommon for additional related tools (such as
+`git` or `bash`) to be included in Alpine-based images. Using this image as a
+base, add the things you need in your own Dockerfile (see the [`alpine` image
+description](https://hub.docker.com/_/alpine/) for examples of how to install
+packages if you are unfamiliar).
 
 ### `node:slim`
 
@@ -217,14 +224,15 @@ upgrade your Docker daemon.
 
 ## Supported Node.js versions
 
-This project will support Node.js versions as still under active support as per the [Node.js release schedule](https://github.com/nodejs/Release).
+This project will support Node.js versions as still under active support as per
+the [Node.js release schedule](https://github.com/nodejs/Release).
 
 ## Governance and Current Members
 
 The Node.js Docker Image is governed by the Docker Working Group. See
 [GOVERNANCE.md](https://github.com/nodejs/docker-node/blob/master/GOVERNANCE.md)
-to learn more about the group's structure and [CONTRIBUTING.md](CONTRIBUTING.md) for guidance
-about the expectations for all contributors to this project.
+to learn more about the group's structure and [CONTRIBUTING.md](CONTRIBUTING.md)
+for guidance about the expectations for all contributors to this project.
 
 ### Docker Working Group Members
 
@@ -242,6 +250,6 @@ about the expectations for all contributors to this project.
 
 ### Emeritus
 
-#### Docker Working Group Members
+#### Emeritus Docker Working Group Members
 
 - Christopher Horrell ([chorrell](https://github.com/chorrell))

@@ -1,0 +1,24 @@
+name: Lint
+on:
+  pull_request:
+
+jobs:
+  super-linter:
+    name: Lint
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      - name: Setup Node
+        uses: actions/setup-node@v1
+
+      - name: Add matchers
+        run: |
+          echo "::add-matcher::.github/super-linter-problem-matcher.json"
+      - name: Lint Code Base
+        uses: github/super-linter@v3
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          FILTER_REGEX_EXCLUDE: .*.template

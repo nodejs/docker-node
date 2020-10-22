@@ -12,6 +12,7 @@ on:
       - "**/docker-entrypoint.sh"
       - "generate-stackbrew-library.sh"
       - "functions.sh"
+      - "config"
 
 jobs:
   pr:

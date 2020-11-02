@@ -195,14 +195,12 @@ examples of how to install packages if you are unfamiliar).
 ### `node:buster`
 This image is based on version 10 of
 [Debian](http://debian.org), available in
-[the `debian` official image](https://hub.docker.com/_/debian). Debian is
-completely open source, and thus can be contributed too and made better.
+[the `debian` official image](https://hub.docker.com/_/debian).
 
 ### `node:stretch`
 This image is based on version 9 of
 [Debian](http://debian.org), available in
-[the `debian` official image](https://hub.docker.com/_/debian). Debian is
-completely open source, and thus can be contributed too and made better.
+[the `debian` official image](https://hub.docker.com/_/debian).
 
 ### `node:slim`
 

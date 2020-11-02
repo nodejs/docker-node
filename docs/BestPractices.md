@@ -1,17 +1,23 @@
 # Docker and Node.js Best Practices
 
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 ## Table of Contents
 
 - [Environment Variables](#environment-variables)
 - [Global npm dependencies](#global-npm-dependencies)
 - [Upgrading/downgrading Yarn](#upgradingdowngrading-yarn)
+  - [Local](#local)
+  - [Global](#global)
 - [Handling Kernel Signals](#handling-kernel-signals)
 - [Non-root User](#non-root-user)
 - [Memory](#memory)
 - [CMD](#cmd)
 - [Docker Run](#docker-run)
 - [Security](#security)
-- [node-gyp in alpine variant](#node-gyp-alpine)
+- [node-gyp alpine](#node-gyp-alpine)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## Environment Variables
 

@@ -192,14 +192,13 @@ image as a base, add the things you need in your own Dockerfile
 (see the [`alpine` image description](https://hub.docker.com/_/alpine/) for
 examples of how to install packages if you are unfamiliar).
 
-### Debian Based Images
-## `node:buster`
+### `node:buster`
 This image is based on version 10 of
 [Debian](http://debian.org), available in
 [the `debian` official image](https://hub.docker.com/_/debian). Debian is
 completely open source, and thus can be contributed too and made better.
 
-## `node:stretch`
+### `node:stretch`
 This image is based on version 9 of
 [Debian](http://debian.org), available in
 [the `debian` official image](https://hub.docker.com/_/debian). Debian is

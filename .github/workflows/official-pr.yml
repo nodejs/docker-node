@@ -59,6 +59,7 @@ jobs:
 
       - name: Create PR comment
         uses: peter-evans/create-or-update-comment@v1
+        if: ${{ steps.create-pr.outputs.pull-request-url != '' }}
         with:
           issue-number: ${{ github.event.pull_request.number }}
           body: |

@@ -1,6 +1,6 @@
 FROM alpine:3.12
 
-ENV NODE_VERSION 15.0.1
+ENV NODE_VERSION 15.1.0
 
 RUN addgroup -g 1000 node \
     && adduser -u 1000 -G node -s /bin/sh -D node \
@@ -12,7 +12,7 @@ RUN addgroup -g 1000 node \
       && case "${alpineArch##*-}" in \
         x86_64) \
           ARCH='x64' \
-          CHECKSUM="6c855f5aa9f93d1a9d2415dc70b567c7f06bb2b47309098934d790d51cae4d66" \
+          CHECKSUM="a13c18ddeb849267e6321ca97570259a0651e42ec43b10a29ef119c79a2adcd6" \
           ;; \
         *) ;; \
       esac \

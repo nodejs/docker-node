@@ -87,3 +87,15 @@ jobs:
 
       - name: Test for yarn
         run: docker run --rm node:${{ matrix.version }}-${{ matrix.variant }} yarn --version
+
+      - name: Push to GitHub Packages
+        uses: docker/build-push-action@v2
+        with:
+          push: false
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+          registry: docker.pkg.github.com
+          context: .
+          file: ./${{ steps.short-version.outputs.result }}/${{ matrix.variant }}/Dockerfile
+          repository: yordis/docker-node/node-${{ matrix.version }}-${{ matrix.variant }}
+          tag_with_ref: true

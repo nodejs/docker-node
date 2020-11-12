@@ -1,0 +1,78 @@
+name: Publish to GitHub Registry
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - "**/Dockerfile"
+      - "**/docker-entrypoint.sh"
+      - genMatrix.js
+      - .github/workflows/publish-to-github-registry.yml
+
+jobs:
+  gen_matrix:
+    name: Generate matrix
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.generator.outputs.result }}
+    steps:
+      - name: Calculate file differences
+        uses: lots0logs/gh-action-get-changed-files@2.1.4
+        id: diff
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Generate testing matrix
+        uses: actions/github-script@v3
+        id: generator
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const script = require(`${process.env.GITHUB_WORKSPACE}/genMatrix.js`)
+            return script(
+              ${{ steps.diff.outputs.added }},
+              ${{ steps.diff.outputs.modified }},
+              ${{ steps.diff.outputs.renamed }},
+            );
+
+  publish:
+    name: Push Image
+    if: ${{ fromJson(needs.gen_matrix.outputs.matrix) }}
+    needs: gen_matrix
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJson(needs.gen_matrix.outputs.matrix) }}
+    steps:
+      - name: Setup builder
+        uses: docker/setup-buildx-action@v1
+
+      - name: Login to Github Docker Registry
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.CR_PAT }}
+
+      - name: Get short Node version
+        uses: actions/github-script@v3
+        id: short-version
+        with:
+          result-encoding: string
+          script: return "${{ matrix.version }}".split('.')[0]
+
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Build and push
+        uses: docker/build-push-action@v2
+        with:
+          push: true
+          context: .
+          file: ./${{ steps.short-version.outputs.result }}/${{ matrix.variant }}/Dockerfile
+          tags: |
+            ghcr.io/${{ github.repository }}/node:${{ matrix.version }}-${{ matrix.variant }}

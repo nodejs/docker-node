@@ -50,7 +50,7 @@ jobs:
           title: "Node: ${{ github.event.pull_request.title }}"
           body: |
             Pull Request: ${{ github.event.pull_request.html_url }}
-            @LaurentGoderre @pesho @PeterDaveHello @SimenB @Starefossen @nschonni @ttshivers
+            @LaurentGoderre @PeterDaveHello @SimenB @Starefossen @nschonni @ttshivers
 
       - name: PR details
         run: |

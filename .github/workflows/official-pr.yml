@@ -43,7 +43,7 @@ jobs:
         uses: peter-evans/create-pull-request@v3
         with:
           token: ${{ secrets.GH_API_TOKEN }}
-          push-to-fork: nodejs-github-bot/official-images
+          push-to-fork: nodejs/official-images
           path: official-images
           branch: node
           commit-message: "Node: ${{ github.event.pull_request.title }}"

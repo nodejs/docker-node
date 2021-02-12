@@ -1,7 +1,7 @@
 bashbrew-arch  variants
-amd64          alpine3.10,alpine3.11,alpine3.12,buster,buster-slim,stretch,stretch-slim
-arm32v6        alpine3.10,alpine3.11,alpine3.12
-arm32v7        alpine3.10,alpine3.11,alpine3.12,buster,buster-slim,stretch,stretch-slim
-arm64v8        alpine3.10,alpine3.11,alpine3.12,buster,buster-slim,stretch,stretch-slim
-ppc64le        alpine3.10,alpine3.11,alpine3.12,buster,buster-slim
-s390x          alpine3.10,alpine3.11,alpine3.12,buster,buster-slim
+amd64          alpine3.10,alpine3.11,alpine3.12,alpine3.13,buster,buster-slim,stretch,stretch-slim
+arm32v6        alpine3.10,alpine3.11,alpine3.12,alpine3.13
+arm32v7        alpine3.10,alpine3.11,alpine3.12,alpine3.13,buster,buster-slim,stretch,stretch-slim
+arm64v8        alpine3.10,alpine3.11,alpine3.12,alpine3.13,buster,buster-slim,stretch,stretch-slim
+ppc64le        alpine3.10,alpine3.11,alpine3.12,alpine3.13,buster,buster-slim
+s390x          alpine3.10,alpine3.11,alpine3.12,alpine3.13,buster,buster-slim

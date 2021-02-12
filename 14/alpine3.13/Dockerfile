@@ -1,6 +1,6 @@
-FROM alpine:3.11
+FROM alpine:3.13
 
-ENV NODE_VERSION 12.20.2
+ENV NODE_VERSION 14.15.5
 
 RUN addgroup -g 1000 node \
     && adduser -u 1000 -G node -s /bin/sh -D node \
@@ -12,7 +12,7 @@ RUN addgroup -g 1000 node \
       && case "${alpineArch##*-}" in \
         x86_64) \
           ARCH='x64' \
-          CHECKSUM="89854b77656f0f7f89e5d1e68c5a2aa6f32d534e9c1646146346a76d4364d1e5" \
+          CHECKSUM="e7ca0569963c3155d86c51b3855469c3496f0c8d2fce080480d92de5a6287977" \
           ;; \
         *) ;; \
       esac \
@@ -33,7 +33,7 @@ RUN addgroup -g 1000 node \
         libgcc \
         linux-headers \
         make \
-        python2 \
+        python3 \
     # gpg keys listed at https://github.com/nodejs/node#release-keys
     && for key in \
       4ED778F539E3634C779C87C6D7062848A1AB005C \

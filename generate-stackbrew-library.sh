@@ -36,6 +36,7 @@ echo "# this file is generated via ${url}/blob/$(fileCommit "${self}")/${self}"
 echo
 echo "Maintainers: The Node.js Docker Team <${url}> (@nodejs)"
 echo "GitRepo: ${url}.git"
+echo "GitFetch: refs/heads/main"
 echo
 
 # prints "$2$1$3$1...$N"

@@ -213,8 +213,7 @@ repository.
 ## License
 
 [License information](https://github.com/nodejs/node/blob/master/LICENSE) for
-the software contained in this image. [License
-information](https://github.com/nodejs/docker-node/blob/master/LICENSE) for the
+the software contained in this image. [License information](LICENSE) for the
 Node.js Docker project.
 
 ## Supported Docker versions
@@ -234,7 +233,7 @@ This project will support Node.js versions as still under active support as per 
 ## Governance and Current Members
 
 The Node.js Docker Image is governed by the Docker Working Group. See
-[GOVERNANCE.md](https://github.com/nodejs/docker-node/blob/master/GOVERNANCE.md)
+[GOVERNANCE.md](GOVERNANCE.md)
 to learn more about the group's structure and [CONTRIBUTING.md](CONTRIBUTING.md) for guidance
 about the expectations for all contributors to this project.
 

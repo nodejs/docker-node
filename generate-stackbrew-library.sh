@@ -13,7 +13,9 @@ array_12='12 erbium'
 # shellcheck disable=SC2034
 array_14='14 fermium lts'
 # shellcheck disable=SC2034
-array_15='15 latest current'
+array_15='15'
+# shellcheck disable=SC2034
+array_16='16 latest current'
 
 default_variant=$(get_config "./" "default_variant")
 

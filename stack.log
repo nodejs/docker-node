@@ -1,186 +1,190 @@
-# this file is generated via https://github.com/nodejs/docker-node/blob/9970bdc645e6688f4b5a4cf5558782e6ec590b91/generate-stackbrew-library.sh
+# this file is generated via https://github.com/nodejs/docker-node/blob/cd940875756a65669d54d0bbe2119924c3c5d9bb/generate-stackbrew-library.sh
 
 Maintainers: The Node.js Docker Team <https://github.com/nodejs/docker-node> (@nodejs)
 GitRepo: https://github.com/nodejs/docker-node.git
 GitFetch: refs/heads/main
 
-Tags: 16.0.0-alpine3.11, 16.0-alpine3.11, 16-alpine3.11, alpine3.11, current-alpine3.11, 16.0.0-alpine, 16.0-alpine, 16-alpine, alpine, current-alpine
+Tags: 16.0.0-alpine3.11, 16-alpine3.11, 16.0-alpine3.11, 16-alpine3.11, alpine3.11, current-alpine3.11
 Architectures: amd64, arm32v6, arm32v7, arm64v8, ppc64le, s390x
 GitCommit: f0551c9eb5e0dbb853eda4266bc0964e5989bda1
 Directory: 16/alpine3.11
 
-Tags: 16.0.0-alpine3.12, 16.0-alpine3.12, 16-alpine3.12, alpine3.12, current-alpine3.12
+Tags: 16.0.0-alpine3.12, 16-alpine3.12, 16.0-alpine3.12, 16-alpine3.12, alpine3.12, current-alpine3.12
 Architectures: amd64, arm32v6, arm32v7, arm64v8, ppc64le, s390x
 GitCommit: f0551c9eb5e0dbb853eda4266bc0964e5989bda1
 Directory: 16/alpine3.12
 
-Tags: 16.0.0-alpine3.13, 16.0-alpine3.13, 16-alpine3.13, alpine3.13, current-alpine3.13
+Tags: 16.0.0-alpine3.13, 16-alpine3.13, 16.0-alpine3.13, 16-alpine3.13, alpine3.13, current-alpine3.13, 16.0.0-alpine, 16-alpine, 16.0-alpine, 16-alpine, alpine, current-alpine
 Architectures: amd64, arm32v6, arm32v7, arm64v8, ppc64le, s390x
 GitCommit: f0551c9eb5e0dbb853eda4266bc0964e5989bda1
 Directory: 16/alpine3.13
 
-Tags: 16.0.0-buster, 16.0-buster, 16-buster, buster, current-buster
+Tags: 16.0.0-buster, 16-buster, 16.0-buster, 16-buster, buster, current-buster
+SharedTags: 16.0.0, 16, 16.0, 16, latest, current
 Architectures: amd64, arm32v7, arm64v8, ppc64le, s390x
 GitCommit: 2438859c181e4e9e5c4a7ad8e4a54ef69aeefbf3
 Directory: 16/buster
 
-Tags: 16.0.0-buster-slim, 16.0-buster-slim, 16-buster-slim, buster-slim, current-buster-slim
+Tags: 16.0.0-buster-slim, 16-buster-slim, 16.0-buster-slim, 16-buster-slim, buster-slim, current-buster-slim
 Architectures: amd64, arm32v7, arm64v8, ppc64le, s390x
 GitCommit: 2438859c181e4e9e5c4a7ad8e4a54ef69aeefbf3
 Directory: 16/buster-slim
 
-Tags: 16.0.0-stretch, 16.0-stretch, 16-stretch, stretch, current-stretch, 16.0.0, 16.0, 16, latest, current
+Tags: 16.0.0-stretch, 16-stretch, 16.0-stretch, 16-stretch, stretch, current-stretch
 Architectures: amd64, arm32v7, arm64v8
 GitCommit: 2438859c181e4e9e5c4a7ad8e4a54ef69aeefbf3
 Directory: 16/stretch
 
-Tags: 16.0.0-stretch-slim, 16.0-stretch-slim, 16-stretch-slim, stretch-slim, current-stretch-slim, 16.0.0-slim, 16.0-slim, 16-slim, slim, current-slim
+Tags: 16.0.0-stretch-slim, 16-stretch-slim, 16.0-stretch-slim, 16-stretch-slim, stretch-slim, current-stretch-slim
 Architectures: amd64, arm32v7, arm64v8
 GitCommit: 2438859c181e4e9e5c4a7ad8e4a54ef69aeefbf3
 Directory: 16/stretch-slim
 
-Tags: 15.14.0-alpine3.10, 15.14-alpine3.10, 15-alpine3.10
+Tags: 15.14.0-alpine3.10, 15-alpine3.10, 15.14-alpine3.10, 15-alpine3.10
 Architectures: amd64, arm32v6, arm32v7, arm64v8, ppc64le, s390x
 GitCommit: 31246f5f779cafa0930a1db04bd00d875d6a940d
 Directory: 15/alpine3.10
 
-Tags: 15.14.0-alpine3.11, 15.14-alpine3.11, 15-alpine3.11, 15.14.0-alpine, 15.14-alpine, 15-alpine
+Tags: 15.14.0-alpine3.11, 15-alpine3.11, 15.14-alpine3.11, 15-alpine3.11, 15.14.0-alpine, 15-alpine, 15.14-alpine, 15-alpine
 Architectures: amd64, arm32v6, arm32v7, arm64v8, ppc64le, s390x
 GitCommit: 31246f5f779cafa0930a1db04bd00d875d6a940d
 Directory: 15/alpine3.11
 
-Tags: 15.14.0-alpine3.12, 15.14-alpine3.12, 15-alpine3.12
+Tags: 15.14.0-alpine3.12, 15-alpine3.12, 15.14-alpine3.12, 15-alpine3.12
 Architectures: amd64, arm32v6, arm32v7, arm64v8, ppc64le, s390x
 GitCommit: 31246f5f779cafa0930a1db04bd00d875d6a940d
 Directory: 15/alpine3.12
 
-Tags: 15.14.0-alpine3.13, 15.14-alpine3.13, 15-alpine3.13
+Tags: 15.14.0-alpine3.13, 15-alpine3.13, 15.14-alpine3.13, 15-alpine3.13
 Architectures: amd64, arm32v6, arm32v7, arm64v8, ppc64le, s390x
 GitCommit: 31246f5f779cafa0930a1db04bd00d875d6a940d
 Directory: 15/alpine3.13
 
-Tags: 15.14.0-buster, 15.14-buster, 15-buster
+Tags: 15.14.0-buster, 15-buster, 15.14-buster, 15-buster
+SharedTags: 15.14.0, 15, 15.14, 15
 Architectures: amd64, arm32v7, arm64v8, ppc64le, s390x
 GitCommit: 31246f5f779cafa0930a1db04bd00d875d6a940d
 Directory: 15/buster
 
-Tags: 15.14.0-buster-slim, 15.14-buster-slim, 15-buster-slim
+Tags: 15.14.0-buster-slim, 15-buster-slim, 15.14-buster-slim, 15-buster-slim
 Architectures: amd64, arm32v7, arm64v8, ppc64le, s390x
 GitCommit: 31246f5f779cafa0930a1db04bd00d875d6a940d
 Directory: 15/buster-slim
 
-Tags: 15.14.0-stretch, 15.14-stretch, 15-stretch, 15.14.0, 15.14, 15
+Tags: 15.14.0-stretch, 15-stretch, 15.14-stretch, 15-stretch
 Architectures: amd64, arm32v7, arm64v8
 GitCommit: 31246f5f779cafa0930a1db04bd00d875d6a940d
 Directory: 15/stretch
 
-Tags: 15.14.0-stretch-slim, 15.14-stretch-slim, 15-stretch-slim, 15.14.0-slim, 15.14-slim, 15-slim
+Tags: 15.14.0-stretch-slim, 15-stretch-slim, 15.14-stretch-slim, 15-stretch-slim
 Architectures: amd64, arm32v7, arm64v8
 GitCommit: 31246f5f779cafa0930a1db04bd00d875d6a940d
 Directory: 15/stretch-slim
 
-Tags: 14.16.1-alpine3.10, 14.16-alpine3.10, 14-alpine3.10, fermium-alpine3.10, lts-alpine3.10
+Tags: 14.16.1-alpine3.10, 14-alpine3.10, 14.16-alpine3.10, 14-alpine3.10, fermium-alpine3.10, lts-alpine3.10
 Architectures: amd64, arm32v6, arm32v7, arm64v8, ppc64le, s390x
 GitCommit: 31246f5f779cafa0930a1db04bd00d875d6a940d
 Directory: 14/alpine3.10
 
-Tags: 14.16.1-alpine3.11, 14.16-alpine3.11, 14-alpine3.11, fermium-alpine3.11, lts-alpine3.11, 14.16.1-alpine, 14.16-alpine, 14-alpine, fermium-alpine, lts-alpine
+Tags: 14.16.1-alpine3.11, 14-alpine3.11, 14.16-alpine3.11, 14-alpine3.11, fermium-alpine3.11, lts-alpine3.11, 14.16.1-alpine, 14-alpine, 14.16-alpine, 14-alpine, fermium-alpine, lts-alpine
 Architectures: amd64, arm32v6, arm32v7, arm64v8, ppc64le, s390x
 GitCommit: 31246f5f779cafa0930a1db04bd00d875d6a940d
 Directory: 14/alpine3.11
 
-Tags: 14.16.1-alpine3.12, 14.16-alpine3.12, 14-alpine3.12, fermium-alpine3.12, lts-alpine3.12
+Tags: 14.16.1-alpine3.12, 14-alpine3.12, 14.16-alpine3.12, 14-alpine3.12, fermium-alpine3.12, lts-alpine3.12
 Architectures: amd64, arm32v6, arm32v7, arm64v8, ppc64le, s390x
 GitCommit: 31246f5f779cafa0930a1db04bd00d875d6a940d
 Directory: 14/alpine3.12
 
-Tags: 14.16.1-alpine3.13, 14.16-alpine3.13, 14-alpine3.13, fermium-alpine3.13, lts-alpine3.13
+Tags: 14.16.1-alpine3.13, 14-alpine3.13, 14.16-alpine3.13, 14-alpine3.13, fermium-alpine3.13, lts-alpine3.13
 Architectures: amd64, arm32v6, arm32v7, arm64v8, ppc64le, s390x
 GitCommit: 31246f5f779cafa0930a1db04bd00d875d6a940d
 Directory: 14/alpine3.13
 
-Tags: 14.16.1-buster, 14.16-buster, 14-buster, fermium-buster, lts-buster
+Tags: 14.16.1-buster, 14-buster, 14.16-buster, 14-buster, fermium-buster, lts-buster
+SharedTags: 14.16.1, 14, 14.16, 14, fermium, lts
 Architectures: amd64, arm32v7, arm64v8, ppc64le, s390x
 GitCommit: 31246f5f779cafa0930a1db04bd00d875d6a940d
 Directory: 14/buster
 
-Tags: 14.16.1-buster-slim, 14.16-buster-slim, 14-buster-slim, fermium-buster-slim, lts-buster-slim
+Tags: 14.16.1-buster-slim, 14-buster-slim, 14.16-buster-slim, 14-buster-slim, fermium-buster-slim, lts-buster-slim
 Architectures: amd64, arm32v7, arm64v8, ppc64le, s390x
 GitCommit: 31246f5f779cafa0930a1db04bd00d875d6a940d
 Directory: 14/buster-slim
 
-Tags: 14.16.1-stretch, 14.16-stretch, 14-stretch, fermium-stretch, lts-stretch, 14.16.1, 14.16, 14, fermium, lts
+Tags: 14.16.1-stretch, 14-stretch, 14.16-stretch, 14-stretch, fermium-stretch, lts-stretch
 Architectures: amd64, arm32v7, arm64v8
 GitCommit: 31246f5f779cafa0930a1db04bd00d875d6a940d
 Directory: 14/stretch
 
-Tags: 14.16.1-stretch-slim, 14.16-stretch-slim, 14-stretch-slim, fermium-stretch-slim, lts-stretch-slim, 14.16.1-slim, 14.16-slim, 14-slim, fermium-slim, lts-slim
+Tags: 14.16.1-stretch-slim, 14-stretch-slim, 14.16-stretch-slim, 14-stretch-slim, fermium-stretch-slim, lts-stretch-slim
 Architectures: amd64, arm32v7, arm64v8
 GitCommit: 31246f5f779cafa0930a1db04bd00d875d6a940d
 Directory: 14/stretch-slim
 
-Tags: 12.22.1-alpine3.10, 12.22-alpine3.10, 12-alpine3.10, erbium-alpine3.10
+Tags: 12.22.1-alpine3.10, 12-alpine3.10, 12.22-alpine3.10, 12-alpine3.10, erbium-alpine3.10
 Architectures: amd64, arm32v6, arm32v7, arm64v8, ppc64le, s390x
 GitCommit: 31246f5f779cafa0930a1db04bd00d875d6a940d
 Directory: 12/alpine3.10
 
-Tags: 12.22.1-alpine3.11, 12.22-alpine3.11, 12-alpine3.11, erbium-alpine3.11, 12.22.1-alpine, 12.22-alpine, 12-alpine, erbium-alpine
+Tags: 12.22.1-alpine3.11, 12-alpine3.11, 12.22-alpine3.11, 12-alpine3.11, erbium-alpine3.11, 12.22.1-alpine, 12-alpine, 12.22-alpine, 12-alpine, erbium-alpine
 Architectures: amd64, arm32v6, arm32v7, arm64v8, ppc64le, s390x
 GitCommit: 31246f5f779cafa0930a1db04bd00d875d6a940d
 Directory: 12/alpine3.11
 
-Tags: 12.22.1-alpine3.12, 12.22-alpine3.12, 12-alpine3.12, erbium-alpine3.12
+Tags: 12.22.1-alpine3.12, 12-alpine3.12, 12.22-alpine3.12, 12-alpine3.12, erbium-alpine3.12
 Architectures: amd64, arm32v6, arm32v7, arm64v8, ppc64le, s390x
 GitCommit: 31246f5f779cafa0930a1db04bd00d875d6a940d
 Directory: 12/alpine3.12
 
-Tags: 12.22.1-buster, 12.22-buster, 12-buster, erbium-buster
+Tags: 12.22.1-buster, 12-buster, 12.22-buster, 12-buster, erbium-buster
+SharedTags: 12.22.1, 12, 12.22, 12, erbium
 Architectures: amd64, arm32v7, arm64v8, ppc64le, s390x
 GitCommit: 31246f5f779cafa0930a1db04bd00d875d6a940d
 Directory: 12/buster
 
-Tags: 12.22.1-buster-slim, 12.22-buster-slim, 12-buster-slim, erbium-buster-slim
+Tags: 12.22.1-buster-slim, 12-buster-slim, 12.22-buster-slim, 12-buster-slim, erbium-buster-slim
 Architectures: amd64, arm32v7, arm64v8, ppc64le, s390x
 GitCommit: 31246f5f779cafa0930a1db04bd00d875d6a940d
 Directory: 12/buster-slim
 
-Tags: 12.22.1-stretch, 12.22-stretch, 12-stretch, erbium-stretch, 12.22.1, 12.22, 12, erbium
+Tags: 12.22.1-stretch, 12-stretch, 12.22-stretch, 12-stretch, erbium-stretch
 Architectures: amd64, arm32v7, arm64v8
 GitCommit: 31246f5f779cafa0930a1db04bd00d875d6a940d
 Directory: 12/stretch
 
-Tags: 12.22.1-stretch-slim, 12.22-stretch-slim, 12-stretch-slim, erbium-stretch-slim, 12.22.1-slim, 12.22-slim, 12-slim, erbium-slim
+Tags: 12.22.1-stretch-slim, 12-stretch-slim, 12.22-stretch-slim, 12-stretch-slim, erbium-stretch-slim
 Architectures: amd64, arm32v7, arm64v8
 GitCommit: 31246f5f779cafa0930a1db04bd00d875d6a940d
 Directory: 12/stretch-slim
 
-Tags: 10.24.1-alpine3.10, 10.24-alpine3.10, 10-alpine3.10, dubnium-alpine3.10
+Tags: 10.24.1-alpine3.10, 10-alpine3.10, 10.24-alpine3.10, 10-alpine3.10, dubnium-alpine3.10
 Architectures: amd64, arm32v6, arm32v7, arm64v8, i386, ppc64le, s390x
 GitCommit: 31246f5f779cafa0930a1db04bd00d875d6a940d
 Directory: 10/alpine3.10
 
-Tags: 10.24.1-alpine3.11, 10.24-alpine3.11, 10-alpine3.11, dubnium-alpine3.11, 10.24.1-alpine, 10.24-alpine, 10-alpine, dubnium-alpine
+Tags: 10.24.1-alpine3.11, 10-alpine3.11, 10.24-alpine3.11, 10-alpine3.11, dubnium-alpine3.11, 10.24.1-alpine, 10-alpine, 10.24-alpine, 10-alpine, dubnium-alpine
 Architectures: amd64, arm32v6, arm32v7, arm64v8, i386, ppc64le, s390x
 GitCommit: 31246f5f779cafa0930a1db04bd00d875d6a940d
 Directory: 10/alpine3.11
 
-Tags: 10.24.1-buster, 10.24-buster, 10-buster, dubnium-buster
-Architectures: amd64, arm32v7, arm64v8, ppc64le, s390x
+Tags: 10.24.1-buster, 10-buster, 10.24-buster, 10-buster, dubnium-buster
+SharedTags: 10.24.1, 10, 10.24, 10, dubnium
+Architectures: amd64, arm32v7, arm64v8, i386, ppc64le, s390x
 GitCommit: 31246f5f779cafa0930a1db04bd00d875d6a940d
 Directory: 10/buster
 
-Tags: 10.24.1-buster-slim, 10.24-buster-slim, 10-buster-slim, dubnium-buster-slim
-Architectures: amd64, arm32v7, arm64v8, ppc64le, s390x
+Tags: 10.24.1-buster-slim, 10-buster-slim, 10.24-buster-slim, 10-buster-slim, dubnium-buster-slim
+Architectures: amd64, arm32v7, arm64v8, i386, ppc64le, s390x
 GitCommit: 31246f5f779cafa0930a1db04bd00d875d6a940d
 Directory: 10/buster-slim
 
-Tags: 10.24.1-stretch, 10.24-stretch, 10-stretch, dubnium-stretch, 10.24.1, 10.24, 10, dubnium
-Architectures: amd64, arm32v7, arm64v8
+Tags: 10.24.1-stretch, 10-stretch, 10.24-stretch, 10-stretch, dubnium-stretch
+Architectures: amd64, arm32v7, arm64v8, i386
 GitCommit: 31246f5f779cafa0930a1db04bd00d875d6a940d
 Directory: 10/stretch
 
-Tags: 10.24.1-stretch-slim, 10.24-stretch-slim, 10-stretch-slim, dubnium-stretch-slim, 10.24.1-slim, 10.24-slim, 10-slim, dubnium-slim
-Architectures: amd64, arm32v7, arm64v8
+Tags: 10.24.1-stretch-slim, 10-stretch-slim, 10.24-stretch-slim, 10-stretch-slim, dubnium-stretch-slim
+Architectures: amd64, arm32v7, arm64v8, i386
 GitCommit: 31246f5f779cafa0930a1db04bd00d875d6a940d
 Directory: 10/stretch-slim
-

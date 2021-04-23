@@ -1,45 +1,87 @@
 #!/usr/bin/env bash
+set -Eeuo pipefail
 
-set -e
-. functions.sh
+declare -A aliases=(
+  [10]='10 dubnium'
+  [12]='12 erbium'
+  [14]='14 fermium lts'
+  [15]='15'
+  [16]='16 latest current'
+)
 
-hash git 2> /dev/null || { echo >&2 "git not found, exiting."; }
+defaultDebianSuite='buster'
+declare -A debianSuite=(
+  #[1.13-rc]='buster'
+)
+defaultAlpineVersion='3.11'
+declare -A alpineVersion=(
+  [16]='3.13'
+)
 
-# Used dynamically: print "$array_" $1
-# shellcheck disable=SC2034
-array_10='10 dubnium'
-# shellcheck disable=SC2034
-array_12='12 erbium'
-# shellcheck disable=SC2034
-array_14='14 fermium lts'
-# shellcheck disable=SC2034
-array_15='15'
-# shellcheck disable=SC2034
-array_16='16 latest current'
+self="$(basename "$BASH_SOURCE")"
+cd "$(dirname "$(readlink -f "$BASH_SOURCE")")"
 
-default_variant=$(get_config "./" "default_variant")
+if [ "$#" -eq 0 ]; then
+  versions="$(jq -r 'keys | map(@sh) | join(" ")' versions.json)"
+  eval "set -- $versions"
+fi
 
-default_alpine=$(get_config "./" "alpine_version")
-
-cd "$(cd "${0%/*}" && pwd -P)"
-
-self="$(basename "${BASH_SOURCE[0]}")"
-
-IFS=' ' read -ra versions <<< "$(get_versions)"
-IFS=' ' read -ra versions <<< "$(sort_versions "${versions[@]}")"
-url='https://github.com/nodejs/docker-node'
+# sort version numbers with highest first
+IFS=$'\n'
+set -- $(sort -rV <<<"$*")
+unset IFS
 
 # get the most recent commit which modified any of "$@"
 fileCommit() {
   git log -1 --format='format:%H' HEAD -- "$@"
 }
 
-echo "# this file is generated via ${url}/blob/$(fileCommit "${self}")/${self}"
-echo
-echo "Maintainers: The Node.js Docker Team <${url}> (@nodejs)"
-echo "GitRepo: ${url}.git"
-echo "GitFetch: refs/heads/main"
-echo
+# get the most recent commit which modified "$1/Dockerfile" or any file COPY'd from "$1/Dockerfile"
+dirCommit() {
+  local dir="$1"
+  shift
+  (
+    cd "$dir"
+    files="$(
+      git show HEAD:./Dockerfile | awk '
+        toupper($1) == "COPY" {
+          for (i = 2; i < NF; i++) {
+            if ($i ~ /^--from=/) {
+              next
+            }
+            print $i
+          }
+        }
+        '
+    )"
+    fileCommit Dockerfile $files
+  )
+}
+
+getArches() {
+  local repo="$1"
+  shift
+  local officialImagesUrl='https://github.com/docker-library/official-images/raw/master/library/'
+
+  eval "declare -g -A parentRepoToArches=( $(
+    find -name 'Dockerfile' -exec awk '
+        toupper($1) == "FROM" && $2 !~ /^('"$repo"'|scratch|.*\/.*)(:|$)/ {
+          print "'"$officialImagesUrl"'" $2
+        }
+      ' '{}' + |
+      sort -u |
+      xargs bashbrew cat --format '[{{ .RepoName }}:{{ .TagName }}]="{{ join " " .TagEntry.Architectures }}"'
+  ) )"
+}
+getArches 'node'
+
+cat <<-EOH
+# this file is generated via https://github.com/nodejs/docker-node/blob/$(fileCommit "$self")/$self
+
+Maintainers: The Node.js Docker Team <https://github.com/nodejs/docker-node> (@nodejs)
+GitRepo: https://github.com/nodejs/docker-node.git
+GitFetch: refs/heads/main
+EOH
 
 # prints "$2$1$3$1...$N"
 join() {
@@ -50,65 +92,105 @@ join() {
   echo "${out#$sep}"
 }
 
-get_stub() {
-  local version="${1}"
-  shift
-  IFS='/' read -ra versionparts <<< "${version}"
-  local stub
-  eval stub="$(join '_' "${versionparts[@]}" | awk -F. '{ print "$array_" $1 }')"
-  echo "${stub}"
-}
+for version; do
+  export version
+  variants="$(jq -r '.[env.version].variants | map(@sh) | join(" ")' versions.json)"
+  eval "variants=( $variants )"
 
-for version in "${versions[@]}"; do
-  # Skip "docs" and other non-docker directories
-  [ -f "${version}/Dockerfile" ] || [ -f "${version}/${default_variant}/Dockerfile" ] || continue
+  fullVersion="$(jq -r '.[env.version].version' versions.json)"
+  [[ "$fullVersion" == *.*[^0-9]* ]] || fullVersion+='.0'
 
-  stub=$(get_stub "${version}")
-  commit="$(fileCommit "${version}")"
-  fullVersion="$(get_tag "${version}" full)"
-  majorMinorVersion="$(get_tag "${version}" majorminor)"
+  versionAliases=(
+    $version
+    $(echo "${fullVersion}" | cut -d'.' -f1).$(echo "${fullVersion}" | cut -d'.' -f2)
+    ${aliases[$version]:-}
+  )
 
-  IFS=' ' read -ra versionAliases <<< "$fullVersion $majorMinorVersion $stub"
+  for v in "${variants[@]}"; do
+    dir="$version/$v"
+    [ -f "$dir/Dockerfile" ] || continue
 
-  if [ -f "${version}/Dockerfile" ]; then
-    # Get supported architectures for a specific version. See details in function.sh
-    IFS=' ' read -ra supportedArches <<< "$(get_supported_arches "${version}" "default")"
+    variant="$(basename "$v")"
+    versionSuite="${debianSuite[$version]:-$defaultDebianSuite}"
 
-    echo "Tags: $(join ', ' "${versionAliases[@]}")"
-    echo "Architectures: $(join ', ' "${supportedArches[@]}")"
-    echo "GitCommit: ${commit}"
-    echo "Directory: ${version}"
-    echo
-  fi
-
-  # Get supported variants according to the target architecture.
-  # See details in function.sh
-  IFS=' ' read -ra variants <<< "$(get_variants "$(dirname "${version}")")"
-  for variant in "${variants[@]}"; do
-    # Skip non-docker directories
-    [ -f "${version}/${variant}/Dockerfile" ] || continue
-
-    commit="$(fileCommit "${version}/${variant}")"
-
-    slash='/'
-    variantAliases=("${versionAliases[@]/%/-${variant//${slash}/-}}")
-    if [ "${variant}" = "${default_variant}-slim" ]; then
-      variantAliases+=("${versionAliases[@]/%/-slim}")
-    elif [ "${variant}" = "alpine${default_alpine}" ]; then
-      variantAliases+=("${versionAliases[@]/%/-alpine}")
-    elif [ "${variant}" = "${default_variant}" ]; then
-      variantAliases+=("${versionAliases[@]}")
+    if [ "$version" = "$fullVersion" ]; then
+      baseAliases=("${versionAliases[@]}")
+    else
+      baseAliases=($fullVersion "${versionAliases[@]}")
     fi
+    variantAliases=("${baseAliases[@]/%/-$variant}")
     variantAliases=("${variantAliases[@]//latest-/}")
 
-    # Get supported architectures for a specific version and variant.
-    # See details in function.sh
-    IFS=' ' read -ra supportedArches <<< "$(get_supported_arches "${version}" "${variant}")"
+    if [ "${variant#alpine}" = "${alpineVersion[$version]:-$defaultAlpineVersion}" ]; then
+      variantAliases+=("${baseAliases[@]/%/-alpine}")
+      variantAliases=("${variantAliases[@]//latest-/}")
+    fi
 
-    echo "Tags: $(join ', ' "${variantAliases[@]}")"
-    echo "Architectures: $(join ', ' "${supportedArches[@]}")"
-    echo "GitCommit: ${commit}"
-    echo "Directory: ${version}/${variant}"
+    case "$v" in
+    windows/*)
+      variantArches='windows-amd64'
+      ;;
+
+    *)
+      variantParent="$(awk 'toupper($1) == "FROM" { print $2 }' "$dir/Dockerfile")"
+      variantArches="${parentRepoToArches[$variantParent]}"
+
+      if [ "$variant" = 'stretch' ]; then
+        # stretch's "golang-go" package fails to build (TODO try backports?)
+        variantArches="$(sed <<<" $variantArches " -e 's/ arm32v5 / /g')"
+        # "gccgo" in stretch can't build mips64le
+        variantArches="$(sed <<<" $variantArches " -e 's/ mips64le / /g')"
+      fi
+      ;;
+    esac
+
+    # cross-reference with supported architectures
+    for arch in $variantArches; do
+      if ! jq -e --arg arch "$arch" '.[env.version].arches[$arch].supported' versions.json &>/dev/null; then
+        variantArches="$(sed <<<" $variantArches " -e "s/ $arch / /g")"
+      fi
+    done
+    # TODO rewrite this whole loop into a single jq expression :)
+    variantArches="${variantArches% }"
+    variantArches="${variantArches# }"
+    if [ -z "$variantArches" ]; then
+      echo >&2 "error: '$dir' has no supported architectures!"
+      exit 1
+    fi
+
+    sharedTags=()
+    for windowsShared in windowsservercore nanoserver; do
+      if [[ "$variant" == "$windowsShared"* ]]; then
+        sharedTags=("${baseAliases[@]/%/-$windowsShared}")
+        sharedTags=("${sharedTags[@]//latest-/}")
+        break
+      fi
+    done
+    if [ "$variant" = "$versionSuite" ] || [[ "$variant" == 'windowsservercore'* ]]; then
+      sharedTags+=("${baseAliases[@]}")
+    fi
+
+    constraints=
+    if [ "$variant" != "$v" ]; then
+      constraints="$variant"
+      if [[ "$variant" == nanoserver-* ]]; then
+        # nanoserver variants "COPY --from=...:...-windowsservercore-... ..."
+        constraints+=", windowsservercore-${variant#nanoserver-}"
+      fi
+    fi
+
+    commit="$(dirCommit "$dir")"
+
     echo
+    echo "Tags: $(join ', ' "${variantAliases[@]}")"
+    if [ "${#sharedTags[@]}" -gt 0 ]; then
+      echo "SharedTags: $(join ', ' "${sharedTags[@]}")"
+    fi
+    cat <<-EOE
+Architectures: $(join ', ' $variantArches)
+GitCommit: $commit
+Directory: $dir
+EOE
+    [ -z "$constraints" ] || echo "Constraints: $constraints"
   done
 done

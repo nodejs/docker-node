@@ -1,0 +1,166 @@
+{
+  "10": {
+    "variants": [
+      "alpine3.10",
+      "alpine3.11",
+      "buster",
+      "buster-slim",
+      "stretch",
+      "stretch-slim"
+    ],
+    "arches": {
+      "amd64": {
+        "supported": true
+      },
+      "arm32v6": {
+        "supported": true
+      },
+      "arm32v7": {
+        "supported": true
+      },
+      "arm64v8": {
+        "supported": true
+      },
+      "i386": {
+        "supported": true
+      },
+      "ppc64le": {
+        "supported": true
+      },
+      "s390x": {
+        "supported": true
+      }
+    },
+    "version": "10.24.1"
+  },
+  "12": {
+    "variants": [
+      "alpine3.10",
+      "alpine3.11",
+      "alpine3.12",
+      "buster",
+      "buster-slim",
+      "stretch",
+      "stretch-slim"
+    ],
+    "arches": {
+      "amd64": {
+        "supported": true
+      },
+      "arm32v6": {
+        "supported": true
+      },
+      "arm32v7": {
+        "supported": true
+      },
+      "arm64v8": {
+        "supported": true
+      },
+      "ppc64le": {
+        "supported": true
+      },
+      "s390x": {
+        "supported": true
+      }
+    },
+    "version": "12.22.1"
+  },
+  "14": {
+    "variants": [
+      "alpine3.10",
+      "alpine3.11",
+      "alpine3.12",
+      "alpine3.13",
+      "buster",
+      "buster-slim",
+      "stretch",
+      "stretch-slim"
+    ],
+    "arches": {
+      "amd64": {
+        "supported": true
+      },
+      "arm32v6": {
+        "supported": true
+      },
+      "arm32v7": {
+        "supported": true
+      },
+      "arm64v8": {
+        "supported": true
+      },
+      "ppc64le": {
+        "supported": true
+      },
+      "s390x": {
+        "supported": true
+      }
+    },
+    "version": "14.16.1"
+  },
+  "15": {
+    "variants": [
+      "alpine3.10",
+      "alpine3.11",
+      "alpine3.12",
+      "alpine3.13",
+      "buster",
+      "buster-slim",
+      "stretch",
+      "stretch-slim"
+    ],
+    "arches": {
+      "amd64": {
+        "supported": true
+      },
+      "arm32v6": {
+        "supported": true
+      },
+      "arm32v7": {
+        "supported": true
+      },
+      "arm64v8": {
+        "supported": true
+      },
+      "ppc64le": {
+        "supported": true
+      },
+      "s390x": {
+        "supported": true
+      }
+    },
+    "version": "15.14.0"
+  },
+  "16": {
+    "variants": [
+      "alpine3.11",
+      "alpine3.12",
+      "alpine3.13",
+      "buster",
+      "buster-slim",
+      "stretch",
+      "stretch-slim"
+    ],
+    "arches": {
+      "amd64": {
+        "supported": true
+      },
+      "arm32v6": {
+        "supported": true
+      },
+      "arm32v7": {
+        "supported": true
+      },
+      "arm64v8": {
+        "supported": true
+      },
+      "ppc64le": {
+        "supported": true
+      },
+      "s390x": {
+        "supported": true
+      }
+    },
+    "version": "16.0.0"
+  }
+}

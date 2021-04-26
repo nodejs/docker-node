@@ -1,0 +1,305 @@
+{
+  "16": {
+    "start": "2021-04-20",
+    "lts": "2021-10-26",
+    "maintenance": "2022-10-18",
+    "end": "2024-04-30",
+    "codename": "",
+    "alpine-default": "alpine3.13",
+    "debian-default": "buster",
+    "variants": {
+      "alpine3.11": [
+        "amd64",
+        "arm32v6",
+        "arm32v7",
+        "arm64v8",
+        "ppc64le",
+        "s390x"
+      ],
+      "alpine3.12": [
+        "amd64",
+        "arm32v6",
+        "arm32v7",
+        "arm64v8",
+        "ppc64le",
+        "s390x"
+      ],
+      "alpine3.13": [
+        "amd64",
+        "arm32v6",
+        "arm32v7",
+        "arm64v8",
+        "ppc64le",
+        "s390x"
+      ],
+      "buster": [
+        "amd64",
+        "arm32v7",
+        "arm64v8",
+        "ppc64le",
+        "s390x"
+      ],
+      "buster-slim": [
+        "amd64",
+        "arm32v7",
+        "arm64v8",
+        "ppc64le",
+        "s390x"
+      ],
+      "stretch": [
+        "amd64",
+        "arm32v7",
+        "arm64v8"
+      ],
+      "stretch-slim": [
+        "amd64",
+        "arm32v7",
+        "arm64v8"
+      ]
+    }
+  },
+  "15": {
+    "start": "2020-10-20",
+    "maintenance": "2021-04-01",
+    "end": "2021-06-01",
+    "alpine-default": "alpine3.11",
+    "debian-default": "stretch",
+    "variants": {
+      "alpine3.10": [
+        "amd64",
+        "arm32v6",
+        "arm32v7",
+        "arm64v8",
+        "ppc64le",
+        "s390x"
+      ],
+      "alpine3.11": [
+        "amd64",
+        "arm32v6",
+        "arm32v7",
+        "arm64v8",
+        "ppc64le",
+        "s390x"
+      ],
+      "alpine3.12": [
+        "amd64",
+        "arm32v6",
+        "arm32v7",
+        "arm64v8",
+        "ppc64le",
+        "s390x"
+      ],
+      "alpine3.13": [
+        "amd64",
+        "arm32v6",
+        "arm32v7",
+        "arm64v8",
+        "ppc64le",
+        "s390x"
+      ],
+      "buster": [
+        "amd64",
+        "arm32v7",
+        "arm64v8",
+        "ppc64le",
+        "s390x"
+      ],
+      "buster-slim": [
+        "amd64",
+        "arm32v7",
+        "arm64v8",
+        "ppc64le",
+        "s390x"
+      ],
+      "stretch": [
+        "amd64",
+        "arm32v7",
+        "arm64v8"
+      ],
+      "stretch-slim": [
+        "amd64",
+        "arm32v7",
+        "arm64v8"
+      ]
+    }
+  },
+  "14": {
+    "start": "2020-04-21",
+    "lts": "2020-10-27",
+    "maintenance": "2021-10-19",
+    "end": "2023-04-30",
+    "codename": "fermium",
+    "alpine-default": "alpine3.11",
+    "debian-default": "stretch",
+    "variants": {
+      "alpine3.10": [
+        "amd64",
+        "arm32v6",
+        "arm32v7",
+        "arm64v8",
+        "ppc64le",
+        "s390x"
+      ],
+      "alpine3.11": [
+        "amd64",
+        "arm32v6",
+        "arm32v7",
+        "arm64v8",
+        "ppc64le",
+        "s390x"
+      ],
+      "alpine3.12": [
+        "amd64",
+        "arm32v6",
+        "arm32v7",
+        "arm64v8",
+        "ppc64le",
+        "s390x"
+      ],
+      "alpine3.13": [
+        "amd64",
+        "arm32v6",
+        "arm32v7",
+        "arm64v8",
+        "ppc64le",
+        "s390x"
+      ],
+      "buster": [
+        "amd64",
+        "arm32v7",
+        "arm64v8",
+        "ppc64le",
+        "s390x"
+      ],
+      "buster-slim": [
+        "amd64",
+        "arm32v7",
+        "arm64v8",
+        "ppc64le",
+        "s390x"
+      ],
+      "stretch": [
+        "amd64",
+        "arm32v7",
+        "arm64v8"
+      ],
+      "stretch-slim": [
+        "amd64",
+        "arm32v7",
+        "arm64v8"
+      ]
+    }
+  },
+  "12": {
+    "start": "2019-04-23",
+    "lts": "2019-10-21",
+    "maintenance": "2020-11-30",
+    "end": "2022-04-30",
+    "codename": "erbium",
+    "alpine-default": "alpine3.11",
+    "debian-default": "stretch",
+    "variants": {
+      "alpine3.10": [
+        "amd64",
+        "arm32v6",
+        "arm32v7",
+        "arm64v8",
+        "ppc64le",
+        "s390x"
+      ],
+      "alpine3.11": [
+        "amd64",
+        "arm32v6",
+        "arm32v7",
+        "arm64v8",
+        "ppc64le",
+        "s390x"
+      ],
+      "alpine3.12": [
+        "amd64",
+        "arm32v6",
+        "arm32v7",
+        "arm64v8",
+        "ppc64le",
+        "s390x"
+      ],
+      "buster": [
+        "amd64",
+        "arm32v7",
+        "arm64v8",
+        "ppc64le",
+        "s390x"
+      ],
+      "buster-slim": [
+        "amd64",
+        "arm32v7",
+        "arm64v8",
+        "ppc64le",
+        "s390x"
+      ],
+      "stretch": [
+        "amd64",
+        "arm32v7",
+        "arm64v8"
+      ],
+      "stretch-slim": [
+        "amd64",
+        "arm32v7",
+        "arm64v8"
+      ]
+    }
+  },
+  "10": {
+    "start": "2018-04-24",
+    "lts": "2018-10-30",
+    "maintenance": "2020-05-19",
+    "end": "2021-04-30",
+    "codename": "dubnium",
+    "alpine-default": "alpine3.11",
+    "debian-default": "stretch",
+    "variants": {
+      "alpine3.10": [
+        "amd64",
+        "arm32v6",
+        "arm32v7",
+        "arm64v8",
+        "i386",
+        "ppc64le",
+        "s390x"
+      ],
+      "alpine3.11": [
+        "amd64",
+        "arm32v6",
+        "arm32v7",
+        "arm64v8",
+        "i386",
+        "ppc64le",
+        "s390x"
+      ],
+      "buster": [
+        "amd64",
+        "arm32v7",
+        "arm64v8",
+        "ppc64le",
+        "s390x"
+      ],
+      "buster-slim": [
+        "amd64",
+        "arm32v7",
+        "arm64v8",
+        "ppc64le",
+        "s390x"
+      ],
+      "stretch": [
+        "amd64",
+        "arm32v7",
+        "arm64v8"
+      ],
+      "stretch-slim": [
+        "amd64",
+        "arm32v7",
+        "arm64v8"
+      ]
+    }
+  }
+}

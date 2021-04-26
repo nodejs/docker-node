@@ -10,8 +10,7 @@ on:
       - "**/Dockerfile"
       - "**/architectures"
       - "**/docker-entrypoint.sh"
-      - "generate-stackbrew-library.sh"
-      - "functions.sh"
+      - "stackbrew.js"
       - "config"
 
 jobs:
@@ -36,7 +35,7 @@ jobs:
       - name: Generate Stackbrew for diff
         run: |
           cd docker-node
-          ./generate-stackbrew-library.sh > ../official-images/library/node
+          ./stackbrew.js > ../official-images/library/node
 
       - name: Create PR in official-images
         id: create-pr

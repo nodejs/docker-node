@@ -248,58 +248,5 @@
         "arm64v8"
       ]
     }
-  },
-  "10": {
-    "start": "2018-04-24",
-    "lts": "2018-10-30",
-    "maintenance": "2020-05-19",
-    "end": "2021-04-30",
-    "codename": "dubnium",
-    "alpine-default": "alpine3.11",
-    "debian-default": "stretch",
-    "variants": {
-      "alpine3.10": [
-        "amd64",
-        "arm32v6",
-        "arm32v7",
-        "arm64v8",
-        "i386",
-        "ppc64le",
-        "s390x"
-      ],
-      "alpine3.11": [
-        "amd64",
-        "arm32v6",
-        "arm32v7",
-        "arm64v8",
-        "i386",
-        "ppc64le",
-        "s390x"
-      ],
-      "buster": [
-        "amd64",
-        "arm32v7",
-        "arm64v8",
-        "ppc64le",
-        "s390x"
-      ],
-      "buster-slim": [
-        "amd64",
-        "arm32v7",
-        "arm64v8",
-        "ppc64le",
-        "s390x"
-      ],
-      "stretch": [
-        "amd64",
-        "arm32v7",
-        "arm64v8"
-      ],
-      "stretch-slim": [
-        "amd64",
-        "arm32v7",
-        "arm64v8"
-      ]
-    }
   }
 }

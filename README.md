@@ -149,7 +149,7 @@ The `node` images come in many flavors, each designed for a specific use case.
 All of the images contain pre-installed versions of `node`,
 [`npm`](https://www.npmjs.com/), and [`yarn`](https://yarnpkg.com). For each
 supported architecture, the supported variants are different. In the file:
-[architectures](./architectures), it lists all supported variants for all of
+[versions.json](./versions.json), it lists all supported variants for all of
 the architectures that we support now.
 
 ### `node:<version>`

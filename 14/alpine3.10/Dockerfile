@@ -70,7 +70,12 @@ RUN addgroup -g 1000 node \
   && apk del .build-deps \
   # smoke tests
   && node --version \
-  && npm --version
+  && npm --version \
+  # remove unnecessary files
+  && rm -rf \
+    /usr/local/lib/node_modules/npm/changelogs \
+    /usr/local/lib/node_modules/npm/man \
+    /usr/local/lib/node_modules/npm/docs
 
 ENV YARN_VERSION 1.22.5
 
@@ -92,7 +97,10 @@ RUN apk add --no-cache --virtual .build-deps-yarn curl gnupg tar \
   && rm yarn-v$YARN_VERSION.tar.gz.asc yarn-v$YARN_VERSION.tar.gz \
   && apk del .build-deps-yarn \
   # smoke test
-  && yarn --version
+  && yarn --version \
+  # remove unnecessary files
+  && rm -rf \
+    /tmp/*
 
 COPY docker-entrypoint.sh /usr/local/bin/
 ENTRYPOINT ["docker-entrypoint.sh"]

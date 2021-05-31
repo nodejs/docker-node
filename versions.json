@@ -65,14 +65,6 @@
     "alpine-default": "alpine3.11",
     "debian-default": "stretch",
     "variants": {
-      "alpine3.10": [
-        "amd64",
-        "arm32v6",
-        "arm32v7",
-        "arm64v8",
-        "ppc64le",
-        "s390x"
-      ],
       "alpine3.11": [
         "amd64",
         "arm32v6",
@@ -132,14 +124,6 @@
     "alpine-default": "alpine3.11",
     "debian-default": "stretch",
     "variants": {
-      "alpine3.10": [
-        "amd64",
-        "arm32v6",
-        "arm32v7",
-        "arm64v8",
-        "ppc64le",
-        "s390x"
-      ],
       "alpine3.11": [
         "amd64",
         "arm32v6",
@@ -199,14 +183,6 @@
     "alpine-default": "alpine3.11",
     "debian-default": "stretch",
     "variants": {
-      "alpine3.10": [
-        "amd64",
-        "arm32v6",
-        "arm32v7",
-        "arm64v8",
-        "ppc64le",
-        "s390x"
-      ],
       "alpine3.11": [
         "amd64",
         "arm32v6",

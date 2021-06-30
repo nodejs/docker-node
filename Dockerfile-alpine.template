@@ -33,15 +33,13 @@ RUN addgroup -g 1000 node \
         libgcc \
         linux-headers \
         make \
+        git \
+        bash \
         ${PYTHON_VERSION} \
     # gpg keys listed at https://github.com/nodejs/node#release-keys
-    && for key in \
-      "${NODE_KEYS[@]}"
-    ; do \
-      gpg --batch --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys "$key" || \
-      gpg --batch --keyserver hkp://ipv4.pool.sks-keyservers.net --recv-keys "$key" || \
-      gpg --batch --keyserver hkp://pgp.mit.edu:80 --recv-keys "$key" ; \
-    done \
+    && git clone https://github.com/nodejs/release-keys.git \
+    && release-keys/cli.sh import \
+    && rm -Rf release-keys \
     && curl -fsSLO --compressed "https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION.tar.xz" \
     && curl -fsSLO --compressed "https://nodejs.org/dist/v$NODE_VERSION/SHASUMS256.txt.asc" \
     && gpg --batch --decrypt --output SHASUMS256.txt SHASUMS256.txt.asc \

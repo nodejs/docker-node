@@ -33,15 +33,10 @@ RUN addgroup -g 1000 node \
         libgcc \
         linux-headers \
         make \
+        bash \
         ${PYTHON_VERSION} \
     # gpg keys listed at https://github.com/nodejs/node#release-keys
-    && for key in \
-      "${NODE_KEYS[@]}"
-    ; do \
-      gpg --batch --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys "$key" || \
-      gpg --batch --keyserver hkp://ipv4.pool.sks-keyservers.net --recv-keys "$key" || \
-      gpg --batch --keyserver hkp://pgp.mit.edu:80 --recv-keys "$key" ; \
-    done \
+    && curl -s https://raw.githubusercontent.com/nodejs/release-keys/HEAD/cli.sh | bash -s import \
     && curl -fsSLO --compressed "https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION.tar.xz" \
     && curl -fsSLO --compressed "https://nodejs.org/dist/v$NODE_VERSION/SHASUMS256.txt.asc" \
     && gpg --batch --decrypt --output SHASUMS256.txt SHASUMS256.txt.asc \
@@ -57,6 +52,7 @@ RUN addgroup -g 1000 node \
     && rm "node-v$NODE_VERSION.tar.xz" SHASUMS256.txt.asc SHASUMS256.txt; \
   fi \
   && rm -f "node-v$NODE_VERSION-linux-$ARCH-musl.tar.xz" \
+  && curl -s https://raw.githubusercontent.com/nodejs/release-keys/HEAD/cli.sh | bash -s clear \
   && apk del .build-deps \
   # smoke tests
   && node --version \

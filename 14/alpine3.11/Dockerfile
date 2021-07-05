@@ -12,7 +12,11 @@ RUN addgroup -g 1000 node \
       && case "${alpineArch##*-}" in \
         x86_64) \
           ARCH='x64' \
+<<<<<<< HEAD
           CHECKSUM="3b3eace287399aa298983d40ecb0ae3736da0baa65246f436b9edab8a9fa28a0" \
+=======
+          CHECKSUM="" \
+>>>>>>> Update nodejs to 14.17.2
           ;; \
         *) ;; \
       esac \

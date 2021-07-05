@@ -20,7 +20,7 @@ RUN ARCH= && dpkgArch="$(dpkg --print-architecture)" \
     && apt-get update && apt-get install -y ca-certificates curl wget gnupg dirmngr xz-utils libatomic1 --no-install-recommends \
     && rm -rf /var/lib/apt/lists/* \
     && for key in \
-      "${NODE_KEYS[@]}"
+      "${NODE_KEYS[@]}" \
     ; do \
       gpg --batch --keyserver hkps://keys.openpgp.org --recv-keys "$key" || \
       gpg --batch --keyserver keyserver.ubuntu.com --recv-keys "$key" ; \
@@ -52,7 +52,7 @@ RUN set -ex \
   && apt-get update && apt-get install -y ca-certificates curl wget gnupg dirmngr --no-install-recommends \
   && rm -rf /var/lib/apt/lists/* \
   && for key in \
-    "${YARN_KEYS[@]}"
+    "${YARN_KEYS[@]}" \
   ; do \
     gpg --batch --keyserver hkps://keys.openpgp.org --recv-keys "$key" || \
     gpg --batch --keyserver keyserver.ubuntu.com --recv-keys "$key" ; \

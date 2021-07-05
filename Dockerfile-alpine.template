@@ -36,7 +36,7 @@ RUN addgroup -g 1000 node \
         ${PYTHON_VERSION} \
     # gpg keys listed at https://github.com/nodejs/node#release-keys
     && for key in \
-      "${NODE_KEYS[@]}"
+      "${NODE_KEYS[@]}" \
     ; do \
       gpg --batch --keyserver hkps://keys.openpgp.org --recv-keys "$key" || \
       gpg --batch --keyserver keyserver.ubuntu.com --recv-keys "$key" ; \
@@ -65,7 +65,7 @@ ENV YARN_VERSION 0.0.0
 
 RUN apk add --no-cache --virtual .build-deps-yarn curl gnupg tar \
   && for key in \
-    "${YARN_KEYS[@]}"
+    "${YARN_KEYS[@]}" \
   ; do \
     gpg --batch --keyserver hkps://keys.openpgp.org --recv-keys "$key" || \
     gpg --batch --keyserver keyserver.ubuntu.com --recv-keys "$key" ; \

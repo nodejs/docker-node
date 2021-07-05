@@ -18,7 +18,7 @@ RUN ARCH= && dpkgArch="$(dpkg --print-architecture)" \
   # gpg keys listed at https://github.com/nodejs/node#release-keys
   && set -ex \
   && for key in \
-    "${NODE_KEYS[@]}"
+    "${NODE_KEYS[@]}" \
   ; do \
       gpg --batch --keyserver hkps://keys.openpgp.org --recv-keys "$key" || \
       gpg --batch --keyserver keyserver.ubuntu.com --recv-keys "$key" ; \
@@ -38,7 +38,7 @@ ENV YARN_VERSION 0.0.0
 
 RUN set -ex \
   && for key in \
-    "${YARN_KEYS[@]}"
+    "${YARN_KEYS[@]}" \
   ; do \
     gpg --batch --keyserver hkps://keys.openpgp.org --recv-keys "$key" || \
     gpg --batch --keyserver keyserver.ubuntu.com --recv-keys "$key" ; \

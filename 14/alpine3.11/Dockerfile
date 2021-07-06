@@ -1,6 +1,6 @@
 FROM alpine:3.11
 
-ENV NODE_VERSION 14.17.2
+ENV NODE_VERSION 14.17.3
 
 RUN addgroup -g 1000 node \
     && adduser -u 1000 -G node -s /bin/sh -D node \
@@ -13,10 +13,14 @@ RUN addgroup -g 1000 node \
         x86_64) \
           ARCH='x64' \
 <<<<<<< HEAD
+<<<<<<< HEAD
           CHECKSUM="3b3eace287399aa298983d40ecb0ae3736da0baa65246f436b9edab8a9fa28a0" \
 =======
           CHECKSUM="" \
 >>>>>>> Update nodejs to 14.17.2
+=======
+          CHECKSUM="58d33d68cf72b41044ea40cfb8ac39c64e3e537b8475426f33b5b54d5712c2b8" \
+>>>>>>> Update nodejs to 14.17.3
           ;; \
         *) ;; \
       esac \

@@ -12,7 +12,11 @@ RUN addgroup -g 1000 node \
       && case "${alpineArch##*-}" in \
         x86_64) \
           ARCH='x64' \
+<<<<<<< HEAD
           CHECKSUM="242bc6f948186d64be162ea7fd5c64fe15d5863100db0d0478ae8853533859c2" \
+=======
+          CHECKSUM="8ed8e250b923427519fb15e2c451663c901d858388b644e1da58f55f878b361c" \
+>>>>>>> Update nodejs to 12.22.3
           ;; \
         *) ;; \
       esac \

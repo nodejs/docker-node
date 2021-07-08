@@ -1,30 +1,14 @@
 'use strict';
 const path = require('path');
-const fs = require('fs');
+const { getAllDockerfiles, getDockerfileNodeVersion } = require('./utils');
 
 const testFiles = [
   'genMatrix.js',
   '.github/workflows/build-test.yml',
 ];
 
-const nodeDirRegex = /^\d+$/;
-
 const areTestFilesChanged = (changedFiles) => changedFiles
   .some((file) => testFiles.includes(file));
-
-// Returns a list of the child directories in the given path
-const getChildDirectories = (parent) => fs.readdirSync(parent, { withFileTypes: true })
-  .filter((dirent) => dirent.isDirectory())
-  .map(({ name }) => path.resolve(parent, name));
-
-const getNodeVerionDirs = (base) => getChildDirectories(base)
-  .filter((childPath) => nodeDirRegex.test(path.basename(childPath)));
-
-// Returns the paths of Dockerfiles that are at: base/*/Dockerfile
-const getDockerfilesInChildDirs = (base) => getChildDirectories(base)
-  .map((childDir) => path.resolve(childDir, 'Dockerfile'));
-
-const getAllDockerfiles = (base) => getNodeVerionDirs(base).flatMap(getDockerfilesInChildDirs);
 
 const getAffectedDockerfiles = (filesAdded, filesModified, filesRenamed) => {
   const files = [
@@ -52,13 +36,10 @@ const getAffectedDockerfiles = (filesAdded, filesModified, filesRenamed) => {
   ];
 };
 
-const getFullNodeVersionFromDockerfile = (file) => fs.readFileSync(file, 'utf8')
-  .match(/^ENV NODE_VERSION (\d*\.*\d*\.\d*)/m)[1];
-
 const getDockerfileMatrixEntry = (file) => {
   const [variant] = path.dirname(file).split(path.sep).slice(-1);
 
-  const version = getFullNodeVersionFromDockerfile(file);
+  const version = getDockerfileNodeVersion(file);
 
   return {
     version,

@@ -158,6 +158,22 @@
         "ppc64le",
         "s390x"
       ],
+      "alpine3.13": [
+        "amd64",
+        "arm32v6",
+        "arm32v7",
+        "arm64v8",
+        "ppc64le",
+        "s390x"
+      ],
+      "alpine3.14": [
+        "amd64",
+        "arm32v6",
+        "arm32v7",
+        "arm64v8",
+        "ppc64le",
+        "s390x"
+      ],
       "buster": [
         "amd64",
         "arm32v7",

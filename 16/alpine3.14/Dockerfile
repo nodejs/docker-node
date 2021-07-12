@@ -1,4 +1,4 @@
-FROM alpine:3.12
+FROM alpine:3.14
 
 ENV NODE_VERSION 16.4.2
 

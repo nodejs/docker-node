@@ -140,11 +140,11 @@ for(version of versions) {
     // remove duplicates
     tags = tags.filter((x, i, a) => a.indexOf(x) == i)
     tags = tags.sort()
-
+    let directory = `${version}/${variant}`
     stackbrew += `\nTags: ${tags.join(', ')}\n`
     stackbrew += `Architectures: ${config[version].variants[variant].join(', ')}\n`
-    stackbrew += `GitCommit: ${getCommitHasForPath(dockerfilePath)}\n`
-    stackbrew += `Directory: ${version}/${variant}\n`
+    stackbrew += `GitCommit: ${getCommitHasForPath(directory)}\n`
+    stackbrew += `Directory: ${directory}\n`
   }
 }
 

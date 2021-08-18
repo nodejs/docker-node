@@ -185,7 +185,7 @@ Here is an example of how you would install dependencies for packages that requi
 ```Dockerfile
 FROM node:alpine
 
-RUN apk add --no-cache --virtual .gyp python make g++ \
+RUN apk add --no-cache --virtual .gyp python3 make g++ \
     && npm install [ your npm dependencies here ] \
     && apk del .gyp
 ```

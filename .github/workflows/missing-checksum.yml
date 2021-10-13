@@ -14,9 +14,7 @@ jobs:
 
       - name: Count number of Alpine Dockersfiles without CHECKSUM
         run: |
-          if [ "$(find -path *alpine*/Dockerfile -exec grep -l CHECKSUM=\"\" {} \; | wc -l)" == 0 ]; then
-              exit 0
-          else
-              # echo "::error file=FILENAME,line=15,col=22::Missing pre-built checksum"
-              exit 1
+          git grep -n 'CHECKSUM=""' -- '*alpine*/Dockerfile' | sed -E 's/^([^:]+):([^:]+):\s*/::error file=\1,line=\2::Missing pre-built checksum/'
+          if [ "${PIPESTATUS[0]}" -eq 0 ]; then
+            exit 1
           fi

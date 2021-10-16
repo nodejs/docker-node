@@ -1,0 +1,20 @@
+name: Check Alpine CHECKSUM
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/missing-checksum.yml"
+      - "**/alpine*/Dockerfile"
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Count number of Alpine Dockersfiles without CHECKSUM
+        run: |
+          git grep -n 'CHECKSUM=""' -- '*alpine*/Dockerfile' | sed -E 's/^([^:]+):([^:]+):\s*/::error file=\1,line=\2::Missing pre-built checksum/'
+          if [ "${PIPESTATUS[0]}" -eq 0 ]; then
+            exit 1
+          fi

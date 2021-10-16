@@ -156,11 +156,14 @@ function update_node_version() {
 
     if is_alpine "${variant}"; then
       alpine_version="${variant#*alpine}"
-      checksum="\"$(
+      checksum=$(
         curl -sSL --compressed "https://unofficial-builds.nodejs.org/download/release/v${nodeVersion}/SHASUMS256.txt" | grep "node-v${nodeVersion}-linux-x64-musl.tar.xz" | cut -d' ' -f1
-      )\""
+      )
+      if [ -z "$checksum" ]; then
+        fatal "Failed to fetch checksum for version ${nodeVersion}"
+      fi
       sed -Ei -e "s/(alpine:)0.0/\\1${alpine_version}/" "${dockerfile}-tmp"
-      sed -Ei -e "s/CHECKSUM=CHECKSUM_x64/CHECKSUM=${checksum}/" "${dockerfile}-tmp"
+      sed -Ei -e "s/CHECKSUM=CHECKSUM_x64/CHECKSUM=\"${checksum}\"/" "${dockerfile}-tmp"
 
       # Use python2 for nodejs < 14 on alpine
       if [ "$version" -lt 14 ]; then
@@ -203,9 +206,12 @@ for version in "${versions[@]}"; do
   # See details in function.sh
   IFS=' ' read -ra variants <<< "$(get_variants "${parentpath}")"
 
+  pids=()
+
   if [ -f "${version}/Dockerfile" ]; then
     if [ "${update_version}" -eq 0 ]; then
       update_node_version "${baseuri}" "${versionnum}" "${parentpath}/Dockerfile.template" "${version}/Dockerfile" &
+      pids+=($!)
     fi
   fi
 
@@ -227,9 +233,15 @@ for version in "${versions[@]}"; do
     cp "${parentpath}/docker-entrypoint.sh" "${version}/${variant}/docker-entrypoint.sh"
     if [ "${update_version}" -eq 0 ] && [ "${update_variant}" -eq 0 ]; then
       update_node_version "${baseuri}" "${versionnum}" "${template_file}" "${version}/${variant}/Dockerfile" "${variant}" &
+      pids+=($!)
     fi
   done
 done
 
-wait
+# The reason we explicitly wait on each pid is so the return status of this script is set properly
+# if one of the jobs fails. If we just called "wait", the exit status would always be 0
+for pid in "${pids[@]}"; do
+  wait "$pid"
+done
+
 info "Done!"

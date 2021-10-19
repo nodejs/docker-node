@@ -1,4 +1,77 @@
 {
+  "17": {
+    "start": "2021-10-19",
+    "lts": "",
+    "maintenance": "2022-04-01",
+    "end": "2022-06-01",
+    "codename": "",
+    "alpine-default": "alpine3.14",
+    "debian-default": "bullseye",
+    "variants": {
+      "alpine3.12": [
+        "amd64",
+        "arm32v6",
+        "arm32v7",
+        "arm64v8",
+        "ppc64le",
+        "s390x"
+      ],
+      "alpine3.13": [
+        "amd64",
+        "arm32v6",
+        "arm32v7",
+        "arm64v8",
+        "ppc64le",
+        "s390x"
+      ],
+      "alpine3.14": [
+        "amd64",
+        "arm32v6",
+        "arm32v7",
+        "arm64v8",
+        "ppc64le",
+        "s390x"
+      ],
+      "bullseye": [
+        "amd64",
+        "arm32v7",
+        "arm64v8",
+        "ppc64le",
+        "s390x"
+      ],
+      "bullseye-slim": [
+        "amd64",
+        "arm32v7",
+        "arm64v8",
+        "ppc64le",
+        "s390x"
+      ],
+      "buster": [
+        "amd64",
+        "arm32v7",
+        "arm64v8",
+        "ppc64le",
+        "s390x"
+      ],
+      "buster-slim": [
+        "amd64",
+        "arm32v7",
+        "arm64v8",
+        "ppc64le",
+        "s390x"
+      ],
+      "stretch": [
+        "amd64",
+        "arm32v7",
+        "arm64v8"
+      ],
+      "stretch-slim": [
+        "amd64",
+        "arm32v7",
+        "arm64v8"
+      ]
+    }
+  },
   "16": {
     "start": "2021-04-20",
     "lts": "2021-10-26",

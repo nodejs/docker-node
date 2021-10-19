@@ -82,6 +82,13 @@ jobs:
           echo "Expected: \"${{ matrix.version }}\", Got: \"${image_node_version}\""
           [ "${image_node_version}" == "${{ matrix.version }}" ]
 
+      - name: Verify entrypoint runs regular, non-executable files with node
+        run: |
+          tmp_file=$(mktemp)
+          echo 'console.log("success")' > "${tmp_file}"
+          output=$(docker run --rm -v "${tmp_file}:/app/index.js" node:${{ matrix.version }}-${{ matrix.variant }} app/index.js)
+          [ "${output}" = 'success' ]
+
       - name: Test for npm
         run: docker run --rm node:${{ matrix.version }}-${{ matrix.variant }} npm --version
 

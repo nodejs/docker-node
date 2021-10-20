@@ -156,7 +156,7 @@
   "14": {
     "start": "2020-04-21",
     "lts": "2020-10-27",
-    "maintenance": "2021-10-19",
+    "maintenance": "2021-10-25",
     "end": "2023-04-30",
     "codename": "fermium",
     "alpine-default": "alpine3.11",

@@ -77,7 +77,7 @@
     "lts": "2021-10-26",
     "maintenance": "2022-10-18",
     "end": "2024-04-30",
-    "codename": "",
+    "codename": "gallium",
     "alpine-default": "alpine3.13",
     "debian-default": "buster",
     "variants": {
@@ -156,7 +156,7 @@
   "14": {
     "start": "2020-04-21",
     "lts": "2020-10-27",
-    "maintenance": "2021-10-25",
+    "maintenance": "2021-10-19",
     "end": "2023-04-30",
     "codename": "fermium",
     "alpine-default": "alpine3.11",

@@ -34,7 +34,7 @@ const slimRE = new RegExp(/\*-slim/);
 for (version of versions) {
   let lts = new Date(`${config[version].lts}T00:00:00.00`).getTime();
   let maintenance = new Date(`${config[version].maintenance}T00:00:00.00`).getTime();
-  let isCurrent = lts >= now;
+  let isCurrent = isNaN(lts) || lts >= now;
   let isLTS = (maintenance >= now) && (now >= lts);
   let codename = config[version].codename
   let defaultAlpine = config[version]['alpine-default']

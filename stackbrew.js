@@ -25,21 +25,23 @@ const config = require('./versions.json');
 
 const versions = Object.keys(config).reverse()
 
-const now = new Date().getTime()
+let midnight = new Date()
+midnight.setHours(0, 0, 0, 0)
+const now = midnight.getTime()
 const aplineRE = new RegExp(/alpine*/);
 const slimRE = new RegExp(/\*-slim/);
 
-for(version of versions) {
-  let lts = new Date(config[version].lts).getTime();
-  let maintenance = new Date(config[version].maintenance).getTime();
-  let isCurrent = lts > now;
-  let isLTS = (maintenance > now) && (now > lts);
+for (version of versions) {
+  let lts = new Date(`${config[version].lts}T00:00:00.00`).getTime();
+  let maintenance = new Date(`${config[version].maintenance}T00:00:00.00`).getTime();
+  let isCurrent = lts >= now;
+  let isLTS = (maintenance >= now) && (now >= lts);
   let codename = config[version].codename
   let defaultAlpine = config[version]['alpine-default']
   let defaultDebian = config[version]['debian-default']
   let variants = config[version].variants
   let fullversion;
-  for(variant in variants) {
+  for (variant in variants) {
     let dockerfilePath = path.join(version, variant, 'Dockerfile');
     let isAlpine = aplineRE.test(variant)
     let isSlim = slimRE.test(variant)

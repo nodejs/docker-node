@@ -33,14 +33,6 @@
         "ppc64le",
         "s390x"
       ],
-      "alpine-runtime3.11": [
-        "amd64",
-        "arm32v6",
-        "arm32v7",
-        "arm64v8",
-        "ppc64le",
-        "s390x"
-      ],
       "alpine-runtime3.12": [
         "amd64",
         "arm32v6",

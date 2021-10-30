@@ -38,6 +38,7 @@ for (version of versions) {
   let isLTS = (maintenance >= now) && (now >= lts);
   let codename = config[version].codename
   let defaultAlpine = config[version]['alpine-default']
+  let defaultAlpineRuntime = config[version]['alpine-runtime-default']
   let defaultDebian = config[version]['debian-default']
   let variants = config[version].variants
   let fullversion;
@@ -71,6 +72,15 @@ for (version of versions) {
       }
     }
 
+    if (variant === defaultAlpineRuntime) {
+      tags.push(`${fullversion.groups.major}.${fullversion.groups.minor}.${fullversion.groups.patch}-alpine-runtime`)
+      tags.push(`${fullversion.groups.major}.${fullversion.groups.minor}-alpine-runtime`)
+      tags.push(`${fullversion.groups.major}-alpine-runtime`)
+      if (codename) {
+        tags.push(`${codename}-alpine-runtime`)
+      }
+    }
+
     if (variant === defaultDebian) {
       tags.push(`${fullversion.groups.major}.${fullversion.groups.minor}.${fullversion.groups.patch}`)
       tags.push(`${fullversion.groups.major}.${fullversion.groups.minor}`)
@@ -101,6 +111,14 @@ for (version of versions) {
         tags.push(`${fullversion.groups.major}-alpine`)
         tags.push('alpine')
         tags.push('current-alpine')
+      }
+      if (variant === defaultAlpineRuntime) {
+        tags.push(variant)
+        tags.push(`${fullversion.groups.major}.${fullversion.groups.minor}.${fullversion.groups.patch}-alpine-runtime`)
+        tags.push(`${fullversion.groups.major}.${fullversion.groups.minor}-alpine-runtime`)
+        tags.push(`${fullversion.groups.major}-alpine-runtime`)
+        tags.push('alpine-runtime')
+        tags.push('current-alpine-runtime')
       }
       if (variant === defaultDebian) {
         tags.push(variant)

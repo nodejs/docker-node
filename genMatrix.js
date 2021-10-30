@@ -55,10 +55,15 @@ const getAffectedDockerfiles = (filesAdded, filesModified, filesRenamed) => {
 const getFullNodeVersionFromDockerfile = (file) => fs.readFileSync(file, 'utf8')
   .match(/^ENV NODE_VERSION (\d*\.*\d*\.\d*)/m)[1];
 
+const getFullNodeVersionFromRuntimeDockerfile = (file) => fs.readFileSync(file, 'utf8')
+  .match(/^FROM node:(\d*\.*\d*\.\d*)/m)[1];
+
 const getDockerfileMatrixEntry = (file) => {
   const [variant] = path.dirname(file).split(path.sep).slice(-1);
 
-  const version = getFullNodeVersionFromDockerfile(file);
+  const version = variant.startsWith('alpine-runtime')
+    ? getFullNodeVersionFromRuntimeDockerfile(file)
+    : getFullNodeVersionFromDockerfile(file);
 
   return {
     version,
@@ -66,10 +71,14 @@ const getDockerfileMatrixEntry = (file) => {
   };
 };
 
+const sortDockerfileMatrixEntry = (a, b) => a.variant.includes('-runtime') ? 1 : b.variant.includes('-runtime') ? -1 : 0;
+
 const generateBuildMatrix = (filesAdded, filesModified, filesRenamed) => {
   const dockerfiles = [...new Set(getAffectedDockerfiles(filesAdded, filesModified, filesRenamed))];
 
-  const entries = dockerfiles.map(getDockerfileMatrixEntry);
+  const entries = dockerfiles
+    .map(getDockerfileMatrixEntry)
+    .sort(sortDockerfileMatrixEntry);
 
   // Return null if there are no entries so we can skip the matrix step
   return entries.length

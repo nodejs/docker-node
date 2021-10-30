@@ -163,6 +163,16 @@ function is_alpine() {
   fi
 }
 
+function is_alpine_runtime() {
+  local variant
+  variant=${1}
+  shift
+
+  if [ "${variant}" = "${variant#alpine-runtime}" ]; then
+    return 1
+  fi
+}
+
 function is_debian() {
   local variant
   variant=$1

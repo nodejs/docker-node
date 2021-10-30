@@ -134,6 +134,7 @@ function update_node_version() {
 
     sed -Ei -e 's/^FROM (.*)/FROM '"$fromprefix"'\1/' "${dockerfile}-tmp"
     sed -Ei -e 's/^(ENV NODE_VERSION ).*/\1'"${nodeVersion}"'/' "${dockerfile}-tmp"
+    sed -Ei -e 's/^(FROM node:)0.0.0(-alpine0.0)/\1'"${nodeVersion}"'\2/' "${dockerfile}-tmp"
 
     if [ "${SKIP}" = true ]; then
       # Get the currently used Yarn version
@@ -155,14 +156,19 @@ function update_node_version() {
     done
 
     if is_alpine "${variant}"; then
-      alpine_version="${variant#*alpine}"
+      if is_alpine_runtime "${variant}"; then
+        alpine_version="${variant#*alpine-runtime}"
+      else
+        alpine_version="${variant#*alpine}"
+      fi
+
       checksum=$(
         curl -sSL --compressed "https://unofficial-builds.nodejs.org/download/release/v${nodeVersion}/SHASUMS256.txt" | grep "node-v${nodeVersion}-linux-x64-musl.tar.xz" | cut -d' ' -f1
       )
       if [ -z "$checksum" ]; then
         fatal "Failed to fetch checksum for version ${nodeVersion}"
       fi
-      sed -Ei -e "s/(alpine:)0.0/\\1${alpine_version}/" "${dockerfile}-tmp"
+      sed -Ei -e "s/(alpine:?)0.0/\\1${alpine_version}/" "${dockerfile}-tmp"
       sed -Ei -e "s/CHECKSUM=CHECKSUM_x64/CHECKSUM=\"${checksum}\"/" "${dockerfile}-tmp"
 
       # Use python2 for nodejs < 14 on alpine
@@ -221,16 +227,23 @@ for version in "${versions[@]}"; do
 
     update_variant=$(in_variants_to_update "${variant}")
     template_file="${parentpath}/Dockerfile-${variant}.template"
+    copy_entrypoint=1
 
     if is_debian "${variant}"; then
       template_file="${parentpath}/Dockerfile-debian.template"
     elif is_debian_slim "${variant}"; then
       template_file="${parentpath}/Dockerfile-slim.template"
+    elif is_alpine_runtime "${variant}"; then
+      template_file="${parentpath}/Dockerfile-alpine-runtime.template"
+      copy_entrypoint=0
     elif is_alpine "${variant}"; then
       template_file="${parentpath}/Dockerfile-alpine.template"
     fi
 
-    cp "${parentpath}/docker-entrypoint.sh" "${version}/${variant}/docker-entrypoint.sh"
+    if [ "${copy_entrypoint}" -eq 1 ]; then
+      cp "${parentpath}/docker-entrypoint.sh" "${version}/${variant}/docker-entrypoint.sh"
+    fi
+
     if [ "${update_version}" -eq 0 ] && [ "${update_variant}" -eq 0 ]; then
       update_node_version "${baseuri}" "${versionnum}" "${template_file}" "${version}/${variant}/Dockerfile" "${variant}" &
       pids+=($!)

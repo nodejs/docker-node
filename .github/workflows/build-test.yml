@@ -91,6 +91,8 @@ jobs:
 
       - name: Test for npm
         run: docker run --rm node:${{ matrix.version }}-${{ matrix.variant }} npm --version
+        if: ${{ success() && !startsWith(matrix.variant, 'alpine-runtime') }}
 
       - name: Test for yarn
         run: docker run --rm node:${{ matrix.version }}-${{ matrix.variant }} yarn --version
+        if: ${{ success() && !startsWith(matrix.variant, 'alpine-runtime') }}

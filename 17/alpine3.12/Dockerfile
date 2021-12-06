@@ -2,7 +2,9 @@ FROM alpine:3.12
 
 ENV NODE_VERSION 17.2.0
 
-RUN addgroup -g 1000 node \
+RUN apk update \
+    && apk upgrade \
+    && addgroup -g 1000 node \
     && adduser -u 1000 -G node -s /bin/sh -D node \
     && apk add --no-cache \
         libstdc++ \

@@ -1,6 +1,6 @@
-FROM alpine:3.12
+FROM alpine:3.15
 
-ENV NODE_VERSION 12.22.8
+ENV NODE_VERSION 16.13.1
 
 RUN addgroup -g 1000 node \
     && adduser -u 1000 -G node -s /bin/sh -D node \
@@ -12,7 +12,7 @@ RUN addgroup -g 1000 node \
       && case "${alpineArch##*-}" in \
         x86_64) \
           ARCH='x64' \
-          CHECKSUM="9cc1d120c404d66a62d6e4daaba361e8e1996bdc5b9643f97bbd1241247332df" \
+          CHECKSUM="3b4c47e5554fa466651a767691fc76c09b6a514b49d79bbd0061e549614adedf" \
           ;; \
         *) ;; \
       esac \
@@ -33,7 +33,7 @@ RUN addgroup -g 1000 node \
         libgcc \
         linux-headers \
         make \
-        python2 \
+        python3 \
     # gpg keys listed at https://github.com/nodejs/node#release-keys
     && for key in \
       4ED778F539E3634C779C87C6D7062848A1AB005C \
@@ -71,7 +71,7 @@ RUN addgroup -g 1000 node \
   && node --version \
   && npm --version
 
-ENV YARN_VERSION 1.22.17
+ENV YARN_VERSION 1.22.15
 
 RUN apk add --no-cache --virtual .build-deps-yarn curl gnupg tar \
   && for key in \

@@ -5,26 +5,18 @@
     "maintenance": "2022-04-01",
     "end": "2022-06-01",
     "codename": "",
-    "alpine-default": "alpine3.14",
+    "alpine-default": "alpine3.15",
     "debian-default": "bullseye",
     "variants": {
-      "alpine3.12": [
-        "amd64",
-        "arm32v6",
-        "arm32v7",
-        "arm64v8",
-        "ppc64le",
-        "s390x"
-      ],
-      "alpine3.13": [
-        "amd64",
-        "arm32v6",
-        "arm32v7",
-        "arm64v8",
-        "ppc64le",
-        "s390x"
-      ],
       "alpine3.14": [
+        "amd64",
+        "arm32v6",
+        "arm32v7",
+        "arm64v8",
+        "ppc64le",
+        "s390x"
+      ],
+      "alpine3.15": [
         "amd64",
         "arm32v6",
         "arm32v7",
@@ -78,26 +70,18 @@
     "maintenance": "2022-10-18",
     "end": "2024-04-30",
     "codename": "gallium",
-    "alpine-default": "alpine3.14",
+    "alpine-default": "alpine3.15",
     "debian-default": "buster",
     "variants": {
-      "alpine3.12": [
-        "amd64",
-        "arm32v6",
-        "arm32v7",
-        "arm64v8",
-        "ppc64le",
-        "s390x"
-      ],
-      "alpine3.13": [
-        "amd64",
-        "arm32v6",
-        "arm32v7",
-        "arm64v8",
-        "ppc64le",
-        "s390x"
-      ],
       "alpine3.14": [
+        "amd64",
+        "arm32v6",
+        "arm32v7",
+        "arm64v8",
+        "ppc64le",
+        "s390x"
+      ],
+      "alpine3.15": [
         "amd64",
         "arm32v6",
         "arm32v7",
@@ -151,26 +135,18 @@
     "maintenance": "2021-10-19",
     "end": "2023-04-30",
     "codename": "fermium",
-    "alpine-default": "alpine3.14",
+    "alpine-default": "alpine3.15",
     "debian-default": "stretch",
     "variants": {
-      "alpine3.12": [
-        "amd64",
-        "arm32v6",
-        "arm32v7",
-        "arm64v8",
-        "ppc64le",
-        "s390x"
-      ],
-      "alpine3.13": [
-        "amd64",
-        "arm32v6",
-        "arm32v7",
-        "arm64v8",
-        "ppc64le",
-        "s390x"
-      ],
       "alpine3.14": [
+        "amd64",
+        "arm32v6",
+        "arm32v7",
+        "arm64v8",
+        "ppc64le",
+        "s390x"
+      ],
+      "alpine3.15": [
         "amd64",
         "arm32v6",
         "arm32v7",
@@ -224,26 +200,18 @@
     "maintenance": "2020-11-30",
     "end": "2022-04-30",
     "codename": "erbium",
-    "alpine-default": "alpine3.14",
+    "alpine-default": "alpine3.15",
     "debian-default": "stretch",
     "variants": {
-      "alpine3.12": [
-        "amd64",
-        "arm32v6",
-        "arm32v7",
-        "arm64v8",
-        "ppc64le",
-        "s390x"
-      ],
-      "alpine3.13": [
-        "amd64",
-        "arm32v6",
-        "arm32v7",
-        "arm64v8",
-        "ppc64le",
-        "s390x"
-      ],
       "alpine3.14": [
+        "amd64",
+        "arm32v6",
+        "arm32v7",
+        "arm64v8",
+        "ppc64le",
+        "s390x"
+      ],
+      "alpine3.15": [
         "amd64",
         "arm32v6",
         "arm32v7",

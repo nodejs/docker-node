@@ -97,7 +97,7 @@ You can also include Tini [directly in your Dockerfile](https://github.com/krall
 
 ## Non-root User
 
-By default, Docker runs container as root which inside of the container can pose as a security issue. You would want to run the container as an unprivileged user wherever possible. The node images provide the `node` user for such purpose. The Docker Image can then be run with the `node` user in the following way:
+By default, Docker runs commands inside the container as root which violates the [Principle of Least Privilege (PoLP)](https://en.wikipedia.org/wiki/Principle_of_least_privilege) when superuser permissions are not strictly required. You want to run the container as an unprivileged user whenever possible. The node images provide the `node` user for such purpose. The Docker Image can then be run with the `node` user in the following way:
 
 ```
 -u "node"

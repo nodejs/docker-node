@@ -160,6 +160,7 @@ function update_node_version() {
         curl -sSL --compressed "https://unofficial-builds.nodejs.org/download/release/v${nodeVersion}/SHASUMS256.txt" | grep "node-v${nodeVersion}-linux-x64-musl.tar.xz" | cut -d' ' -f1
       )
       if [ -z "$checksum" ]; then
+        rm -f "${dockerfile}-tmp"
         fatal "Failed to fetch checksum for version ${nodeVersion}"
       fi
       sed -Ei -e "s/(alpine:)0.0/\\1${alpine_version}/" "${dockerfile}-tmp"

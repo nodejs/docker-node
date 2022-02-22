@@ -24,6 +24,9 @@ const request = (url) => {
   });
 };
 
+// a function that queries the Node.js release website for new versions,
+// compare the available ones with the ones we use in this repo
+// and returns whether we should update or not
 const checkIfThereAreNewVersions = async () => {
   try {
     const nodeWebsite = await request('https://nodejs.org/en/download/releases/');
@@ -43,7 +46,7 @@ const checkIfThereAreNewVersions = async () => {
       
       const { stdout: fullVersionOutput } = await exec(`. functions.sh && get_full_version ./${supportedVersion}/${lsOutput.trim().split("\n")[0]}`);
 
-      latestSupportedVersions[supportedVersion] = fullVersionOutput.trim();
+      latestSupportedVersions[supportedVersion] = { fullVersion: fullVersionOutput.trim() };
     }
 
     // filter only more recent versions of availableVersions for each major version in latestSupportedVersions' keys
@@ -55,24 +58,51 @@ const checkIfThereAreNewVersions = async () => {
     for (let availableVersion of availableVersions) {
       if (availableVersion.includes("Node.js ")) {
         const [availableMajor, availableMinor, availablePatch] = availableVersion.split(" ")[1].split(".");
-        const [_latestMajor, latestMinor, latestPatch] = filteredNewerVersions[availableMajor].split(".");
+        const [_latestMajor, latestMinor, latestPatch] = filteredNewerVersions[availableMajor].fullVersion.split(".");
         if (filteredNewerVersions[availableMajor] && (Number(availableMinor) > Number(latestMinor) || (availableMinor === latestMinor && Number(availablePatch) > Number(latestPatch)))) {
           console.log(availableMajor, availableMinor, availablePatch, _latestMajor, latestMinor, latestPatch, availableMinor > latestMinor, (availableMinor === latestMinor && availablePatch > latestPatch));
-          filteredNewerVersions[availableMajor] = `${availableMajor}.${availableMinor}.${availablePatch}`;
+          filteredNewerVersions[availableMajor] = { fullVersion: `${availableMajor}.${availableMinor}.${availablePatch}` };
           continue
         }
       }
     }
     
-    return JSON.stringify(filteredNewerVersions) !== JSON.stringify(latestSupportedVersions);
+    return {
+      shouldUpdate: JSON.stringify(filteredNewerVersions) !== JSON.stringify(latestSupportedVersions),
+      versions: filteredNewerVersions,
+    } 
   } catch (error) {
     console.log(error);
   }
 };
 
+// a function that queries the Node.js unofficial release website for new musl versions and security releases,
+// and returns relevant information
+const checkForMuslVersionsAndSecurityReleases = async (versions) => {
+  try {
+    let unofficialBuildsIndexText = JSON.parse(await request('https://unofficial-builds.nodejs.org/download/release/index.json'));
+
+    let unofficialBuildsWebsiteText = "";
+
+    for (let version of Object.keys(versions)) {
+      unofficialBuildsWebsiteText = await request(`https://unofficial-builds.nodejs.org/download/release/v${versions[version].fullVersion}`);
+      versions[version].muslBuildExists = unofficialBuildsWebsiteText.includes("musl");
+      
+      versions[version].isSecurityRelease = unofficialBuildsIndexText.find(indexVersion => indexVersion.version === `v${versions[version].fullVersion}`)?.security;
+    }
+    return versions;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+// if there are no new versions, exit gracefully
 (async () => {
-  const shouldUpdate = await checkIfThereAreNewVersions();
+  const { shouldUpdate, versions } = await checkIfThereAreNewVersions();
   if (!shouldUpdate) {
     process.exit(0);
+  } else {
+    const newVersions = await checkForMuslVersionsAndSecurityReleases(versions);
+    console.log(newVersions);
   }
 })();

@@ -72,5 +72,7 @@ const checkIfThereAreNewVersions = async () => {
 
 (async () => {
   const shouldUpdate = await checkIfThereAreNewVersions();
-  console.log(shouldUpdate);
+  if (!shouldUpdate) {
+    process.exit(0);
+  }
 })();

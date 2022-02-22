@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 #
 # Utlity functions
+# Don't change this file unless needed
+# The GitHub Action for automating new builds rely on this file
 
 info() {
   printf "%s\\n" "$@"

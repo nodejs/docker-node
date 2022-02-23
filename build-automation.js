@@ -8,8 +8,13 @@ const https = require("https");
 // returning the response as a promise
 const request = (url) => {
   return new Promise((resolve, reject) => {
-    https.get(url, (res) => {
+    https.get(url, async (res) => {
       let body = '';
+
+      if(res.statusCode === 301 || res.statusCode === 302) {
+        resolve(await request(res.headers.location, resolve, reject));
+      }
+
       res.on('data', (chunk) => {
         body += chunk;
       });
@@ -54,13 +59,15 @@ const checkIfThereAreNewVersions = async () => {
     // and availableVersions = ["Node.js 12.22.10", "Node.js 12.24.0", "Node.js 14.19.0", "Node.js 14.22.0", "Node.js 16.14.0", "Node.js 16.16.0", "Node.js 17.5.0", "Node.js 17.8.0"]
     // return { "12": "12.24.0", "14": "14.22.0", "16": "16.16.0", "17": "17.8.0" }
 
-    const filteredNewerVersions = latestSupportedVersions;
+    let filteredNewerVersions = {};
+
+    Object.assign(filteredNewerVersions, latestSupportedVersions);
+
     for (let availableVersion of availableVersions) {
       if (availableVersion.includes("Node.js ")) {
         const [availableMajor, availableMinor, availablePatch] = availableVersion.split(" ")[1].split(".");
         const [_latestMajor, latestMinor, latestPatch] = filteredNewerVersions[availableMajor].fullVersion.split(".");
         if (filteredNewerVersions[availableMajor] && (Number(availableMinor) > Number(latestMinor) || (availableMinor === latestMinor && Number(availablePatch) > Number(latestPatch)))) {
-          console.log(availableMajor, availableMinor, availablePatch, _latestMajor, latestMinor, latestPatch, availableMinor > latestMinor, (availableMinor === latestMinor && availablePatch > latestPatch));
           filteredNewerVersions[availableMajor] = { fullVersion: `${availableMajor}.${availableMinor}.${availablePatch}` };
           continue
         }
@@ -83,7 +90,6 @@ const checkForMuslVersionsAndSecurityReleases = async (versions) => {
     let unofficialBuildsIndexText = JSON.parse(await request('https://unofficial-builds.nodejs.org/download/release/index.json'));
 
     let unofficialBuildsWebsiteText = "";
-
     for (let version of Object.keys(versions)) {
       unofficialBuildsWebsiteText = await request(`https://unofficial-builds.nodejs.org/download/release/v${versions[version].fullVersion}`);
       versions[version].muslBuildExists = unofficialBuildsWebsiteText.includes("musl");
@@ -104,5 +110,9 @@ const checkForMuslVersionsAndSecurityReleases = async (versions) => {
   } else {
     const newVersions = await checkForMuslVersionsAndSecurityReleases(versions);
     console.log(newVersions);
+    let stdout = "";
+    newVersions.map((version) => {
+
+    });
   }
 })();

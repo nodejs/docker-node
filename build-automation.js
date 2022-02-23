@@ -61,13 +61,11 @@ const checkIfThereAreNewVersions = async () => {
 
     let filteredNewerVersions = {};
 
-    Object.assign(filteredNewerVersions, latestSupportedVersions);
-
     for (let availableVersion of availableVersions) {
       if (availableVersion.includes("Node.js ")) {
         const [availableMajor, availableMinor, availablePatch] = availableVersion.split(" ")[1].split(".");
-        const [_latestMajor, latestMinor, latestPatch] = filteredNewerVersions[availableMajor].fullVersion.split(".");
-        if (filteredNewerVersions[availableMajor] && (Number(availableMinor) > Number(latestMinor) || (availableMinor === latestMinor && Number(availablePatch) > Number(latestPatch)))) {
+        const [_latestMajor, latestMinor, latestPatch] = latestSupportedVersions[availableMajor].fullVersion.split(".");
+        if (latestSupportedVersions[availableMajor] && (Number(availableMinor) > Number(latestMinor) || (availableMinor === latestMinor && Number(availablePatch) > Number(latestPatch)))) {
           filteredNewerVersions[availableMajor] = { fullVersion: `${availableMajor}.${availableMinor}.${availablePatch}` };
           continue
         }
@@ -108,11 +106,19 @@ const checkForMuslVersionsAndSecurityReleases = async (versions) => {
   if (!shouldUpdate) {
     process.exit(0);
   } else {
+    let ranUpdates = falseç
     const newVersions = await checkForMuslVersionsAndSecurityReleases(versions);
-    console.log(newVersions);
-    let stdout = "";
-    newVersions.map((version) => {
-
+    newVersions.map(async (version) => {
+      if (version.muslBuildExists) {
+        const { stdout } = await exec(`./update.sh ${version.isSecurityRelease ? "-s" : ""} ${version}`);
+        ranUpdates = true;
+        console.log(stdout);
+      } else {
+        console.log(`There's no musl build for version ${version.fullVersion} yet.`);
+      }
     });
+    if (!ranUpdates) {
+      process.exit(0);
+    }
   }
 })();

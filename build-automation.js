@@ -108,15 +108,15 @@ const checkForMuslVersionsAndSecurityReleases = async (versions) => {
   } else {
     // let ranUpdates = false;
     const newVersions = await checkForMuslVersionsAndSecurityReleases(versions);
-    for (let version of Object.keys(newVersions)) {
-      if (version.muslBuildExists) {
-        const { stdout } = await exec(`./update.sh ${version.isSecurityRelease ? "-s" : ""} ${version}`);
+    newVersions.map(version => {
+      if (newVersions[version].muslBuildExists) {
+        const { stdout } = await exec(`./update.sh ${newVersions[version].isSecurityRelease ? "-s" : ""} ${version}`);
         // ranUpdates = true;
         console.log(stdout);
       } else {
-        console.log(`There's no musl build for version ${version.fullVersion} yet.`);
+        console.log(`There's no musl build for version ${newVersions[version].fullVersion} yet.`);
       }
-    };
+    });
     // if (!ranUpdates) {
     //   process.exit(0);
     // }

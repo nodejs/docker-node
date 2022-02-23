@@ -43,7 +43,7 @@ const checkIfThereAreNewVersions = async () => {
 
     for (let supportedVersion of supportedVersions) {
       lsOutput = (await exec(`ls ${supportedVersion}`)).stdout;
-      
+
       const { stdout: fullVersionOutput } = await exec(`. functions.sh && get_full_version ./${supportedVersion}/${lsOutput.trim().split("\n")[0]}`);
 
       latestSupportedVersions[supportedVersion] = { fullVersion: fullVersionOutput.trim() };
@@ -53,7 +53,7 @@ const checkIfThereAreNewVersions = async () => {
     // e.g. if latestSupportedVersions = { "12": "12.22.10", "14": "14.19.0", "16": "16.14.0", "17": "17.5.0" }
     // and availableVersions = ["Node.js 12.22.10", "Node.js 12.24.0", "Node.js 14.19.0", "Node.js 14.22.0", "Node.js 16.14.0", "Node.js 16.16.0", "Node.js 17.5.0", "Node.js 17.8.0"]
     // return { "12": "12.24.0", "14": "14.22.0", "16": "16.16.0", "17": "17.8.0" }
-    
+
     const filteredNewerVersions = latestSupportedVersions;
     for (let availableVersion of availableVersions) {
       if (availableVersion.includes("Node.js ")) {
@@ -66,11 +66,11 @@ const checkIfThereAreNewVersions = async () => {
         }
       }
     }
-    
+
     return {
       shouldUpdate: JSON.stringify(filteredNewerVersions) !== JSON.stringify(latestSupportedVersions),
       versions: filteredNewerVersions,
-    } 
+    }
   } catch (error) {
     console.log(error);
   }
@@ -87,7 +87,7 @@ const checkForMuslVersionsAndSecurityReleases = async (versions) => {
     for (let version of Object.keys(versions)) {
       unofficialBuildsWebsiteText = await request(`https://unofficial-builds.nodejs.org/download/release/v${versions[version].fullVersion}`);
       versions[version].muslBuildExists = unofficialBuildsWebsiteText.includes("musl");
-      
+
       versions[version].isSecurityRelease = unofficialBuildsIndexText.find(indexVersion => indexVersion.version === `v${versions[version].fullVersion}`)?.security;
     }
     return versions;

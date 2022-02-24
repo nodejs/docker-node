@@ -47,7 +47,7 @@ const checkIfThereAreNewVersions = async () => {
     const nodeWebsite = await request('https://nodejs.org/en/download/releases/');
     const nodeWebsiteText = nodeWebsite.toString();
 
-    const { stdout: versionsOutput } = await exec(". ./functions.sh && get_versions .");
+    const { stdout: versionsOutput } = await exec("set -ue && . ./functions.sh && get_versions .");
 
     const supportedVersions = versionsOutput.trim().split(" ");
 
@@ -59,7 +59,7 @@ const checkIfThereAreNewVersions = async () => {
     for (let supportedVersion of supportedVersions) {
       lsOutput = (await exec(`ls ${supportedVersion}`)).stdout;
 
-      const { stdout: fullVersionOutput } = await exec(`. ./functions.sh && get_full_version ./${supportedVersion}/${lsOutput.trim().split("\n")[0]}`);
+      const { stdout: fullVersionOutput } = await exec(`set -ue && . ./functions.sh && get_full_version ./${supportedVersion}/${lsOutput.trim().split("\n")[0]}`);
 
       latestSupportedVersions[supportedVersion] = { fullVersion: fullVersionOutput.trim() };
     }

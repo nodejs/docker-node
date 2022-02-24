@@ -1,13 +1,15 @@
 name: Automatically update Docker image versions
 
 on:
-  schedule:
-    - cron: "15 * * * *"
+  # schedule:
+  #   - cron: "15 * * * *"
+  pull_request:
+    types: [ synchronize ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    if: github.repository_owner == 'nodejs'
+    # if: github.repository_owner == 'nodejs'
 
     steps:
       - uses: actions/checkout@v2

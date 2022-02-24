@@ -4,6 +4,16 @@ const exec = util.promisify(require("child_process").exec);
 
 const https = require("https");
 
+const mapSeries = (arr) => {
+  const length = arr.length;
+  const results = new Array(length);
+  
+  arr.reduce((chain, item, i) => {
+    return chain.then(() => item).then(val => results[i] = val);
+  }, Promise.resolve())
+  .then(() => results);
+}
+
 // a function that takes an URL as argument and makes a request to that URL
 // returning the response as a promise
 const request = (url) => {
@@ -37,7 +47,7 @@ const checkIfThereAreNewVersions = async () => {
     const nodeWebsite = await request('https://nodejs.org/en/download/releases/');
     const nodeWebsiteText = nodeWebsite.toString();
 
-    const { stdout: versionsOutput } = await exec(". functions.sh && get_versions .");
+    const { stdout: versionsOutput } = await exec("source ./functions.sh && get_versions .");
 
     const supportedVersions = versionsOutput.trim().split(" ");
 
@@ -49,7 +59,7 @@ const checkIfThereAreNewVersions = async () => {
     for (let supportedVersion of supportedVersions) {
       lsOutput = (await exec(`ls ${supportedVersion}`)).stdout;
 
-      const { stdout: fullVersionOutput } = await exec(`. functions.sh && get_full_version ./${supportedVersion}/${lsOutput.trim().split("\n")[0]}`);
+      const { stdout: fullVersionOutput } = await exec(`source ./functions.sh && get_full_version ./${supportedVersion}/${lsOutput.trim().split("\n")[0]}`);
 
       latestSupportedVersions[supportedVersion] = { fullVersion: fullVersionOutput.trim() };
     }
@@ -108,15 +118,17 @@ const checkForMuslVersionsAndSecurityReleases = async (versions) => {
   } else {
     // let ranUpdates = false;
     const newVersions = await checkForMuslVersionsAndSecurityReleases(versions);
-    newVersions.map(version => {
+    mapSeries(Object.keys(newVersions).map(async version => {
       if (newVersions[version].muslBuildExists) {
-        const { stdout } = await exec(`./update.sh ${newVersions[version].isSecurityRelease ? "-s" : ""} ${version}`);
+        let { stdout } = await exec(`./update.sh ${newVersions[version].isSecurityRelease ? "-s " : ""}${version}`);
         // ranUpdates = true;
+        console.log(stdout);
+        stdout = (await exec(`git diff`)).stdout;
         console.log(stdout);
       } else {
         console.log(`There's no musl build for version ${newVersions[version].fullVersion} yet.`);
       }
-    });
+    }));
     // if (!ranUpdates) {
     //   process.exit(0);
     // }

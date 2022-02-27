@@ -113,19 +113,19 @@ const checkForMuslVersionsAndSecurityReleases = async (versions) => {
 };
 
 // if there are no new versions, exit gracefully
+// if there are new versions,
+// check for musl builds
+// then run update.sh
 (async () => {
   const { shouldUpdate, versions } = await checkIfThereAreNewVersions();
-  console.log(versions);
   if (!shouldUpdate) {
     console.log("No new versions found. No update required.");
     process.exit(0);
   } else {
-    // let ranUpdates = false;
     const newVersions = await checkForMuslVersionsAndSecurityReleases(versions);
     mapSeries(Object.keys(newVersions).map(async version => {
       if (newVersions[version].muslBuildExists) {
         let { stdout } = await exec(`./update.sh ${newVersions[version].isSecurityRelease ? "-s " : ""}${version}`);
-        // ranUpdates = true;
         console.log(stdout);
         stdout = (await exec(`git diff`)).stdout;
         console.log(stdout);
@@ -133,8 +133,5 @@ const checkForMuslVersionsAndSecurityReleases = async (versions) => {
         console.log(`There's no musl build for version ${newVersions[version].fullVersion} yet.`);
       }
     }));
-    // if (!ranUpdates) {
-    //   process.exit(0);
-    // }
   }
 })();

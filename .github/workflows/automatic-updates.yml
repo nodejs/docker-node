@@ -21,6 +21,18 @@ jobs:
       - name: Run automation script
         run: node ./build-automation.js
 
+      - name: Create update PR
+        uses: peter-evans/create-pull-request@v3
+        with:
+          token: ${{ secrets.GH_API_TOKEN }}
+          branch: update-branch
+          commit-message: "version update"
+          title: "Version update"
+          body: |
+            @LaurentGoderre @PeterDaveHello @SimenB @Starefossen @nschonni @ttshivers
+          
+
+
 
 
 

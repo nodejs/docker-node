@@ -7,7 +7,7 @@ const https = require("https");
 const mapSeries = (arr) => {
   const length = arr.length;
   const results = new Array(length);
-  
+
   arr.reduce((chain, item, i) => {
     return chain.then(() => item).then(val => results[i] = val);
   }, Promise.resolve())
@@ -47,8 +47,10 @@ const checkIfThereAreNewVersions = async () => {
     const nodeWebsite = await request('https://nodejs.org/en/download/releases/');
     const nodeWebsiteText = nodeWebsite.toString();
 
-    const { stdout: versionsOutput } = await exec(". ./functions.sh && get_versions .", { shell: "bash" });
+    const { stdout: versionsOutput } = await exec(". ./functions.sh && get_versions", { shell: "bash" });
 
+    console.log(versionsOutput);
+  
     const supportedVersions = versionsOutput.trim().split(" ");
 
     const availableVersions = nodeWebsiteText.match(new RegExp("Node\\.js (" + supportedVersions.join('|') + ")\\.\\d+\\.\\d+", "g"));
@@ -60,6 +62,8 @@ const checkIfThereAreNewVersions = async () => {
       lsOutput = (await exec(`ls ${supportedVersion}`)).stdout;
 
       const { stdout: fullVersionOutput } = await exec(`. ./functions.sh && get_full_version ./${supportedVersion}/${lsOutput.trim().split("\n")[0]}`, { shell: "bash" });
+
+      console.log(fullVersionOutput);
 
       latestSupportedVersions[supportedVersion] = { fullVersion: fullVersionOutput.trim() };
     }
@@ -83,7 +87,7 @@ const checkIfThereAreNewVersions = async () => {
     }
 
     return {
-      shouldUpdate: JSON.stringify(filteredNewerVersions) !== JSON.stringify(latestSupportedVersions),
+      shouldUpdate: Object.keys(filteredNewerVersions).length > 0 && JSON.stringify(filteredNewerVersions) !== JSON.stringify(latestSupportedVersions),
       versions: filteredNewerVersions,
     }
   } catch (error) {

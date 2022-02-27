@@ -9,7 +9,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    # if: github.repository_owner == 'nodejs'
+    if: github.repository_owner != 'nodejs'
 
     steps:
       - uses: actions/checkout@v2

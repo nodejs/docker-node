@@ -12,7 +12,7 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v3
         with:
-          node-version: '12.x'
+          node-version: 'lts/*'
       - name: Install markdown-link-check
         run: npm i -g markdown-link-check
       - name: Run markdown-link-check on MD files

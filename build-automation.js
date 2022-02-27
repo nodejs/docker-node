@@ -113,8 +113,9 @@ const checkForMuslVersionsAndSecurityReleases = async (versions) => {
 // if there are no new versions, exit gracefully
 (async () => {
   const { shouldUpdate, versions } = await checkIfThereAreNewVersions();
-  console.log("debug");
+  console.log(versions);
   if (!shouldUpdate) {
+    console.log("No new versions found. No update required.");
     process.exit(0);
   } else {
     // let ranUpdates = false;

@@ -14,7 +14,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
-          ref: ${{ env.GITHUB_REF_NANE || (env.GITHUB_BASE_REF || 'main') }} 
+          ref: ${{ env.GITHUB_REF_NAME || (env.GITHUB_BASE_REF || 'main') }} 
 
       - uses: actions/setup-node@v2
         with:

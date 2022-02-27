@@ -48,7 +48,7 @@ const checkIfThereAreNewVersions = async () => {
     const nodeWebsiteText = nodeWebsite.toString();
 
     const { stdout: versionsOutput } = await exec(". ./functions.sh && get_versions", { shell: "bash" });
-    
+
     const supportedVersions = versionsOutput.trim().split(" ");
 
     const availableVersions = nodeWebsiteText.match(new RegExp("Node\\.js (" + supportedVersions.join('|') + ")\\.\\d+\\.\\d+", "g"));

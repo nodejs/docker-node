@@ -1,0 +1,17 @@
+name: Automatically merge version update PRs
+
+on:
+  check_suite:
+    types: [ completed ]
+    branches: [ update-branch ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    if: github.repository_owner != 'nodejs'
+
+    steps:
+      - run: |
+          echo "Completed the checks"
+          exit 1
+

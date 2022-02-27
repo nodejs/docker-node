@@ -1,10 +1,8 @@
 name: Automatically update Docker image versions
 
 on:
-  # schedule:
-  #   - cron: "15 * * * *"
-  pull_request:
-    types: [ opened, synchronize ]
+  schedule:
+    - cron: "15 * * * *"
 
 jobs:
   build:
@@ -13,8 +11,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-        with:
-          ref: ${{ github.event.pull_request.head.ref ||  'main' }} 
 
       - uses: actions/setup-node@v2
         with:
@@ -32,7 +28,7 @@ jobs:
           title: "Version update"
           body: |
             @LaurentGoderre @PeterDaveHello @SimenB @Starefossen @nschonni @ttshivers
-          
+
 
 
 

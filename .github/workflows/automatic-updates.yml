@@ -13,6 +13,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+        with:
+          ref: main
 
       - uses: actions/setup-node@v2
         with:

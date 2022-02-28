@@ -86,7 +86,7 @@ const checkForMuslVersionsAndSecurityReleases = async (versions) => {
     process.exit(0);
   } else {
     const newVersions = await checkForMuslVersionsAndSecurityReleases(versions);
-    for(let version of newVersions) {
+    for(let version of Object.keys(newVersions)) {
       if (newVersions[version].muslBuildExists) {
         let { stdout } = await exec(`./update.sh ${newVersions[version].isSecurityRelease ? "-s " : ""}${version}`);
         console.log(stdout);

@@ -82,7 +82,7 @@ const checkForMuslVersionsAndSecurityReleases = async (versions) => {
 (async () => {
   const { shouldUpdate, versions } = await checkIfThereAreNewVersions();
   if (!shouldUpdate) {
-    console.log("No new versions found. No update required.");
+    console.log("No new versions found. No update required for now.");
     process.exit(0);
   } else {
     const newVersions = await checkForMuslVersionsAndSecurityReleases(versions);

@@ -3,7 +3,7 @@ name: Automatically merge version update PRs
 on:
   check_suite:
     types: [ completed ]
-    branches: [ update-branch ]
+    head_branch: update-branch
 
 jobs:
   build:

@@ -12,12 +12,12 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - uses: actions/setup-node@v2
+      - uses: actions/setup-node@v3
         with:
-          node-version: 'lts/*'
+          node-version: '17'
 
       - name: Run automation script
-        run: node ./build-automation.js
+        run: node --experimental-fetch ./build-automation.js
 
       - name: Create update PR
         uses: peter-evans/create-pull-request@v3
@@ -26,8 +26,10 @@ jobs:
           branch: update-branch
           commit-message: "version update"
           title: "Version update"
-          body: |
-            @LaurentGoderre @PeterDaveHello @SimenB @Starefossen @nschonni @ttshivers
+          delete-branch: "true"
+          team-reviewers: |
+            owners
+            maintainers
 
 
 

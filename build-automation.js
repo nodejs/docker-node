@@ -14,37 +14,12 @@ const mapSeries = (arr) => {
   .then(() => results);
 }
 
-// a function that takes an URL as argument and makes a request to that URL
-// returning the response as a promise
-const request = (url) => {
-  return new Promise((resolve, reject) => {
-    https.get(url, async (res) => {
-      let body = '';
-
-      if(res.statusCode === 301 || res.statusCode === 302) {
-        resolve(await request(res.headers.location, resolve, reject));
-      }
-
-      res.on('data', (chunk) => {
-        body += chunk;
-      });
-      res.on('end', () => {
-        if (res.statusCode < 400) {
-          resolve(body);
-        } else {
-          reject(new Error(`Request failed: ${res.statusCode}`));
-        }
-      })
-    });
-  });
-};
-
 // a function that queries the Node.js release website for new versions,
 // compare the available ones with the ones we use in this repo
 // and returns whether we should update or not
 const checkIfThereAreNewVersions = async () => {
   try {
-    const nodeWebsite = await request('https://nodejs.org/en/download/releases/');
+    const nodeWebsite = await (await fetch('https://nodejs.org/en/download/releases/')).text();
     const nodeWebsiteText = nodeWebsite.toString();
 
     const { stdout: versionsOutput } = await exec(". ./functions.sh && get_versions", { shell: "bash" });
@@ -97,11 +72,11 @@ const checkIfThereAreNewVersions = async () => {
 // and returns relevant information
 const checkForMuslVersionsAndSecurityReleases = async (versions) => {
   try {
-    let unofficialBuildsIndexText = JSON.parse(await request('https://unofficial-builds.nodejs.org/download/release/index.json'));
+    let unofficialBuildsIndexText = await (await fetch('https://unofficial-builds.nodejs.org/download/release/index.json')).json();
 
     let unofficialBuildsWebsiteText = "";
     for (let version of Object.keys(versions)) {
-      unofficialBuildsWebsiteText = await request(`https://unofficial-builds.nodejs.org/download/release/v${versions[version].fullVersion}`);
+      unofficialBuildsWebsiteText = await (await fetch(`https://unofficial-builds.nodejs.org/download/release/v${versions[version].fullVersion}`)).text();
       versions[version].muslBuildExists = unofficialBuildsWebsiteText.includes("musl");
 
       versions[version].isSecurityRelease = unofficialBuildsIndexText.find(indexVersion => indexVersion.version === `v${versions[version].fullVersion}`)?.security;

@@ -2,18 +2,6 @@ const util = require("util")
 
 const exec = util.promisify(require("child_process").exec);
 
-const https = require("https");
-
-const mapSeries = (arr) => {
-  const length = arr.length;
-  const results = new Array(length);
-
-  arr.reduce((chain, item, i) => {
-    return chain.then(() => item).then(val => results[i] = val);
-  }, Promise.resolve())
-  .then(() => results);
-}
-
 // a function that queries the Node.js release website for new versions,
 // compare the available ones with the ones we use in this repo
 // and returns whether we should update or not
@@ -98,15 +86,15 @@ const checkForMuslVersionsAndSecurityReleases = async (versions) => {
     process.exit(0);
   } else {
     const newVersions = await checkForMuslVersionsAndSecurityReleases(versions);
-    mapSeries(Object.keys(newVersions).map(async version => {
+    for(let version of newVersions) {
       if (newVersions[version].muslBuildExists) {
         let { stdout } = await exec(`./update.sh ${newVersions[version].isSecurityRelease ? "-s " : ""}${version}`);
-        console.log(stdout);
-        stdout = (await exec(`git diff`)).stdout;
         console.log(stdout);
       } else {
         console.log(`There's no musl build for version ${newVersions[version].fullVersion} yet.`);
       }
-    }));
+    };
+    let stdout = (await exec(`git diff`)).stdout;
+    console.log(stdout);
   }
 })();

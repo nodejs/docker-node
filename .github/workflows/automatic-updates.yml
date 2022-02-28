@@ -1,13 +1,15 @@
 name: Automatically update Docker image versions
 
 on:
-  schedule:
-    - cron: "*/15 * * * *"
+  # schedule:
+  #   - cron: "*/15 * * * *"
+  pull_request:
+    types: [ synchronize, opened, reopened, edited ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    if: github.repository_owner == 'iasuhiu3hdiuwdhiuwhqfs'
+    if: github.repository_owner != 'nodejs'
 
     steps:
       - uses: actions/checkout@v2
@@ -17,7 +19,7 @@ jobs:
           node-version: '17'
 
       - name: Run automation script
-        run: node --experimental-fetch ./build-automation.js
+        run: node --experimental-fetch build-automation.js
 
       - name: Create update PR
         uses: peter-evans/create-pull-request@v3

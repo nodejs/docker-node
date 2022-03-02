@@ -6,13 +6,13 @@ const { setTimeout } = require('timers/promises');
 
 (async () => {
   const retries = 10;
-  const retryDelay = 10000;
+  const retryDelay = 20000;
 
   for (let tries = 0; tries < retries; tries++) {
     try {
-      const [owner, repo, pull_number] = process.argv.slice(2);
+      const [repo, pull_number] = process.argv.slice(2);
 
-      const data = await (await fetch(`https://api.github.com/repos/${owner}/${repo}/pulls/${pull_number}`)).json();
+      const data = await (await fetch(`https://api.github.com/repos/${repo}/pulls/${pull_number}`)).json();
 
       if (data.mergeable_state === 'clean') {
         process.exit(0);

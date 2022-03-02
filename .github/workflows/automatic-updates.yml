@@ -40,7 +40,7 @@ jobs:
       - name: Check CI status periodically
         env:
           GH_API_TOKEN: ${{ secrets.GH_API_TOKEN }}
-        run: node --experimental-fetch check-pr-status.js
+        run: node --experimental-fetch check-pr-status.js ${{ github.repository }} ${{ steps.cpr.outputs.pull-request-number }}
 
       - name: Merge PR
         uses: juliangruber/merge-pull-request-action@v1

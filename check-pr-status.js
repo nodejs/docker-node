@@ -5,10 +5,12 @@
 const { setTimeout } = require('timers/promises');
 
 (async () => {
-  const retries = 10;
-  const retryDelay = 20000;
+  const tries = 10;
+  const retryDelay = 30000;
 
-  for (let tries = 0; tries < retries; tries++) {
+  await setTimeout(retryDelay);
+
+  for (let t = 0; t < tries; t++) {
     try {
       const [repo, pull_number] = process.argv.slice(2);
 

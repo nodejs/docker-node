@@ -2,13 +2,13 @@ name: Automatically update Docker image versions
 
 on:
   schedule:
-    - cron: "*/48 * * * *"
+    - cron: "*/15 * * * *"
 
 jobs:
   build:
     runs-on: ubuntu-latest
     # if the repo owner isn't nodejs and the branch isn't update-branch
-    if: github.repository_owner != 'nodejs'
+    if: github.repository_owner == 'nodejs'
 
     steps:
       - uses: actions/checkout@v2
@@ -26,7 +26,7 @@ jobs:
         with:
           token: ${{ secrets.GH_API_TOKEN }}
           branch: update-branch
-          base: test-branch-main
+          base: main
           commit-message: "version update"
           title: "Version update"
           delete-branch: "true"

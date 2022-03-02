@@ -19,14 +19,14 @@ jobs:
 
     steps:
       - name: Checkout the docker-node repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           path: docker-node
           ref: ${{ github.base_ref }}
           fetch-depth: 50
 
       - name: Checkout the official-images repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           path: official-images
           repository: docker-library/official-images

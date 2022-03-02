@@ -27,7 +27,7 @@ jobs:
         with:
           token: ${{ secrets.GH_API_TOKEN }}
           branch: update-branch
-          base: test-branch
+          base: main
           commit-message: "version update"
           title: "Version update"
           delete-branch: "true"

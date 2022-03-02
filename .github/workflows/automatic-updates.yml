@@ -22,11 +22,12 @@ jobs:
         run: node --experimental-fetch build-automation.js
 
       - name: Create update PR
+        id: cpr
         uses: peter-evans/create-pull-request@v3
         with:
           token: ${{ secrets.GH_API_TOKEN }}
           branch: update-branch
-          base: main
+          base: test-branch
           commit-message: "version update"
           title: "Version update"
           delete-branch: "true"
@@ -34,6 +35,11 @@ jobs:
             owners
             maintainers
 
+      - name: Auto-merge PR when ready
+        uses: peter-evans/enable-pull-request-automerge@v1
+        with:
+          token: ${{ secrets.GH_API_TOKEN }}
+          pull-request-number: ${{ steps.cpr.outputs.pull-request-number }}
 
 
 

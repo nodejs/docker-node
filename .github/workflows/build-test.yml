@@ -28,7 +28,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Generate testing matrix
         uses: actions/github-script@v6
@@ -65,7 +65,7 @@ jobs:
           script: return "${{ matrix.version }}".split('.')[0]
 
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Build image
         uses: docker/build-push-action@v2

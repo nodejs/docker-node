@@ -35,8 +35,8 @@ jobs:
             owners
             maintainers
 
-      - name: Wait 1 second
-        run: sleep 1
+      - name: Wait 2 second
+        run: sleep 2
 
       - name: Auto-merge PR when ready
         uses: peter-evans/enable-pull-request-automerge@v1

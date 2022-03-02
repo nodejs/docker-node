@@ -9,7 +9,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    if: github.repository_owner != 'nodejs'
+    # if the repo owner isn't nodejs and the branch isn't update-branch
+    if: github.repository_owner != 'nodejs' && github.ref != 'refs/heads/update-branch'
 
     steps:
       - uses: actions/checkout@v2

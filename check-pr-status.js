@@ -14,6 +14,7 @@ const { setTimeout } = require('timers/promises');
 
       const data = await (await fetch(`https://api.github.com/repos/${repo}/pulls/${pull_number}`)).json();
 
+      console.log(data);
       if (data.mergeable_state === 'clean') {
         process.exit(0);
       }

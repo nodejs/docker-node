@@ -27,7 +27,7 @@ jobs:
         with:
           token: ${{ secrets.GH_API_TOKEN }}
           branch: update-branch
-          base: main
+          base: test-branch-main
           commit-message: "version update"
           title: "Version update"
           delete-branch: "true"
@@ -35,19 +35,17 @@ jobs:
             owners
             maintainers
 
-      # - name: Check CI status periodically
-      #   env:
-      #     GH_API_TOKEN: ${{ secrets.GH_API_TOKEN }}
-      #   run: node --experimental-fetch check-pr-status.js
+      - name: Check CI status periodically
+        env:
+          GH_API_TOKEN: ${{ secrets.GH_API_TOKEN }}
+        run: node --experimental-fetch check-pr-status.js
 
-      # - name: Auto-merge PR when ready
-      #   uses: peter-evans/enable-pull-request-automerge@v1
-      #   with:
-      #     token: ${{ secrets.GH_API_TOKEN }}
-      #     pull-request-number: ${{ steps.cpr.outputs.pull-request-number }}
-
-
-
+      - name: Merge PR
+        uses: juliangruber/merge-pull-request-action@v1
+        with:
+          github-token: ${{ secrets.GH_API_TOKEN }}
+          number: ${{ steps.cpr.outputs.pull-request-number }}
+          method: squash
 
 
 

@@ -1,30 +1,26 @@
 // fetch /repos/{owner}/{repo}/pulls/{pull_number}
-// and check if the status checks of a pull request are all green
-// if so, exit with status code 0
+// and check its mergeable_state
+// if "clean", exit with status code 0
 // else exit with error
+const { setTimeout } = require('timers/promises');
+
 (async () => {
-  const [owner, repo, pull_number] = process.argv.slice(2);
+  const retries = 10;
+  const retryDelay = 10000;
 
-  const response = await (await fetch(`https://api.github.com/repos/${owner}/${repo}/pulls/${pull_number}`)).json();
+  for (let tries = 0; tries < retries; tries++) {
+    try {
+      const [owner, repo, pull_number] = process.argv.slice(2);
 
-  console.log(response);
+      const data = await (await fetch(`https://api.github.com/repos/${owner}/${repo}/pulls/${pull_number}`)).json();
 
-  // const { data: pullRequest } = await octokit.pulls.get({
-  //   owner,
-  //   repo,
-  //   pull_number,
-  // });
-  // const { data: statusChecks } = await octokit.checks.listForRef({
-  //   owner,
-  //   repo,
-  //   ref: pullRequest.head.sha,
-  // });
-  // const statusChecksPassed = statusChecks.check_runs.every(
-  //   (check) => check.conclusion === "success"
-  // );
-  // if (statusChecksPassed) {
-  //   process.exit(0);
-  // } else {
-  //   process.exit(1);
-  // }
+      if (data.mergeable_state === 'clean') {
+        process.exit(0);
+      }
+      setTimeout(retryDelay);
+    } catch (error) {
+      process.exit(1);
+    }
+  }
+  process.exit(1);
 })();

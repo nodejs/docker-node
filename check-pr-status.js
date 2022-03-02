@@ -17,8 +17,9 @@ const { setTimeout } = require('timers/promises');
       if (data.mergeable_state === 'clean') {
         process.exit(0);
       }
-      setTimeout(retryDelay);
+      await setTimeout(retryDelay);
     } catch (error) {
+      console.log(error);
       process.exit(1);
     }
   }

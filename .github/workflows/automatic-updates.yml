@@ -34,7 +34,7 @@ jobs:
           base: main
           commit-message: "Update to $UPDATED_VERSIONS"
           title: "Update to $UPDATED_VERSIONS"
-          delete-branch: "true"
+          delete-branch: true
           team-reviewers: |
             @nodejs/docker
 
@@ -51,6 +51,3 @@ jobs:
           github-token: ${{ secrets.GH_API_TOKEN }}
           number: ${{ steps.cpr.outputs.pull-request-number }}
           method: squash
-
-
-

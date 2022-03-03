@@ -1,14 +1,15 @@
-const util = require("util")
+import { promisify } from "util";
 
-const exec = util.promisify(require("child_process").exec);
+import child_process from "child_process";
+
+const exec = promisify(child_process.exec);
 
 // a function that queries the Node.js release website for new versions,
 // compare the available ones with the ones we use in this repo
 // and returns whether we should update or not
 const checkIfThereAreNewVersions = async () => {
   try {
-    const nodeWebsite = await (await fetch('https://nodejs.org/en/download/releases/')).text();
-    const nodeWebsiteText = nodeWebsite.toString();
+    const nodeWebsiteText = await (await fetch('https://nodejs.org/en/download/releases/')).text();
 
     const { stdout: versionsOutput } = await exec(". ./functions.sh && get_versions", { shell: "bash" });
 
@@ -79,22 +80,22 @@ const checkForMuslVersionsAndSecurityReleases = async (versions) => {
 // if there are new versions,
 // check for musl builds
 // then run update.sh
-(async () => {
-  const { shouldUpdate, versions } = await checkIfThereAreNewVersions();
-  if (!shouldUpdate) {
-    console.log("No new versions found. No update required.");
-    process.exit(0);
-  } else {
-    const newVersions = await checkForMuslVersionsAndSecurityReleases(versions);
-    for(let version of Object.keys(newVersions)) {
-      if (newVersions[version].muslBuildExists) {
-        let { stdout } = await exec(`./update.sh ${newVersions[version].isSecurityRelease ? "-s " : ""}${version}`);
-        console.log(stdout);
-      } else {
-        console.log(`There's no musl build for version ${newVersions[version].fullVersion} yet.`);
-      }
-    };
-    let stdout = (await exec(`git diff`)).stdout;
-    console.log(stdout);
-  }
-})();
+const { shouldUpdate, versions } = await checkIfThereAreNewVersions();
+
+if (!shouldUpdate) {
+  console.log("No new versions found. No update required.");
+  process.exit(0);
+} else {
+  const newVersions = await checkForMuslVersionsAndSecurityReleases(versions);
+  for(let version of Object.keys(newVersions)) {
+    if (newVersions[version].muslBuildExists) {
+      let { stdout } = await exec(`./update.sh ${newVersions[version].isSecurityRelease ? "-s " : ""}${version}`);
+      console.log(stdout);
+      await exec(`echo "${newVersions[version].fullVersion} " >> updated_versions`);
+    } else {
+      console.log(`There's no musl build for version ${newVersions[version].fullVersion} yet.`);
+    }
+  };
+  let stdout = (await exec(`git diff`)).stdout;
+  console.log(stdout);
+}

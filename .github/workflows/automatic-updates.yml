@@ -7,7 +7,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    # if the repo owner isn't nodejs and the branch isn't update-branch
     if: github.repository_owner == 'nodejs'
 
     steps:
@@ -19,7 +18,12 @@ jobs:
           node-version: '17'
 
       - name: Run automation script
-        run: node --experimental-fetch build-automation.js
+        run: node --experimental-fetch build-automation.mjs
+
+      - name: Get updated versions from updated_versions file and store in env vars
+        run: |
+          [ -f updated_versions ] && echo "UPDATED_VERSIONS=$(cat updated_versions)" >> GITHUB_ENV
+          rm -f updated_versions
 
       - name: Create update PR
         id: cpr
@@ -28,19 +32,18 @@ jobs:
           token: ${{ secrets.GH_API_TOKEN }}
           branch: update-branch
           base: main
-          commit-message: "version update"
-          title: "Version update"
+          commit-message: "Update to $UPDATED_VERSIONS"
+          title: "Update to $UPDATED_VERSIONS"
           delete-branch: "true"
           team-reviewers: |
-            owners
-            maintainers
+            @nodejs/docker
 
       - uses: actions/checkout@v2
 
       - name: Check CI status periodically
         env:
           GH_API_TOKEN: ${{ secrets.GH_API_TOKEN }}
-        run: node --experimental-fetch check-pr-status.js ${{ github.repository }} ${{ steps.cpr.outputs.pull-request-number }}
+        run: node --experimental-fetch check-pr-status.mjs ${{ github.repository }} ${{ steps.cpr.outputs.pull-request-number }}
 
       - name: Merge PR
         uses: juliangruber/merge-pull-request-action@v1

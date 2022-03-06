@@ -18,12 +18,8 @@ jobs:
           node-version: '17'
 
       - name: Run automation script
+        id: updt
         run: node --experimental-fetch build-automation.mjs
-
-      - name: Get updated versions from updated_versions file and store in env vars
-        run: |
-          [ -f updated_versions ] && echo "UPDATED_VERSIONS=$(cat updated_versions)" >> GITHUB_ENV
-          rm -f updated_versions
 
       - name: Create update PR
         id: cpr
@@ -32,8 +28,8 @@ jobs:
           token: ${{ secrets.GH_API_TOKEN }}
           branch: update-branch
           base: main
-          commit-message: "Update to $UPDATED_VERSIONS"
-          title: "Update to $UPDATED_VERSIONS"
+          commit-message: "Update to ${{ steps.updt.outputs.updated-versions }}"
+          title: "Update to ${{ steps.updt.outputs.updated-versions }}"
           delete-branch: true
           team-reviewers: |
             @nodejs/docker

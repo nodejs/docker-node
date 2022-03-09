@@ -94,6 +94,6 @@ if (!shouldUpdate) {
     }
   };
   console.log(`::set-output name=updated-versions::${updatedVersions.join(',')}`);
-  let stdout = (await exec(`git diff`)).stdout;
+  const { stdout } = (await exec(`git diff`));
   console.log(stdout);
 }

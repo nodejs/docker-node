@@ -21,7 +21,7 @@ for (let t = 0; t < tries; t++) {
     }
     await setTimeout(retryDelay);
   } catch (error) {
-    console.log(error);
+    console.error(error);
     process.exit(1);
   }
 }

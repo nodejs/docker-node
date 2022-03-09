@@ -49,7 +49,7 @@ const checkIfThereAreNewVersions = async () => {
       versions: filteredNewerVersions,
     }
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 };
 

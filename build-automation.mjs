@@ -50,6 +50,7 @@ const checkIfThereAreNewVersions = async () => {
     }
   } catch (error) {
     console.error(error);
+    process.exit(1);
   }
 };
 
@@ -69,6 +70,7 @@ const checkForMuslVersionsAndSecurityReleases = async (versions) => {
     return versions;
   } catch (error) {
     console.error(error);
+    process.exit(1);
   }
 };
 
@@ -91,6 +93,7 @@ if (!shouldUpdate) {
       updatedVersions.push(newVersions[version].fullVersion);
     } else {
       console.log(`There's no musl build for version ${newVersions[version].fullVersion} yet.`);
+      process.exit(0);
     }
   };
   console.log(`::set-output name=updated-versions::${updatedVersions.join(',')}`);

@@ -34,8 +34,6 @@ jobs:
           team-reviewers: |
             @nodejs/docker
 
-      - uses: actions/checkout@v2
-
       - name: Check CI status periodically
         env:
           GH_API_TOKEN: ${{ secrets.GH_API_TOKEN }}

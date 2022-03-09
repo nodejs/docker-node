@@ -86,7 +86,7 @@ if (!shouldUpdate) {
   let updatedVersions = [];
   for (let version of Object.keys(newVersions)) {
     if (newVersions[version].muslBuildExists) {
-      let { stdout } = await exec(`./update.sh ${newVersions[version].isSecurityRelease ? "-s " : ""}${version}`);
+      const { stdout } = await exec(`./update.sh ${newVersions[version].isSecurityRelease ? "-s " : ""}${version}`);
       console.log(stdout);
       updatedVersions.push(newVersions[version].fullVersion);
     } else {

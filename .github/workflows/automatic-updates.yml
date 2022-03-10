@@ -36,7 +36,7 @@ jobs:
 
       - name: Check CI status periodically
         env:
-          GH_API_TOKEN: ${{ secrets.GH_API_TOKEN }}
+          GH_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: node --experimental-fetch check-pr-status.mjs ${{ github.repository }} ${{ steps.cpr.outputs.pull-request-number }}
 
       - name: Auto-approve the PR

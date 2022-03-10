@@ -7,22 +7,23 @@ import { setTimeout } from 'timers/promises';
 const tries = 10;
 const retryDelay = 30000;
 
-await setTimeout(retryDelay);
+export default async function(github, repository, pull_number) {
+  const [owner, repo] = repository.split('/');
+  await setTimeout(retryDelay);
 
-for (let t = 0; t < tries; t++) {
-  try {
-    const [repo, pull_number] = process.argv.slice(2);
+  for (let t = 0; t < tries; t++) {
+    try {
+      const { data } = await github.rest.pulls.get({owner, repo, pull_number})
 
-    const data = await (await fetch(`https://api.github.com/repos/${repo}/pulls/${pull_number}`)).json();
-
-    console.log(data);
-    if (data.mergeable_state === 'clean') {
-      process.exit(0);
+      console.log(data);
+      if (data.mergeable_state === 'clean') {
+        process.exit(0);
+      }
+      await setTimeout(retryDelay);
+    } catch (error) {
+      console.error(error);
+      process.exit(1);
     }
-    await setTimeout(retryDelay);
-  } catch (error) {
-    console.error(error);
-    process.exit(1);
   }
+  process.exit(1);
 }
-process.exit(1);

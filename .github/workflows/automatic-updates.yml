@@ -12,14 +12,13 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - uses: actions/setup-node@v3
-        with:
-          # to access `--experimental-fetch`
-          node-version: '17'
-
       - name: Run automation script
+        uses: actions/github-script@v6
         id: updt
-        run: node --experimental-fetch build-automation.mjs
+        with:
+          script: |
+            const { default: script } = await import(`${process.env.GITHUB_WORKSPACE}/build-automation.mjs`);
+            await script(github);
 
       - name: Create update PR
         id: cpr
@@ -35,9 +34,11 @@ jobs:
             @nodejs/docker
 
       - name: Check CI status periodically
-        env:
-          GH_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: node --experimental-fetch check-pr-status.mjs ${{ github.repository }} ${{ steps.cpr.outputs.pull-request-number }}
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const { default: script } = await import(`${process.env.GITHUB_WORKSPACE}/check-pr-status.mjs`);
+            await script(github, '${{ github.repository }}', ${{ steps.cpr.outputs.pull-request-number }});
 
       - name: Auto-approve the PR
         uses: juliangruber/approve-pull-request-action@v1

@@ -48,5 +48,5 @@ jobs:
       - name: Merge PR
         uses: juliangruber/merge-pull-request-action@v1
         with:
-          github-token: ${{ secrets.GH_API_TOKEN }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
           number: ${{ steps.cpr.outputs.pull-request-number }}

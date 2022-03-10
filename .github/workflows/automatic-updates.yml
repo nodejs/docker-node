@@ -42,6 +42,7 @@ jobs:
       - name: Auto-approve the PR
         uses: juliangruber/approve-pull-request-action@v1
         with:
+          # Cannot use `GITHUB_TOKEN` as it's not allowed to approve own PR
           github-token: ${{ secrets.GH_API_TOKEN }}
           number: ${{ steps.cpr.outputs.pull-request-number }}
 

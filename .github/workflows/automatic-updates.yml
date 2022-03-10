@@ -25,7 +25,7 @@ jobs:
         id: cpr
         uses: peter-evans/create-pull-request@v3
         with:
-          token: ${{ secrets.GH_API_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           branch: update-branch
           base: main
           commit-message: "Update to ${{ steps.updt.outputs.updated-versions }}"

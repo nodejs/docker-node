@@ -1,0 +1,54 @@
+name: Automatically update Docker image versions
+
+on:
+  schedule:
+    - cron: "*/15 * * * *"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    if: github.repository_owner == 'nodejs'
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Run automation script
+        uses: actions/github-script@v6
+        id: updt
+        with:
+          script: |
+            const { default: script } = await import(`${process.env.GITHUB_WORKSPACE}/build-automation.mjs`);
+            await script(github);
+
+      - name: Create update PR
+        id: cpr
+        uses: peter-evans/create-pull-request@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: update-branch
+          base: main
+          commit-message: "Update to ${{ steps.updt.outputs.updated-versions }}"
+          title: "Update to ${{ steps.updt.outputs.updated-versions }}"
+          delete-branch: true
+          team-reviewers: |
+            @nodejs/docker
+
+      - name: Check CI status periodically
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const { default: script } = await import(`${process.env.GITHUB_WORKSPACE}/check-pr-status.mjs`);
+            await script(github, '${{ github.repository }}', ${{ steps.cpr.outputs.pull-request-number }});
+
+      - name: Auto-approve the PR
+        uses: juliangruber/approve-pull-request-action@v1
+        with:
+          # Cannot use `GITHUB_TOKEN` as it's not allowed to approve own PR
+          github-token: ${{ secrets.GH_API_TOKEN }}
+          number: ${{ steps.cpr.outputs.pull-request-number }}
+
+      - name: Merge PR
+        uses: juliangruber/merge-pull-request-action@v1
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          number: ${{ steps.cpr.outputs.pull-request-number }}

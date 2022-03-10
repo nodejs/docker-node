@@ -37,10 +37,12 @@ const checkIfThereAreNewVersions = async () => {
 
     for (let availableVersion of availableVersionsJson) {
       const [availableMajor, availableMinor, availablePatch] = availableVersion.version.split("v")[1].split(".");
+      if (latestSupportedVersions[availableMajor] == null) {
+        continue;
+      }
       const [_latestMajor, latestMinor, latestPatch] = latestSupportedVersions[availableMajor].fullVersion.split(".");
       if (latestSupportedVersions[availableMajor] && (Number(availableMinor) > Number(latestMinor) || (availableMinor === latestMinor && Number(availablePatch) > Number(latestPatch)))) {
         filteredNewerVersions[availableMajor] = { fullVersion: `${availableMajor}.${availableMinor}.${availablePatch}` };
-        continue
       }
     }
 

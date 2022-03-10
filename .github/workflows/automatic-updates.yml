@@ -39,10 +39,11 @@ jobs:
           GH_API_TOKEN: ${{ secrets.GH_API_TOKEN }}
         run: node --experimental-fetch check-pr-status.mjs ${{ github.repository }} ${{ steps.cpr.outputs.pull-request-number }}
 
-      - uses: hmarr/auto-approve-action@v2
+      - name: Auto-approve the PR
+        uses: juliangruber/approve-pull-request-action@v1
         with:
           github-token: ${{ secrets.GH_API_TOKEN }}
-          pull-request-number: ${{ steps.cpr.outputs.pull-request-number }}
+          number: ${{ steps.cpr.outputs.pull-request-number }}
 
       - name: Merge PR
         uses: juliangruber/merge-pull-request-action@v1

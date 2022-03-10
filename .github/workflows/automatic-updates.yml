@@ -44,4 +44,3 @@ jobs:
         with:
           github-token: ${{ secrets.GH_API_TOKEN }}
           number: ${{ steps.cpr.outputs.pull-request-number }}
-          method: squash

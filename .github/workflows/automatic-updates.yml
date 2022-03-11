@@ -18,7 +18,7 @@ jobs:
         with:
           script: |
             const { default: script } = await import(`${process.env.GITHUB_WORKSPACE}/build-automation.mjs`);
-            await script(github);
+            return script(github);
 
       - name: Create update PR
         id: cpr
@@ -27,8 +27,8 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           branch: update-branch
           base: main
-          commit-message: "Update to ${{ steps.updt.outputs.updated-versions }}"
-          title: "Update to ${{ steps.updt.outputs.updated-versions }}"
+          commit-message: "Update to ${{ steps.updt.outputs.result.updatedVersions.join(', ') }}"
+          title: "Update to ${{ steps.updt.outputs.result.updatedVersions.join(', ') }}"
           delete-branch: true
           team-reviewers: |
             @nodejs/docker

@@ -97,8 +97,9 @@ export default async function(github) {
         process.exit(0);
       }
     }
-    console.log(`::set-output name=updated-versions::${updatedVersions.join(',')}`);
     const { stdout } = (await exec(`git diff`));
     console.log(stdout);
+
+    return { updatedVersions };
   }
 }

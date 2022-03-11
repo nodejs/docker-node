@@ -32,23 +32,3 @@ jobs:
           delete-branch: true
           team-reviewers: |
             @nodejs/docker
-
-      - name: Check CI status periodically
-        uses: actions/github-script@v6
-        with:
-          script: |
-            const { default: script } = await import(`${process.env.GITHUB_WORKSPACE}/check-pr-status.mjs`);
-            await script(github, '${{ github.repository }}', ${{ steps.cpr.outputs.pull-request-number }});
-
-      - name: Auto-approve the PR
-        uses: juliangruber/approve-pull-request-action@v1
-        with:
-          # Cannot use `GITHUB_TOKEN` as it's not allowed to approve own PR
-          github-token: ${{ secrets.GH_API_TOKEN }}
-          number: ${{ steps.cpr.outputs.pull-request-number }}
-
-      - name: Merge PR
-        uses: juliangruber/merge-pull-request-action@v1
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          number: ${{ steps.cpr.outputs.pull-request-number }}

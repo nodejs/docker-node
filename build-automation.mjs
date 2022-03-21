@@ -100,6 +100,6 @@ export default async function(github) {
     const { stdout } = (await exec(`git diff`));
     console.log(stdout);
 
-    return { updatedVersions };
+    return { updatedVersions, updatedVersionsString: updatedVersions.join(', ') };
   }
 }

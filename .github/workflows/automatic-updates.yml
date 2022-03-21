@@ -27,8 +27,8 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           branch: update-branch
           base: main
-          commit-message: "Update to ${{ steps.updt.outputs.result.updatedVersions.join(', ') }}"
-          title: "Update to ${{ steps.updt.outputs.result.updatedVersions.join(', ') }}"
+          commit-message: "feat: Node.js ${{ steps.updt.outputs.result.updatedVersions.join(', ') }}"
+          title: "feat: Node.js ${{ steps.updt.outputs.result.updatedVersions.join(', ') }}"
           delete-branch: true
           team-reviewers: |
             @nodejs/docker

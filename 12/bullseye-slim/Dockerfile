@@ -3,7 +3,7 @@ FROM debian:bullseye-slim
 RUN groupadd --gid 1000 node \
   && useradd --uid 1000 --gid node --shell /bin/bash --create-home node
 
-ENV NODE_VERSION 12.22.11
+ENV NODE_VERSION 12.22.12
 
 RUN ARCH= && dpkgArch="$(dpkg --print-architecture)" \
     && case "${dpkgArch##*-}" in \
@@ -56,7 +56,7 @@ RUN ARCH= && dpkgArch="$(dpkg --print-architecture)" \
     && node --version \
     && npm --version
 
-ENV YARN_VERSION 1.22.17
+ENV YARN_VERSION 1.22.18
 
 RUN set -ex \
   && savedAptMark="$(apt-mark showmanual)" \

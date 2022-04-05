@@ -24,7 +24,8 @@ jobs:
         id: cpr
         uses: peter-evans/create-pull-request@v4
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.GH_API_TOKEN }}
+          author: "Node.js GitHub Bot <nodejs-github-bot@users.noreply.github.com>"
           branch: update-branch
           base: main
           commit-message: "feat: Node.js ${{ steps.updt.outputs.result.updatedVersionsString }}"

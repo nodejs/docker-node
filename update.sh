@@ -135,11 +135,8 @@ function update_node_version() {
     sed -Ei -e 's/^FROM (.*)/FROM '"$fromprefix"'\1/' "${dockerfile}-tmp"
     sed -Ei -e 's/^(ENV NODE_VERSION ).*/\1'"${nodeVersion}"'/' "${dockerfile}-tmp"
 
-    if [ "${SKIP}" = true ]; then
-      # Get the currently used Yarn version
-      yarnVersion="$(grep "ENV YARN_VERSION" "${dockerfile}" | cut -d' ' -f3)"
-    fi
-    sed -Ei -e 's/^(ENV YARN_VERSION ).*/\1'"${yarnVersion}"'/' "${dockerfile}-tmp"
+    currentYarnVersion="$(grep "ENV YARN_VERSION" "${dockerfile}" | cut -d' ' -f3)"
+    sed -Ei -e 's/^(ENV YARN_VERSION ).*/\1'"${currentYarnVersion}"'/' "${dockerfile}-tmp"
 
     # shellcheck disable=SC1004
     new_line=' \\\
@@ -180,15 +177,20 @@ function update_node_version() {
       sed -Ei -e "s/(debian:)name-slim/\\1${variant}/" "${dockerfile}-tmp"
     fi
 
-    # Required for POSIX sed
-    if [ -f "${dockerfile}-tmp-e" ]; then
-      rm "${dockerfile}-tmp-e"
-    fi
-
     if diff -q "${dockerfile}-tmp" "${dockerfile}" > /dev/null; then
       echo "${dockerfile} is already up to date!"
     else
+      if [ "${SKIP}" = true ]; then
+        # Get the currently used Yarn version
+        yarnVersion="$(grep "ENV YARN_VERSION" "${dockerfile}" | cut -d' ' -f3)"
+      fi
+      sed -Ei -e 's/^(ENV YARN_VERSION ).*/\1'"${yarnVersion}"'/' "${dockerfile}-tmp"
       echo "${dockerfile} updated!"
+    fi
+
+    # Required for POSIX sed
+    if [ -f "${dockerfile}-tmp-e" ]; then
+      rm "${dockerfile}-tmp-e"
     fi
 
     mv -f "${dockerfile}-tmp" "${dockerfile}"

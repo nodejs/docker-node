@@ -51,16 +51,6 @@
         "arm64v8",
         "ppc64le",
         "s390x"
-      ],
-      "stretch": [
-        "amd64",
-        "arm32v7",
-        "arm64v8"
-      ],
-      "stretch-slim": [
-        "amd64",
-        "arm32v7",
-        "arm64v8"
       ]
     }
   },

@@ -30,12 +30,16 @@ midnight.setHours(0, 0, 0, 0)
 const now = midnight.getTime()
 const aplineRE = new RegExp(/alpine*/);
 const slimRE = new RegExp(/\*-slim/);
+let foundLTS = false;
+let foundCurrent = false;
 
 for (version of versions) {
   let lts = new Date(`${config[version].lts}T00:00:00.00`).getTime();
   let maintenance = new Date(`${config[version].maintenance}T00:00:00.00`).getTime();
-  let isCurrent = isNaN(lts) || lts >= now;
-  let isLTS = (maintenance >= now) && (now >= lts);
+  let isCurrent = foundCurrent ? false : isNaN(lts) || lts >= now;
+  foundCurrent = isCurrent || foundCurrent;
+  let isLTS = foundLTS ? false : (maintenance >= now) && (now >= lts);
+  foundLTS = isLTS || foundLTS;
   let codename = config[version].codename
   let defaultAlpine = config[version]['alpine-default']
   let defaultDebian = config[version]['debian-default']

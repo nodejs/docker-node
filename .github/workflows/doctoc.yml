@@ -6,6 +6,9 @@ on:
       - "README.md"
       - "docs/BestPractices.md"
 
+permissions:
+  contents: read
+
 jobs:
   doctoc:
     name: Doc TOC Check

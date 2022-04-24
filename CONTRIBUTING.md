@@ -14,12 +14,12 @@ New **NPM** releases are not tracked. We simply use the NPM version bundled in t
 
 If you'd like to help us by submitting a PR for a version update, please do the following:
 
-1. [Fork this project.](https://help.github.com/en/github/getting-started-with-github/fork-a-repo)
-1. [Clone the forked repository.](https://help.github.com/en/github/creating-cloning-and-archiving-repositories/cloning-a-repository)
+1. [Fork this project.](https://docs.github.com/en/get-started/quickstart/fork-a-repo)
+1. [Clone the forked repository.](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository)
 1. Create a branch for the update PR. For example, `git checkout main; git checkout -b version-update`.
 1. Run `./update.sh`. You can see additional options by using accessing the built-in help documentation with `./update.sh -h`. This script will automatically update the appropriate files with the latest versions and checksums.
 1. Commit the modified files to the `version-update` branch and push the branch to your fork.
-1. [Create a PR to merge the branch from your fork into this project's default branch.](https://help.github.com/en/github/collaborating-with-issues-and-pull-requests/creating-a-pull-request-from-a-fork).
+1. [Create a PR to merge the branch from your fork into this project's default branch.](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request-from-a-fork).
 
 ## Adding dependencies to the base images
 

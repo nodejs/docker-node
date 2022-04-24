@@ -88,7 +88,7 @@ You can then run using Docker Compose:
 $ docker-compose up -d
 ```
 
-Docker Compose example copies your current directory (including node_modules) to the container.
+Docker Compose example mounts your current directory (including node_modules) to the container.
 It assumes that your application has a file named [`package.json`](https://docs.npmjs.com/files/package.json)
 defining [start script](https://docs.npmjs.com/misc/scripts#default-values).
 

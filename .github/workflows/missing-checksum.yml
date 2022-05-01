@@ -6,6 +6,9 @@ on:
       - ".github/workflows/missing-checksum.yml"
       - "**/alpine*/Dockerfile"
 
+permissions:
+  contents: read
+
 jobs:
   test:
     runs-on: ubuntu-latest

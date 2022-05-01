@@ -2,6 +2,9 @@ name: Test Whitespace and line endings
 
 on: [pull_request]
 
+permissions:
+  contents: read
+
 jobs:
   eclint:
     runs-on: ubuntu-latest

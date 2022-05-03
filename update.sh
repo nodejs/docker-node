@@ -163,14 +163,6 @@ function update_node_version() {
       sed -Ei -e "s/(alpine:)0.0/\\1${alpine_version}/" "${dockerfile}-tmp"
       sed -Ei -e "s/CHECKSUM=CHECKSUM_x64/CHECKSUM=\"${checksum}\"/" "${dockerfile}-tmp"
 
-      # Use python2 for nodejs < 14 on alpine
-      if [ "$version" -lt 14 ]; then
-        pythonVersion="python2"
-      else
-        pythonVersion="python3"
-      fi
-
-      sed -Ei -e 's/\$\{PYTHON_VERSION\}/'"${pythonVersion}"'/' "${dockerfile}-tmp"
     elif is_debian "${variant}"; then
       sed -Ei -e "s/(buildpack-deps:)name/\\1${variant}/" "${dockerfile}-tmp"
     elif is_debian_slim "${variant}"; then

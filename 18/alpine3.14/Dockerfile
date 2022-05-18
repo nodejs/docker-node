@@ -1,6 +1,6 @@
 FROM alpine:3.14
 
-ENV NODE_VERSION 18.1.0
+ENV NODE_VERSION 18.2.0
 
 RUN addgroup -g 1000 node \
     && adduser -u 1000 -G node -s /bin/sh -D node \
@@ -12,7 +12,7 @@ RUN addgroup -g 1000 node \
       && case "${alpineArch##*-}" in \
         x86_64) \
           ARCH='x64' \
-          CHECKSUM="db44a0003c61313ba466a486508353d013bc651973581acd9b9f4c71024cc7df" \
+          CHECKSUM="2a0b06e7322d79863191a8a4da517be4df5ff18920b2315fe3e8cd8ca0ae4025" \
           ;; \
         *) ;; \
       esac \
@@ -41,6 +41,7 @@ RUN addgroup -g 1000 node \
       94AE36675C464D64BAFA68DD7434390BDBE9B9C5 \
       74F12602B6F1C4E913FAA37AD3A89613643B6201 \
       71DCFD284A79C3B38668286BC97EC7A07EDE3FC1 \
+      61FC681DFB92A079F1685E77973F295594EC4689 \
       8FCCA13FEF1D0C2E91008E09770F7A9A5AE15600 \
       C4F0DFFF4E8C1A8236409D08E73BC641CC11F4C8 \
       C82FA3AE1CBEDC6BE46B9360C43CEC45C17AB93C \
@@ -72,7 +73,7 @@ RUN addgroup -g 1000 node \
   && node --version \
   && npm --version
 
-ENV YARN_VERSION 1.22.18
+ENV YARN_VERSION 1.22.19
 
 RUN apk add --no-cache --virtual .build-deps-yarn curl gnupg tar \
   && for key in \

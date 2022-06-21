@@ -4,7 +4,7 @@ on:
   pull_request:
     paths:
       - "**/*.md"
-      - ".markdown-link-check.json"
+      - "markdown_link_check_config.json"
 
 permissions:
   contents: read

@@ -24,7 +24,7 @@ The official Node.js docker image, made with love by the node community.
   - [`node:<version>`](#nodeversion)
   - [`node:alpine`](#nodealpine)
   - [`node:buster`](#nodebuster)
-  - [`node:stretch`](#nodestretch)
+  - [`node:bullseye`](#nodebullseye)
   - [`node:slim`](#nodeslim)
 - [License](#license)
 - [Supported Docker versions](#supported-docker-versions)
@@ -198,9 +198,9 @@ This image is based on version 10 of
 [Debian](http://debian.org), available in
 [the `debian` official image](https://hub.docker.com/_/debian).
 
-### `node:stretch`
+### `node:bullseye`
 
-This image is based on version 9 of
+This image is based on version 11 of
 [Debian](http://debian.org), available in
 [the `debian` official image](https://hub.docker.com/_/debian).
 

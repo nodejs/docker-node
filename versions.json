@@ -106,16 +106,6 @@
         "arm64v8",
         "ppc64le",
         "s390x"
-      ],
-      "stretch": [
-        "amd64",
-        "arm32v7",
-        "arm64v8"
-      ],
-      "stretch-slim": [
-        "amd64",
-        "arm32v7",
-        "arm64v8"
       ]
     }
   },
@@ -126,7 +116,7 @@
     "end": "2023-04-30",
     "codename": "fermium",
     "alpine-default": "alpine3.16",
-    "debian-default": "stretch",
+    "debian-default": "buster",
     "variants": {
       "alpine3.15": [
         "amd64",
@@ -171,16 +161,6 @@
         "arm64v8",
         "ppc64le",
         "s390x"
-      ],
-      "stretch": [
-        "amd64",
-        "arm32v7",
-        "arm64v8"
-      ],
-      "stretch-slim": [
-        "amd64",
-        "arm32v7",
-        "arm64v8"
       ]
     }
   }

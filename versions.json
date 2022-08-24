@@ -41,16 +41,12 @@
       "buster": [
         "amd64",
         "arm32v7",
-        "arm64v8",
-        "ppc64le",
-        "s390x"
+        "arm64v8"
       ],
       "buster-slim": [
         "amd64",
         "arm32v7",
-        "arm64v8",
-        "ppc64le",
-        "s390x"
+        "arm64v8"
       ]
     }
   },
@@ -96,16 +92,12 @@
       "buster": [
         "amd64",
         "arm32v7",
-        "arm64v8",
-        "ppc64le",
-        "s390x"
+        "arm64v8"
       ],
       "buster-slim": [
         "amd64",
         "arm32v7",
-        "arm64v8",
-        "ppc64le",
-        "s390x"
+        "arm64v8"
       ]
     }
   },
@@ -151,16 +143,12 @@
       "buster": [
         "amd64",
         "arm32v7",
-        "arm64v8",
-        "ppc64le",
-        "s390x"
+        "arm64v8"
       ],
       "buster-slim": [
         "amd64",
         "arm32v7",
-        "arm64v8",
-        "ppc64le",
-        "s390x"
+        "arm64v8"
       ]
     }
   }

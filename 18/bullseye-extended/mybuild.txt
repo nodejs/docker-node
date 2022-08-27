@@ -1,3 +1,4 @@
 DOCKER_BUILDKIT=1 docker build -t alv:latest --output type=tar,dest=out.tar  .
  DOCKER_BUILDKIT=1 docker build -t alv:latest  --progress=plain . > build.log 2>&1
  DOCKER_BUILDKIT=1 docker build -t alv:latest  --progress=plain --no-cache . > build.log 2>&1
+DOCKER_BUILDKIT=1 docker build -t alv:sqlite  --progress=plain  . > build.log 2>&1

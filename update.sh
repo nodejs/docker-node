@@ -12,15 +12,15 @@ function usage() {
 
   Examples:
     - update.sh                      # Update all images
-    - update.sh -s                   # Update all images, skip updating Alpine and Yarn
+    - update.sh -s                   # Update all images, skip updating Alpine
     - update.sh 8,10                 # Update all variants of version 8 and 10
-    - update.sh -s 8                 # Update version 8 and variants, skip updating Alpine and Yarn
+    - update.sh -s 8                 # Update version 8 and variants, skip updating Alpine
     - update.sh 8 buster-slim,buster # Update only buster's slim and buster variants for version 8
-    - update.sh -s 8 stretch         # Update only stretch variant for version 8, skip updating Alpine and Yarn
+    - update.sh -s 8 stretch         # Update only stretch variant for version 8, skip updating Alpine
     - update.sh . alpine             # Update the alpine variant for all versions
 
   OPTIONS:
-    -s Security update; skip updating the yarn and alpine versions.
+    -s Security update; skip updating alpine version.
     -b CI config update only
     -h Show this message
 
@@ -67,7 +67,6 @@ arch=$(get_arch)
 
 if [ "${SKIP}" != true ]; then
   alpine_version=$(get_config "./" "alpine_version")
-  yarnVersion="$(curl -sSL --compressed https://yarnpkg.com/latest-version)"
 fi
 
 function in_versions_to_update() {
@@ -135,21 +134,16 @@ function update_node_version() {
     sed -Ei -e 's/^FROM (.*)/FROM '"$fromprefix"'\1/' "${dockerfile}-tmp"
     sed -Ei -e 's/^(ENV NODE_VERSION ).*/\1'"${nodeVersion}"'/' "${dockerfile}-tmp"
 
-    currentYarnVersion="$(grep "ENV YARN_VERSION" "${dockerfile}" | cut -d' ' -f3)"
-    sed -Ei -e 's/^(ENV YARN_VERSION ).*/\1'"${currentYarnVersion}"'/' "${dockerfile}-tmp"
-
     # shellcheck disable=SC1004
     new_line=' \\\
 '
 
     # Add GPG keys
-    for key_type in "node" "yarn"; do
-      while read -r line; do
-        pattern='"\$\{'$(echo "${key_type}" | tr '[:lower:]' '[:upper:]')'_KEYS\[@\]\}"'
-        sed -Ei -e "s/([ \\t]*)(${pattern})/\\1${line}${new_line}\\1\\2/" "${dockerfile}-tmp"
-      done < "keys/${key_type}.keys"
-      sed -Ei -e "/${pattern}/d" "${dockerfile}-tmp"
-    done
+    while read -r line; do
+      pattern='"\$\{'$(echo "node" | tr '[:lower:]' '[:upper:]')'_KEYS\[@\]\}"'
+      sed -Ei -e "s/([ \\t]*)(${pattern})/\\1${line}${new_line}\\1\\2/" "${dockerfile}-tmp"
+    done < "keys/node.keys"
+    sed -Ei -e "/${pattern}/d" "${dockerfile}-tmp"
 
     if is_alpine "${variant}"; then
       alpine_version="${variant#*alpine}"
@@ -167,17 +161,6 @@ function update_node_version() {
       sed -Ei -e "s/(buildpack-deps:)name/\\1${variant}/" "${dockerfile}-tmp"
     elif is_debian_slim "${variant}"; then
       sed -Ei -e "s/(debian:)name-slim/\\1${variant}/" "${dockerfile}-tmp"
-    fi
-
-    if diff -q "${dockerfile}-tmp" "${dockerfile}" > /dev/null; then
-      echo "${dockerfile} is already up to date!"
-    else
-      if [ "${SKIP}" = true ]; then
-        # Get the currently used Yarn version
-        yarnVersion="$(grep "ENV YARN_VERSION" "${dockerfile}" | cut -d' ' -f3)"
-      fi
-      sed -Ei -e 's/^(ENV YARN_VERSION ).*/\1'"${yarnVersion}"'/' "${dockerfile}-tmp"
-      echo "${dockerfile} updated!"
     fi
 
     # Required for POSIX sed

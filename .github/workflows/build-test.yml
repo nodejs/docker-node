@@ -94,3 +94,6 @@ jobs:
 
       - name: Test for yarn
         run: docker run --rm node:${{ matrix.version }}-${{ matrix.variant }} yarn --version
+
+      - name: Test for pnpm
+        run: docker run --rm node:${{ matrix.version }}-${{ matrix.variant }} pnpm --version

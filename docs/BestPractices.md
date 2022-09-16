@@ -225,8 +225,7 @@ RUN npm run build
 
 # Make sure the alpine version is the same as in the build stage
 FROM alpine:3.16
-RUN apk add --no-cache libstdc++
-RUN apk add --no-cache dumb-init
+RUN apk add --no-cache libstdc++ dumb-init
 RUN addgroup -g 1000 node && adduser -u 1000 -G node -s /bin/sh -D node
 
 COPY --from=builder /usr/local/bin/node /usr/local/bin/
@@ -239,7 +238,7 @@ COPY --from=builder /build-stage/dist ./dist
 
 RUN chown -R node:node ./
 USER node
-# Run with dumb-init to not start node with PID=1, since Node.js was not designed to run as PID 1 
+# Run with dumb-init to not start node with PID=1, since Node.js was not designed to run as PID 1
 CMD ["dumb-init", "node", "dist/index.js"]
 ```
 

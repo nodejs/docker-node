@@ -16,6 +16,7 @@
 - [Docker Run](#docker-run)
 - [Security](#security)
 - [node-gyp alpine](#node-gyp-alpine)
+- [Smaller images without npm/yarn](#smaller-images-without-npmyarn)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 

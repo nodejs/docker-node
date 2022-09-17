@@ -212,31 +212,29 @@ COPY --from=builder node_modules .
 If you want to achieve an even smaller image size than the `-alpine`, you can omit the npm/yarn like this:
 
 ```Dockerfile
-FROM node:18-alpine3.16 AS builder
+ARG ALPINE_VERSION=3.16
+
+
+FROM node:18-alpine${ALPINE_VERSION} AS builder
 WORKDIR /build-stage
 COPY package*.json ./
 RUN npm ci
-
 # Copy the the files you need
 COPY . ./
-
 RUN npm run build
 
 
-# Make sure the alpine version is the same as in the build stage
-FROM alpine:3.16
+FROM alpine:${ALPINE_VERSION}
 RUN apk add --no-cache libstdc++ dumb-init
 RUN addgroup -g 1000 node && adduser -u 1000 -G node -s /bin/sh -D node
-
 COPY --from=builder /usr/local/bin/node /usr/local/bin/
 COPY --from=builder /usr/local/bin/docker-entrypoint.sh /usr/local/bin/
 ENTRYPOINT ["docker-entrypoint.sh"]
-
-# Update the following lines based on your codebase
-COPY --from=builder /build-stage/node_modules ./node_modules
-COPY --from=builder /build-stage/dist ./dist
-
-RUN chown -R node:node ./
+WORKDIR /usr/src/app
+RUN chown node:node ./
+# Update the following COPY lines based on your codebase
+COPY --chown=node:node --from=builder /build-stage/node_modules ./node_modules
+COPY --chown=node:node --from=builder /build-stage/dist ./dist
 USER node
 # Run with dumb-init to not start node with PID=1, since Node.js was not designed to run as PID 1
 CMD ["dumb-init", "node", "dist/index.js"]

@@ -340,7 +340,7 @@ function images_updated() {
     IFS=','
     get_versions
   )"
-  images_changed=$(git diff --name-only "${commit_range}" "${versions[@]}")
+  images_changed=$(git diff --name-only "${commit_range}" "${versions[@]}" -G NODE_VERSION)
 
   if [ -z "${images_changed}" ]; then
     return 1

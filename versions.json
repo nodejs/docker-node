@@ -55,7 +55,7 @@
     "lts": "2022-10-25",
     "maintenance": "2023-10-18",
     "end": "2025-04-30",
-    "codename": "",
+    "codename": "hydrogen",
     "alpine-default": "alpine3.16",
     "debian-default": "bullseye",
     "variants": {

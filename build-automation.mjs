@@ -94,7 +94,6 @@ export default async function(github) {
         updatedVersions.push(newVersions[version].fullVersion);
       } else {
         console.log(`There's no musl build for version ${newVersions[version].fullVersion} yet.`);
-        process.exit(0);
       }
     }
     const { stdout } = (await exec(`git diff`));

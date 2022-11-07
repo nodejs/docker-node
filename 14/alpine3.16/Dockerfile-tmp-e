@@ -1,6 +1,6 @@
-FROM alpine:3.15
+FROM alpine:0.0
 
-ENV NODE_VERSION 16.18.1
+ENV NODE_VERSION 14.21.1
 
 RUN addgroup -g 1000 node \
     && adduser -u 1000 -G node -s /bin/sh -D node \
@@ -12,7 +12,7 @@ RUN addgroup -g 1000 node \
       && case "${alpineArch##*-}" in \
         x86_64) \
           ARCH='x64' \
-          CHECKSUM="ba6f8e66b23518ff4ff465814f781fd48b196a1cd77a9942ca5c7857715253a9" \
+          CHECKSUM=CHECKSUM_x64 \
           ;; \
         *) ;; \
       esac \
@@ -74,6 +74,7 @@ ENV YARN_VERSION 1.22.19
 RUN apk add --no-cache --virtual .build-deps-yarn curl gnupg tar \
   && for key in \
     6A010C5166006599AA17F08146C2130DFD2497F5 \
+    "${YARN_KEYS[@]}"
   ; do \
     gpg --batch --keyserver hkps://keys.openpgp.org --recv-keys "$key" || \
     gpg --batch --keyserver keyserver.ubuntu.com --recv-keys "$key" ; \

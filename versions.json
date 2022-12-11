@@ -5,10 +5,10 @@
     "maintenance": "2023-04-01",
     "end": "2023-06-01",
     "codename": "",
-    "alpine-default": "alpine3.16",
+    "alpine-default": "alpine3.17",
     "debian-default": "bullseye",
     "variants": {
-      "alpine3.15": [
+      "alpine3.16": [
         "amd64",
         "arm32v6",
         "arm32v7",
@@ -16,7 +16,7 @@
         "ppc64le",
         "s390x"
       ],
-      "alpine3.16": [
+      "alpine3.17": [
         "amd64",
         "arm32v6",
         "arm32v7",
@@ -56,10 +56,10 @@
     "maintenance": "2023-10-18",
     "end": "2025-04-30",
     "codename": "hydrogen",
-    "alpine-default": "alpine3.16",
+    "alpine-default": "alpine3.17",
     "debian-default": "bullseye",
     "variants": {
-      "alpine3.15": [
+      "alpine3.16": [
         "amd64",
         "arm32v6",
         "arm32v7",
@@ -67,7 +67,7 @@
         "ppc64le",
         "s390x"
       ],
-      "alpine3.16": [
+      "alpine3.17": [
         "amd64",
         "arm32v6",
         "arm32v7",
@@ -107,10 +107,10 @@
     "maintenance": "2022-10-18",
     "end": "2024-04-30",
     "codename": "gallium",
-    "alpine-default": "alpine3.16",
+    "alpine-default": "alpine3.17",
     "debian-default": "buster",
     "variants": {
-      "alpine3.15": [
+      "alpine3.16": [
         "amd64",
         "arm32v6",
         "arm32v7",
@@ -118,7 +118,7 @@
         "ppc64le",
         "s390x"
       ],
-      "alpine3.16": [
+      "alpine3.17": [
         "amd64",
         "arm32v6",
         "arm32v7",
@@ -158,10 +158,10 @@
     "maintenance": "2021-10-19",
     "end": "2023-04-30",
     "codename": "fermium",
-    "alpine-default": "alpine3.16",
+    "alpine-default": "alpine3.17",
     "debian-default": "buster",
     "variants": {
-      "alpine3.15": [
+      "alpine3.16": [
         "amd64",
         "arm32v6",
         "arm32v7",
@@ -169,7 +169,7 @@
         "ppc64le",
         "s390x"
       ],
-      "alpine3.16": [
+      "alpine3.17": [
         "amd64",
         "arm32v6",
         "arm32v7",

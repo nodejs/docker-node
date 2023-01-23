@@ -25,6 +25,8 @@ The official Node.js docker image, made with love by the node community.
   - [`node:alpine`](#nodealpine)
   - [`node:buster`](#nodebuster)
   - [`node:bullseye`](#nodebullseye)
+  - [`node:jammy`](#nodejammy)
+  - [`node:kinetic`](#nodekinetic)
   - [`node:slim`](#nodeslim)
 - [License](#license)
 - [Supported Docker versions](#supported-docker-versions)
@@ -203,6 +205,18 @@ This image is based on version 10 of
 This image is based on version 11 of
 [Debian](http://debian.org), available in
 [the `debian` official image](https://hub.docker.com/_/debian).
+
+### `node:jammy`
+
+This image is based on version 22.04 of
+[Ubuntu](http://ubuntu.com), available in
+[the `ubuntu` official image](https://hub.docker.com/_/ubuntu).
+
+### `node:kinetic`
+
+This image is based on version 22.10 of
+[Ubuntu](http://ubuntu.com), available in
+[the `ubuntu` official image](https://hub.docker.com/_/ubuntu).
 
 ### `node:slim`
 

@@ -2,3 +2,4 @@ baseuri     https://nodejs.org/dist
 default_variant bullseye
 alpine_version  3.17
 debian_versions stretch bullseye buster
+ubuntu_versions jammy kinetic

@@ -7,6 +7,7 @@
     "codename": "",
     "alpine-default": "alpine3.17",
     "debian-default": "bullseye",
+    "ubuntu-default": "jammy",
     "variants": {
       "alpine3.16": [
         "amd64",
@@ -47,6 +48,20 @@
         "amd64",
         "arm32v7",
         "arm64v8"
+      ],
+      "jammy": [
+        "amd64",
+        "arm32v7",
+        "arm64v8",
+        "ppc64le",
+        "s390x"
+      ],
+      "kinetic": [
+        "amd64",
+        "arm32v7",
+        "arm64v8",
+        "ppc64le",
+        "s390x"
       ]
     }
   },
@@ -58,6 +73,7 @@
     "codename": "hydrogen",
     "alpine-default": "alpine3.17",
     "debian-default": "bullseye",
+    "ubuntu-default": "jammy",
     "variants": {
       "alpine3.16": [
         "amd64",
@@ -98,6 +114,20 @@
         "amd64",
         "arm32v7",
         "arm64v8"
+      ],
+      "jammy": [
+        "amd64",
+        "arm32v7",
+        "arm64v8",
+        "ppc64le",
+        "s390x"
+      ],
+      "kinetic": [
+        "amd64",
+        "arm32v7",
+        "arm64v8",
+        "ppc64le",
+        "s390x"
       ]
     }
   },
@@ -109,6 +139,7 @@
     "codename": "gallium",
     "alpine-default": "alpine3.17",
     "debian-default": "buster",
+    "ubuntu-default": "jammy",
     "variants": {
       "alpine3.16": [
         "amd64",
@@ -149,6 +180,20 @@
         "amd64",
         "arm32v7",
         "arm64v8"
+      ],
+      "jammy": [
+        "amd64",
+        "arm32v7",
+        "arm64v8",
+        "ppc64le",
+        "s390x"
+      ],
+      "kinetic": [
+        "amd64",
+        "arm32v7",
+        "arm64v8",
+        "ppc64le",
+        "s390x"
       ]
     }
   },
@@ -160,6 +205,7 @@
     "codename": "fermium",
     "alpine-default": "alpine3.17",
     "debian-default": "buster",
+    "ubuntu-default": "jammy",
     "variants": {
       "alpine3.16": [
         "amd64",
@@ -200,6 +246,20 @@
         "amd64",
         "arm32v7",
         "arm64v8"
+      ],
+      "jammy": [
+        "amd64",
+        "arm32v7",
+        "arm64v8",
+        "ppc64le",
+        "s390x"
+      ],
+      "kinetic": [
+        "amd64",
+        "arm32v7",
+        "arm64v8",
+        "ppc64le",
+        "s390x"
       ]
     }
   }

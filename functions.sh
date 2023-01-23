@@ -193,6 +193,20 @@ function is_debian_slim() {
   return 1
 }
 
+function is_ubuntu() {
+  local variant
+  variant=$1
+  shift
+
+  IFS=' ' read -ra ubuntuVersions <<< "$(get_config "./" "ubuntu_versions")"
+  for d in "${ubuntuVersions[@]}"; do
+    if [ "${d}" = "${variant}" ]; then
+      return 0
+    fi
+  done
+  return 1
+}
+
 function get_fork_name() {
   local version
   version=$1

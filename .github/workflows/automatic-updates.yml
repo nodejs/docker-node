@@ -32,5 +32,3 @@ jobs:
           commit-message: "feat: Node.js ${{ steps.updt.outputs.result }}"
           title: "feat: Node.js ${{ steps.updt.outputs.result }}"
           delete-branch: true
-          team-reviewers: |
-            @nodejs/docker

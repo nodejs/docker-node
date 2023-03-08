@@ -166,6 +166,7 @@ Here is an example of how you would run a default Node.JS Docker Containerized a
 
 ```
 $ docker run \
+  --init \
   -e "NODE_ENV=production" \
   -u "node" \
   -m "300M" --memory-swap "1G" \

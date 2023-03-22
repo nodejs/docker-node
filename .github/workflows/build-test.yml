@@ -21,14 +21,15 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Calculate file differences
-        uses: lots0logs/gh-action-get-changed-files@2.1.4
-        id: diff
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Checkout
         uses: actions/checkout@v3
+
+      - name: Calculate file differences
+        id: changed-files
+        uses: tj-actions/changed-files@v35
+        with:
+          json: true
+          json_raw_format: true
 
       - name: Generate testing matrix
         uses: actions/github-script@v6
@@ -38,9 +39,9 @@ jobs:
           script: |
             const script = require(`${process.env.GITHUB_WORKSPACE}/genMatrix.js`)
             return script(
-              ${{ steps.diff.outputs.added }},
-              ${{ steps.diff.outputs.modified }},
-              ${{ steps.diff.outputs.renamed }},
+              ${{ steps.changed-files.outputs.added_files }},
+              ${{ steps.changed-files.outputs.modified_files }},
+              ${{ steps.changed-files.outputs.renamed_files }},
             );
 
     outputs:

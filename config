@@ -1,4 +1,4 @@
 baseuri     https://nodejs.org/dist
-default_variant bullseye
+default_variant bookworm
 alpine_version  3.18
-debian_versions stretch bullseye buster
+debian_versions bookworm bullseye buster

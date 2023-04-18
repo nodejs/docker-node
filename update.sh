@@ -16,7 +16,7 @@ function usage() {
     - update.sh 8,10                 # Update all variants of version 8 and 10
     - update.sh -s 8                 # Update version 8 and variants, skip updating Alpine and Yarn
     - update.sh 8 buster-slim,buster # Update only buster's slim and buster variants for version 8
-    - update.sh -s 8 stretch         # Update only stretch variant for version 8, skip updating Alpine and Yarn
+    - update.sh -s 8 bullseye        # Update only bullseye variant for version 8, skip updating Alpine and Yarn
     - update.sh . alpine             # Update the alpine variant for all versions
 
   OPTIONS:

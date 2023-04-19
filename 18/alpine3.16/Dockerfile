@@ -68,7 +68,9 @@ RUN addgroup -g 1000 node \
   && apk del .build-deps \
   # smoke tests
   && node --version \
-  && npm --version
+  && npm --version \
+  # cleanup
+  && rm -rf /root/.gnupg /root/.npm
 
 ENV YARN_VERSION 1.22.19
 
@@ -89,7 +91,9 @@ RUN apk add --no-cache --virtual .build-deps-yarn curl gnupg tar \
   && rm yarn-v$YARN_VERSION.tar.gz.asc yarn-v$YARN_VERSION.tar.gz \
   && apk del .build-deps-yarn \
   # smoke test
-  && yarn --version
+  && yarn --version \
+  # cleanup
+  && rm -rf /root/.gnupg /tmp/v8-compile-cache-*
 
 COPY docker-entrypoint.sh /usr/local/bin/
 ENTRYPOINT ["docker-entrypoint.sh"]

@@ -41,7 +41,9 @@ RUN ARCH= && dpkgArch="$(dpkg --print-architecture)" \
   && ln -s /usr/local/bin/node /usr/local/bin/nodejs \
   # smoke tests
   && node --version \
-  && npm --version
+  && npm --version \
+  # cleanup
+  && rm -rf /root/.gnupg /root/.npm
 
 ENV YARN_VERSION 1.22.19
 
@@ -61,7 +63,9 @@ RUN set -ex \
   && ln -s /opt/yarn-v$YARN_VERSION/bin/yarnpkg /usr/local/bin/yarnpkg \
   && rm yarn-v$YARN_VERSION.tar.gz.asc yarn-v$YARN_VERSION.tar.gz \
   # smoke test
-  && yarn --version
+  && yarn --version \
+  # cleanup
+  && rm -rf /root/.gnupg /tmp/v8-compile-cache-*
 
 COPY docker-entrypoint.sh /usr/local/bin/
 ENTRYPOINT ["docker-entrypoint.sh"]

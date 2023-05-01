@@ -202,56 +202,5 @@
         "arm64v8"
       ]
     }
-  },
-  "14": {
-    "start": "2020-04-21",
-    "lts": "2020-10-27",
-    "maintenance": "2021-10-19",
-    "end": "2023-04-30",
-    "codename": "fermium",
-    "alpine-default": "alpine3.17",
-    "debian-default": "buster",
-    "variants": {
-      "alpine3.16": [
-        "amd64",
-        "arm32v6",
-        "arm32v7",
-        "arm64v8",
-        "ppc64le",
-        "s390x"
-      ],
-      "alpine3.17": [
-        "amd64",
-        "arm32v6",
-        "arm32v7",
-        "arm64v8",
-        "ppc64le",
-        "s390x"
-      ],
-      "bullseye": [
-        "amd64",
-        "arm32v7",
-        "arm64v8",
-        "ppc64le",
-        "s390x"
-      ],
-      "bullseye-slim": [
-        "amd64",
-        "arm32v7",
-        "arm64v8",
-        "ppc64le",
-        "s390x"
-      ],
-      "buster": [
-        "amd64",
-        "arm32v7",
-        "arm64v8"
-      ],
-      "buster-slim": [
-        "amd64",
-        "arm32v7",
-        "arm64v8"
-      ]
-    }
   }
 }

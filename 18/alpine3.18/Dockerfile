@@ -70,6 +70,8 @@ RUN addgroup -g 1000 node \
   fi \
   && rm -f "node-v$NODE_VERSION-linux-$ARCH-musl.tar.xz" \
   && apk del .build-deps \
+  && apk update \
+  && apk add openssl \
   # smoke tests
   && node --version \
   && npm --version

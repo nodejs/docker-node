@@ -6,7 +6,7 @@
     "end": "2026-04-30",
     "codename": "",
     "alpine-default": "alpine3.18",
-    "debian-default": "bullseye",
+    "debian-default": "bookworm",
     "variants": {
       "alpine3.17": [
         "amd64",
@@ -19,6 +19,20 @@
       "alpine3.18": [
         "amd64",
         "arm32v6",
+        "arm32v7",
+        "arm64v8",
+        "ppc64le",
+        "s390x"
+      ],
+      "bookworm": [
+        "amd64",
+        "arm32v7",
+        "arm64v8",
+        "ppc64le",
+        "s390x"
+      ],
+      "bookworm-slim": [
+        "amd64",
         "arm32v7",
         "arm64v8",
         "ppc64le",
@@ -57,7 +71,7 @@
     "end": "2025-04-30",
     "codename": "hydrogen",
     "alpine-default": "alpine3.18",
-    "debian-default": "bullseye",
+    "debian-default": "bookworm",
     "variants": {
       "alpine3.17": [
         "amd64",
@@ -70,6 +84,20 @@
       "alpine3.18": [
         "amd64",
         "arm32v6",
+        "arm32v7",
+        "arm64v8",
+        "ppc64le",
+        "s390x"
+      ],
+      "bookworm": [
+        "amd64",
+        "arm32v7",
+        "arm64v8",
+        "ppc64le",
+        "s390x"
+      ],
+      "bookworm-slim": [
+        "amd64",
         "arm32v7",
         "arm64v8",
         "ppc64le",
@@ -121,6 +149,20 @@
       "alpine3.18": [
         "amd64",
         "arm32v6",
+        "arm32v7",
+        "arm64v8",
+        "ppc64le",
+        "s390x"
+      ],
+      "bookworm": [
+        "amd64",
+        "arm32v7",
+        "arm64v8",
+        "ppc64le",
+        "s390x"
+      ],
+      "bookworm-slim": [
+        "amd64",
         "arm32v7",
         "arm64v8",
         "ppc64le",

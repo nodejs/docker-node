@@ -25,6 +25,7 @@ The official Node.js docker image, made with love by the node community.
   - [`node:alpine`](#nodealpine)
   - [`node:buster`](#nodebuster)
   - [`node:bullseye`](#nodebullseye)
+  - [`node:bookworm`](#nodebookworm)
   - [`node:slim`](#nodeslim)
 - [License](#license)
 - [Supported Docker versions](#supported-docker-versions)
@@ -201,6 +202,12 @@ This image is based on version 10 of
 ### `node:bullseye`
 
 This image is based on version 11 of
+[Debian](http://debian.org), available in
+[the `debian` official image](https://hub.docker.com/_/debian).
+
+### `node:bookworm`
+
+This image is based on version 12 of
 [Debian](http://debian.org), available in
 [the `debian` official image](https://hub.docker.com/_/debian).
 

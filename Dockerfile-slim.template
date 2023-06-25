@@ -5,14 +5,14 @@ RUN groupadd --gid 1000 node \
 
 ENV NODE_VERSION 0.0.0
 
-RUN ARCH= && dpkgArch="$(dpkg --print-architecture)" \
+RUN ARCH= OPENSSL_ARCH= && dpkgArch="$(dpkg --print-architecture)" \
     && case "${dpkgArch##*-}" in \
-      amd64) ARCH='x64';; \
-      ppc64el) ARCH='ppc64le';; \
-      s390x) ARCH='s390x';; \
-      arm64) ARCH='arm64';; \
-      armhf) ARCH='armv7l';; \
-      i386) ARCH='x86';; \
+      amd64) ARCH='x64' OPENSSL_ARCH='linux-x86_64';; \
+      ppc64el) ARCH='ppc64le' OPENSSL_ARCH='linux-ppc64le';; \
+      s390x) ARCH='s390x' OPENSSL_ARCH='linux*-s390x';; \
+      arm64) ARCH='arm64' OPENSSL_ARCH='linux-aarch64';; \
+      armhf) ARCH='armv7l' OPENSSL_ARCH='linux-armv4';; \
+      i386) ARCH='x86' OPENSSL_ARCH='linux-elf';; \
       *) echo "unsupported architecture"; exit 1 ;; \
     esac \
     && set -ex \
@@ -31,6 +31,8 @@ RUN ARCH= && dpkgArch="$(dpkg --print-architecture)" \
     && grep " node-v$NODE_VERSION-linux-$ARCH.tar.xz\$" SHASUMS256.txt | sha256sum -c - \
     && tar -xJf "node-v$NODE_VERSION-linux-$ARCH.tar.xz" -C /usr/local --strip-components=1 --no-same-owner \
     && rm "node-v$NODE_VERSION-linux-$ARCH.tar.xz" SHASUMS256.txt.asc SHASUMS256.txt \
+    # Remove unused OpenSSL headers to save ~34MB. See this NodeJS issue: https://github.com/nodejs/node/issues/46451
+    && find /usr/local/include/node/openssl/archs -mindepth 1 -maxdepth 1 ! -name "$OPENSSL_ARCH" -exec rm -rf {} \; \
     && apt-mark auto '.*' > /dev/null \
     && find /usr/local -type f -executable -exec ldd '{}' ';' \
       | awk '/=>/ { so = $(NF-1); if (index(so, "/usr/local/") == 1) { next }; gsub("^/(usr/)?", "", so); print so }' \

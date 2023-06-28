@@ -33,7 +33,7 @@ RUN ARCH= && dpkgArch="$(dpkg --print-architecture)" \
     && rm "node-v$NODE_VERSION-linux-$ARCH.tar.xz" SHASUMS256.txt.asc SHASUMS256.txt \
     && apt-mark auto '.*' > /dev/null \
     && find /usr/local -type f -executable -exec ldd '{}' ';' \
-      | awk '/=>/ { print $(NF-1) }' \
+      | awk '/=>/ { so = $(NF-1); if (index(so, "/usr/local/") == 1) { next }; gsub("^/(usr/)?", "", so); print so }' \
       | sort -u \
       | xargs -r dpkg-query --search \
       | cut -d: -f1 \
@@ -68,7 +68,7 @@ RUN set -ex \
   && apt-mark auto '.*' > /dev/null \
   && { [ -z "$savedAptMark" ] || apt-mark manual $savedAptMark > /dev/null; } \
   && find /usr/local -type f -executable -exec ldd '{}' ';' \
-    | awk '/=>/ { print $(NF-1) }' \
+    | awk '/=>/ { so = $(NF-1); if (index(so, "/usr/local/") == 1) { next }; gsub("^/(usr/)?", "", so); print so }' \
     | sort -u \
     | xargs -r dpkg-query --search \
     | cut -d: -f1 \

@@ -1,6 +1,6 @@
 FROM alpine:3.18
 
-ENV NODE_VERSION 16.20.1
+ENV NODE_VERSION=16.20.1
 
 RUN addgroup -g 1000 node \
     && adduser -u 1000 -G node -s /bin/sh -D node \
@@ -74,7 +74,7 @@ RUN addgroup -g 1000 node \
   && node --version \
   && npm --version
 
-ENV YARN_VERSION 1.22.19
+ENV YARN_VERSION=1.22.19
 
 RUN apk add --no-cache --virtual .build-deps-yarn curl gnupg tar \
   # use pre-existing gpg directory, see https://github.com/nodejs/docker-node/pull/1895#issuecomment-1550389150

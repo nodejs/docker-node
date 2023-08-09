@@ -29,7 +29,7 @@ jobs:
         uses: tj-actions/changed-files@v37
         with:
           json: true
-          json_raw_format: true
+          escape_json: false
 
       - name: Generate testing matrix
         uses: actions/github-script@v6

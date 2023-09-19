@@ -1,6 +1,6 @@
 FROM alpine:3.17
 
-ENV NODE_VERSION 18.17.1
+ENV NODE_VERSION 18.18.0
 
 RUN addgroup -g 1000 node \
     && adduser -u 1000 -G node -s /bin/sh -D node \
@@ -12,7 +12,7 @@ RUN addgroup -g 1000 node \
       && case "${alpineArch##*-}" in \
         x86_64) \
           ARCH='x64' \
-          CHECKSUM="a67f0b51f0951382709abb5613ee577b5af648752ed363ae32411214041f4e73" \
+          CHECKSUM="1159f06f17f7c2e582c77e4602249b440bd1daab667694063f1d61fb621aa65c" \
           ;; \
         *) ;; \
       esac \
@@ -48,6 +48,7 @@ RUN addgroup -g 1000 node \
       890C08DB8579162FEE0DF9DB8BEAB4DFCF555EF4 \
       C82FA3AE1CBEDC6BE46B9360C43CEC45C17AB93C \
       108F52B48DB57BB0CC439B2997B01419BD92F80A \
+      A363A499291CBBC940DD62E41F10027AF002F8B0 \
     ; do \
       gpg --batch --keyserver hkps://keys.openpgp.org --recv-keys "$key" || \
       gpg --batch --keyserver keyserver.ubuntu.com --recv-keys "$key" ; \

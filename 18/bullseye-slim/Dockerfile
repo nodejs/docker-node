@@ -86,6 +86,7 @@ RUN set -ex \
     | xargs -r apt-mark manual \
   && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
   # smoke test
+  && npm explore npm/node_modules/@npmcli/run-script -g -- npm_config_global=false npm install node-gyp@latest \
   && yarn --version
 
 COPY docker-entrypoint.sh /usr/local/bin/

@@ -1,0 +1,97 @@
+name: build-test
+
+on:
+  push:
+    paths:
+      - "**/Dockerfile"
+      - "**/docker-entrypoint.sh"
+      - genMatrix.js
+      - ".github/workflows/build-test.yml"
+
+  pull_request:
+    paths:
+      - "**/Dockerfile"
+      - "**/docker-entrypoint.sh"
+      - genMatrix.js
+      - ".github/workflows/build-test.yml"
+
+jobs:
+  gen-matrix:
+    name: generate-matrix
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Calculate file differences
+        id: diff
+        uses: tj-actions/changed-files@v39
+        with:
+          json: true
+          escape_json: false
+
+      - name: Generate testing matrix
+        uses: actions/github-script@v6
+        id: generator
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const script = require(`${process.env.GITHUB_WORKSPACE}/genMatrix.js`)
+            return script(
+              ${{ steps.diff.outputs.added_files }},
+              ${{ steps.diff.outputs.modified_files }},
+              ${{ steps.diff.outputs.renamed_files }},
+            );
+
+    outputs:
+      matrix: ${{ steps.generator.outputs.result }}
+
+  build:
+    if: ${{ fromJson(needs.gen-matrix.outputs.matrix) }}
+    needs: gen-matrix
+    name: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJson(needs.gen-matrix.outputs.matrix) }}
+
+    steps:
+      - name: Get short node version
+        uses: actions/github-script@v6
+        id: short-version
+        with:
+          result-encoding: string
+          script: return "${{ matrix.version }}".split('.')[0]
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build image
+        uses: docker/build-push-action@v5
+        with:
+          push: false
+          load: true
+          context: .
+          file: ./${{ steps.short-version.outputs.result }}/${{ matrix.variant }}/Dockerfile
+          tags: node:${{ matrix.version }}-${{ matrix.variant }}
+
+      - name: Test for node version
+        run: |
+          image_node_version=$(docker run --rm node:${{ matrix.version }}-${{ matrix.variant }} node --print "process.versions.node")
+          echo "Expected: \"${{ matrix.version }}\", Got: \"${image_node_version}\""
+          [ "${image_node_version}" == "${{ matrix.version }}" ]
+
+      - name: Verify entrypoint runs regular, non-executable files with node
+        run: |
+          tmp_file=$(mktemp)
+          echo 'console.log("success")' > "${tmp_file}"
+          output=$(docker run --rm -v "${tmp_file}:/app/index.js" node:${{ matrix.version }}-${{ matrix.variant }} app/index.js)
+          [ "${output}" = 'success' ]
+
+      - name: Test for npm
+        run: docker run --rm node:${{ matrix.version }}-${{ matrix.variant }} npm --version
+
+      - name: Test for yarn
+        run: docker run --rm node:${{ matrix.version }}-${{ matrix.variant }} yarn --version

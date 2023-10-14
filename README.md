@@ -1,6 +1,6 @@
 # Node.js
 
-[![dockeri.co](http://dockeri.co/image/_/node)](https://registry.hub.docker.com/_/node/)
+[![dockeri.co](https://dockerico.blankenship.io/image/node)](https://hub.docker.com/_/node)
 
 [![GitHub issues](https://img.shields.io/github/issues/nodejs/docker-node.svg "GitHub issues")](https://github.com/nodejs/docker-node)
 [![GitHub stars](https://img.shields.io/github/stars/nodejs/docker-node.svg "GitHub stars")](https://github.com/nodejs/docker-node)
@@ -23,6 +23,9 @@ The official Node.js docker image, made with love by the node community.
 - [Image Variants](#image-variants)
   - [`node:<version>`](#nodeversion)
   - [`node:alpine`](#nodealpine)
+  - [`node:buster`](#nodebuster)
+  - [`node:bullseye`](#nodebullseye)
+  - [`node:bookworm`](#nodebookworm)
   - [`node:slim`](#nodeslim)
 - [License](#license)
 - [Supported Docker versions](#supported-docker-versions)
@@ -50,7 +53,7 @@ See: http://nodejs.org
 
 ```dockerfile
 # specify the node base image with your desired version node:<version>
-FROM node:10
+FROM node:16
 # replace this with your application's default port
 EXPOSE 8888
 ```
@@ -86,7 +89,7 @@ You can then run using Docker Compose:
 $ docker-compose up -d
 ```
 
-Docker Compose example copies your current directory (including node_modules) to the container.
+Docker Compose example mounts your current directory (including node_modules) to the container.
 It assumes that your application has a file named [`package.json`](https://docs.npmjs.com/files/package.json)
 defining [start script](https://docs.npmjs.com/misc/scripts#default-values).
 
@@ -147,7 +150,7 @@ The `node` images come in many flavors, each designed for a specific use case.
 All of the images contain pre-installed versions of `node`,
 [`npm`](https://www.npmjs.com/), and [`yarn`](https://yarnpkg.com). For each
 supported architecture, the supported variants are different. In the file:
-[architectures](./architectures), it lists all supported variants for all of
+[versions.json](./versions.json), it lists all supported variants for all of
 the architectures that we support now.
 
 ### `node:<version>`
@@ -190,6 +193,24 @@ image as a base, add the things you need in your own Dockerfile
 (see the [`alpine` image description](https://hub.docker.com/_/alpine/) for
 examples of how to install packages if you are unfamiliar).
 
+### `node:buster`
+
+This image is based on version 10 of
+[Debian](http://debian.org), available in
+[the `debian` official image](https://hub.docker.com/_/debian).
+
+### `node:bullseye`
+
+This image is based on version 11 of
+[Debian](http://debian.org), available in
+[the `debian` official image](https://hub.docker.com/_/debian).
+
+### `node:bookworm`
+
+This image is based on version 12 of
+[Debian](http://debian.org), available in
+[the `debian` official image](https://hub.docker.com/_/debian).
+
 ### `node:slim`
 
 This image does not contain the common packages contained in the default tag and
@@ -201,8 +222,7 @@ repository.
 ## License
 
 [License information](https://github.com/nodejs/node/blob/master/LICENSE) for
-the software contained in this image. [License
-information](https://github.com/nodejs/docker-node/blob/master/LICENSE) for the
+the software contained in this image. [License information](LICENSE) for the
 Node.js Docker project.
 
 ## Supported Docker versions
@@ -222,7 +242,7 @@ This project will support Node.js versions as still under active support as per 
 ## Governance and Current Members
 
 The Node.js Docker Image is governed by the Docker Working Group. See
-[GOVERNANCE.md](https://github.com/nodejs/docker-node/blob/master/GOVERNANCE.md)
+[GOVERNANCE.md](GOVERNANCE.md)
 to learn more about the group's structure and [CONTRIBUTING.md](CONTRIBUTING.md) for guidance
 about the expectations for all contributors to this project.
 
@@ -231,7 +251,6 @@ about the expectations for all contributors to this project.
 - Hans Kristian Flaatten ([starefossen](https://github.com/starefossen))
 - Hugues Malphettes ([hmalphettes](https://github.com/hmalphettes))
 - John Mitchell ([jlmitch5](https://github.com/jlmitch5))
-- Peter Petrov ([pesho](https://github.com/pesho))
 
 ### Docker Working Group Collaborators
 
@@ -245,3 +264,4 @@ about the expectations for all contributors to this project.
 #### Docker Working Group Members
 
 - Christopher Horrell ([chorrell](https://github.com/chorrell))
+- Peter Petrov ([pesho](https://github.com/pesho))

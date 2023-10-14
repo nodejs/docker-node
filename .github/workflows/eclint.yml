@@ -2,13 +2,16 @@ name: Test Whitespace and line endings
 
 on: [pull_request]
 
+permissions:
+  contents: read
+
 jobs:
   eclint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v3
         with:
-          node-version: '12.x'
+          node-version: 'lts/*'
       - run: npm i -g eclint
       - run: eclint check

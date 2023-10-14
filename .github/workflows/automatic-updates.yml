@@ -1,0 +1,36 @@
+name: Automatically update Docker image versions
+
+on:
+  schedule:
+    - cron: "*/15 * * * *"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    if: github.repository_owner == 'nodejs'
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run automation script
+        uses: actions/github-script@v6
+        id: updt
+        with:
+          result-encoding: string
+          script: |
+            const { default: script } = await import(`${process.env.GITHUB_WORKSPACE}/build-automation.mjs`);
+            return script(github);
+
+      - name: Create update PR
+        id: cpr
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.GH_API_TOKEN }}
+          author: "Node.js GitHub Bot <nodejs-github-bot@users.noreply.github.com>"
+          branch: update-branch
+          base: main
+          commit-message: "feat: Node.js ${{ steps.updt.outputs.result }}"
+          title: "feat: Node.js ${{ steps.updt.outputs.result }}"
+          delete-branch: true
+          team-reviewers: |
+            nodejs/docker

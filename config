@@ -1,4 +1,4 @@
 baseuri     https://nodejs.org/dist
-default_variant stretch
-alpine_version  3.11
-debian_versions jessie stretch buster
+default_variant bookworm
+alpine_version  3.18
+debian_versions bookworm bullseye buster

@@ -6,15 +6,18 @@ on:
       - "README.md"
       - "docs/BestPractices.md"
 
+permissions:
+  contents: read
+
 jobs:
   doctoc:
     name: Doc TOC Check
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v3
         with:
-          node-version: '12.x'
+          node-version: 'lts/*'
       - name: Install doctoc
         run: npm i -g doctoc
       - name: Create README copy and diff with doctoc

@@ -1,9 +1,9 @@
-FROM debian:name-slim
+FROM debian:bullseye-slim
 
 RUN groupadd --gid 1000 node \
   && useradd --uid 1000 --gid node --shell /bin/bash --create-home node
 
-ENV NODE_VERSION 0.0.0
+ENV NODE_VERSION 18.18.1
 
 RUN ARCH= && dpkgArch="$(dpkg --print-architecture)" \
     && case "${dpkgArch##*-}" in \
@@ -20,7 +20,17 @@ RUN ARCH= && dpkgArch="$(dpkg --print-architecture)" \
     && apt-get update && apt-get install -y ca-certificates curl wget gnupg dirmngr xz-utils libatomic1 --no-install-recommends \
     && rm -rf /var/lib/apt/lists/* \
     && for key in \
-      "${NODE_KEYS[@]}"
+      4ED778F539E3634C779C87C6D7062848A1AB005C \
+      141F07595B7B3FFE74309A937405533BE57C7D57 \
+      74F12602B6F1C4E913FAA37AD3A89613643B6201 \
+      DD792F5973C6DE52C432CBDAC77ABFA00DDBF2B7 \
+      61FC681DFB92A079F1685E77973F295594EC4689 \
+      8FCCA13FEF1D0C2E91008E09770F7A9A5AE15600 \
+      C4F0DFFF4E8C1A8236409D08E73BC641CC11F4C8 \
+      890C08DB8579162FEE0DF9DB8BEAB4DFCF555EF4 \
+      C82FA3AE1CBEDC6BE46B9360C43CEC45C17AB93C \
+      108F52B48DB57BB0CC439B2997B01419BD92F80A \
+      A363A499291CBBC940DD62E41F10027AF002F8B0 \
     ; do \
       gpg --batch --keyserver hkps://keys.openpgp.org --recv-keys "$key" || \
       gpg --batch --keyserver keyserver.ubuntu.com --recv-keys "$key" ; \
@@ -45,14 +55,14 @@ RUN ARCH= && dpkgArch="$(dpkg --print-architecture)" \
     && node --version \
     && npm --version
 
-ENV YARN_VERSION 0.0.0
+ENV YARN_VERSION 1.22.19
 
 RUN set -ex \
   && savedAptMark="$(apt-mark showmanual)" \
   && apt-get update && apt-get install -y ca-certificates curl wget gnupg dirmngr --no-install-recommends \
   && rm -rf /var/lib/apt/lists/* \
   && for key in \
-    "${YARN_KEYS[@]}"
+    6A010C5166006599AA17F08146C2130DFD2497F5 \
   ; do \
     gpg --batch --keyserver hkps://keys.openpgp.org --recv-keys "$key" || \
     gpg --batch --keyserver keyserver.ubuntu.com --recv-keys "$key" ; \

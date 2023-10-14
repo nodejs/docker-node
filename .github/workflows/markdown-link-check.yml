@@ -4,16 +4,20 @@ on:
   pull_request:
     paths:
       - "**/*.md"
+      - "markdown_link_check_config.json"
+
+permissions:
+  contents: read
 
 jobs:
   markdown-link-check:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v3
         with:
-          node-version: '12.x'
+          node-version: 'lts/*'
       - name: Install markdown-link-check
         run: npm i -g markdown-link-check
       - name: Run markdown-link-check on MD files
-        run: find . -name "*.md" | xargs -n 1 markdown-link-check -q
+        run: find . -name "*.md" | xargs -n 1 markdown-link-check -c markdown_link_check_config.json -q

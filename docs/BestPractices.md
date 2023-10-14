@@ -1,17 +1,23 @@
 # Docker and Node.js Best Practices
 
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 ## Table of Contents
 
 - [Environment Variables](#environment-variables)
 - [Global npm dependencies](#global-npm-dependencies)
 - [Upgrading/downgrading Yarn](#upgradingdowngrading-yarn)
+  - [Local](#local)
+  - [Global](#global)
 - [Handling Kernel Signals](#handling-kernel-signals)
 - [Non-root User](#non-root-user)
 - [Memory](#memory)
 - [CMD](#cmd)
 - [Docker Run](#docker-run)
 - [Security](#security)
-- [node-gyp in alpine variant](#node-gyp-alpine)
+- [node-gyp alpine](#node-gyp-alpine)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## Environment Variables
 
@@ -91,7 +97,7 @@ You can also include Tini [directly in your Dockerfile](https://github.com/krall
 
 ## Non-root User
 
-By default, Docker runs container as root which inside of the container can pose as a security issue. You would want to run the container as an unprivileged user wherever possible. The node images provide the `node` user for such purpose. The Docker Image can then be run with the `node` user in the following way:
+By default, Docker runs commands inside the container as root which violates the [Principle of Least Privilege (PoLP)](https://en.wikipedia.org/wiki/Principle_of_least_privilege) when superuser permissions are not strictly required. You want to run the container as an unprivileged user whenever possible. The node images provide the `node` user for such purpose. The Docker Image can then be run with the `node` user in the following way:
 
 ```
 -u "node"
@@ -160,6 +166,7 @@ Here is an example of how you would run a default Node.JS Docker Containerized a
 
 ```
 $ docker run \
+  --init \
   -e "NODE_ENV=production" \
   -u "node" \
   -m "300M" --memory-swap "1G" \
@@ -179,7 +186,7 @@ Here is an example of how you would install dependencies for packages that requi
 ```Dockerfile
 FROM node:alpine
 
-RUN apk add --no-cache --virtual .gyp python make g++ \
+RUN apk add --no-cache --virtual .gyp python3 make g++ \
     && npm install [ your npm dependencies here ] \
     && apk del .gyp
 ```
@@ -190,7 +197,7 @@ And Here's a multistage build example
 FROM node:alpine as builder
 
 ## Install build toolchain, install node deps and compile native add-ons
-RUN apk add --no-cache python make g++
+RUN apk add --no-cache python3 make g++
 RUN npm install [ your npm dependencies here ]
 
 FROM node:alpine as app

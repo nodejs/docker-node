@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 #
 # Utlity functions
+# Don't change this file unless needed
+# The GitHub Action for automating new builds rely on this file
 
 info() {
   printf "%s\\n" "$@"
@@ -46,10 +48,10 @@ function get_arch() {
 }
 
 # Get corresponding variants based on the architecture.
-# All supported variants of each supported architecutre are listed in a
+# All supported variants of each supported architecture are listed in a
 # file - 'architectures'. Its format is:
-#   <architecutre 1> <supported variant 1 >,<supported variant 2>...
-#   <architecutre 2> <supported variant 1 >,<supported variant 2>...
+#   <architecture 1> <supported variant 1 >,<supported variant 2>...
+#   <architecture 2> <supported variant 1 >,<supported variant 2>...
 function get_variants() {
   local dir
   dir=${1:-.}
@@ -133,33 +135,17 @@ function get_config() {
 
 # Get available versions for a given path
 #
-# If full or partial versions are provided then they are processed and
-# validated. e.g. "6 chakracore" returns "6 chakracore/8" since it processed the
-# chakracore entry and found it to be a fork rather than a complete version.
-#
 # The result is a list of valid versions.
 function get_versions() {
-  local prefix
-  prefix=${1:-.}
-  shift
-
   local versions=()
-  local dirs=("$@")
+  local dirs=()
 
   local default_variant
   default_variant=$(get_config "./" "default_variant")
-  if [ ${#dirs[@]} -eq 0 ]; then
-    IFS=' ' read -ra dirs <<< "$(echo "${prefix%/}/"*/)"
-  fi
+  IFS=' ' read -ra dirs <<< "$(echo "./"*/)"
 
   for dir in "${dirs[@]}"; do
-    if [ -a "${dir}/config" ]; then
-      local subdirs
-      IFS=' ' read -ra subdirs <<< "$(get_versions "${dir#./}")"
-      for subdir in "${subdirs[@]}"; do
-        versions+=("${subdir}")
-      done
-    elif [ -a "${dir}/Dockerfile" ] || [ -a "${dir}/${default_variant}/Dockerfile" ]; then
+    if [ -a "${dir}/Dockerfile" ] || [ -a "${dir}/${default_variant}/Dockerfile" ]; then
       versions+=("${dir#./}")
     fi
   done

@@ -193,6 +193,8 @@ image as a base, add the things you need in your own Dockerfile
 (see the [`alpine` image description](https://hub.docker.com/_/alpine/) for
 examples of how to install packages if you are unfamiliar).
 
+To make the image size even smaller, you can [bundle without npm/yarn](./docs/BestPractices.md#smaller-images-without-npmyarn).
+
 ### `node:buster`
 
 This image is based on version 10 of

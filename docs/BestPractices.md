@@ -16,6 +16,7 @@
 - [Docker Run](#docker-run)
 - [Security](#security)
 - [node-gyp alpine](#node-gyp-alpine)
+- [Smaller images without npm/yarn](#smaller-images-without-npmyarn)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -205,3 +206,39 @@ FROM node:alpine as app
 ## Copy built node modules and binaries without including the toolchain
 COPY --from=builder node_modules .
 ```
+
+
+## Smaller images without npm/yarn
+
+If you want to achieve an even smaller image size than the `-alpine`, you can omit the npm/yarn like this:
+
+```Dockerfile
+ARG ALPINE_VERSION=3.16
+
+FROM node:18-alpine${ALPINE_VERSION} AS builder
+WORKDIR /build-stage
+COPY package*.json ./
+RUN npm ci
+# Copy the the files you need
+COPY . ./
+RUN npm run build
+
+FROM alpine:${ALPINE_VERSION}
+# Create app directory
+WORKDIR /usr/src/app
+# Add required binaries
+RUN apk add --no-cache libstdc++ dumb-init \
+  && addgroup -g 1000 node && adduser -u 1000 -G node -s /bin/sh -D node \
+  && chown node:node ./
+COPY --from=builder /usr/local/bin/node /usr/local/bin/
+COPY --from=builder /usr/local/bin/docker-entrypoint.sh /usr/local/bin/
+ENTRYPOINT ["docker-entrypoint.sh"]
+USER node
+# Update the following COPY lines based on your codebase
+COPY --from=builder /build-stage/node_modules ./node_modules
+COPY --from=builder /build-stage/dist ./dist
+# Run with dumb-init to not start node with PID=1, since Node.js was not designed to run as PID 1
+CMD ["dumb-init", "node", "dist/index.js"]
+```
+
+

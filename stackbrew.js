@@ -38,7 +38,7 @@ for (version of versions) {
   let maintenance = new Date(`${config[version].maintenance}T00:00:00.00`).getTime();
   let isCurrent = foundCurrent ? false : isNaN(lts) || lts >= now;
   foundCurrent = isCurrent || foundCurrent;
-  let isLTS = foundLTS ? false : (maintenance >= now) && (now >= lts);
+  let isLTS = foundLTS ? false : (now >= lts);
   foundLTS = isLTS || foundLTS;
   let codename = config[version].codename
   let defaultAlpine = config[version]['alpine-default']

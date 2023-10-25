@@ -59,7 +59,7 @@
     "lts": "2023-10-24",
     "maintenance": "2024-10-22",
     "end": "2026-04-30",
-    "codename": "",
+    "codename": "iron",
     "alpine-default": "alpine3.18",
     "debian-default": "bookworm",
     "variants": {

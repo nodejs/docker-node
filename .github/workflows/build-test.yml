@@ -32,7 +32,7 @@ jobs:
           escape_json: false
 
       - name: Generate testing matrix
-        uses: actions/github-script@v6
+        uses: actions/github-script@v7
         id: generator
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -59,7 +59,7 @@ jobs:
 
     steps:
       - name: Get short node version
-        uses: actions/github-script@v6
+        uses: actions/github-script@v7
         id: short-version
         with:
           result-encoding: string

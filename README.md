@@ -186,7 +186,7 @@ variant is usually a very safe choice. See
 for more discussion of the issues that might arise and some pro/con comparisons
 of using Alpine-based images. One common issue that may arise is a missing shared
 library required for use of `process.dlopen`. To add the missing shared libraries
-to your image, adding the [`libc6-compat`](https://pkgs.alpinelinux.org/package/edge/main/x86/libc6-compat)
+to your image, adding the [`libc6-compat`](https://pkgs.alpinelinux.org/package/v3.10/main/x86_64/libc6-compat)
 package in your Dockerfile is recommended: `apk add --no-cache libc6-compat`
 
 To minimize image size, it's uncommon for additional related tools

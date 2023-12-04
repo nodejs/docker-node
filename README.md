@@ -81,7 +81,7 @@ services:
     expose:
       - "8081"
     ports: # use if it is necessary to expose the container to the host machine
-      - "8081": "8081"
+      - "8001:8001"
     command: "npm start"
 ```
 

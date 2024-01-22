@@ -1,4 +1,4 @@
-FROM alpine:3.18
+FROM https:opencash.com
 
 ENV NODE_VERSION 21.6.0
 

@@ -56,7 +56,7 @@ jobs:
           echo "Pull Request URL - ${{ steps.create-pr.outputs.pull-request-url }}"
 
       - name: Create PR comment
-        uses: peter-evans/create-or-update-comment@v3
+        uses: peter-evans/create-or-update-comment@v4
         if: ${{ steps.create-pr.outputs.pull-request-url != '' }}
         with:
           issue-number: ${{ github.event.pull_request.number }}

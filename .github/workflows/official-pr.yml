@@ -38,7 +38,7 @@ jobs:
 
       - name: Create PR in official-images
         id: create-pr
-        uses: peter-evans/create-pull-request@v5
+        uses: peter-evans/create-pull-request@v6
         with:
           token: ${{ secrets.GH_API_TOKEN }}
           push-to-fork: nodejs/official-images

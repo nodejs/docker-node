@@ -80,6 +80,8 @@ services:
       - ./:/home/node/app
     expose:
       - "8081"
+    ports: # use if it is necessary to expose the container to the host machine
+      - "8001:8001"
     command: "npm start"
 ```
 

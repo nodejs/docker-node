@@ -62,10 +62,10 @@ const checkForMuslVersionsAndSecurityReleases = async (github, versions) => {
     const { data: unofficialBuildsIndexText } = await github.request('https://unofficial-builds.nodejs.org/download/release/index.json');
 
     for (let version of Object.keys(versions)) {
-      const { data: unofficialBuildsWebsiteText } = await github.request(`https://unofficial-builds.nodejs.org/download/release/v${versions[version].fullVersion}`);
+      const buildVersion = unofficialBuildsIndexText.find(indexVersion => indexVersion.version === `v${versions[version].fullVersion}`);
 
-      versions[version].muslBuildExists = unofficialBuildsWebsiteText.includes("musl");
-      versions[version].isSecurityRelease = unofficialBuildsIndexText.find(indexVersion => indexVersion.version === `v${versions[version].fullVersion}`)?.security;
+      versions[version].muslBuildExists = buildVersion?.files.includes("linux-x64-musl") ?? false;
+      versions[version].isSecurityRelease = buildVersion?.security ?? false;
     }
     return versions;
   } catch (error) {

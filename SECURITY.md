@@ -4,7 +4,7 @@
 
 Security issues relating to Node.js project should follow the process documented on <https://nodejs.org/en/security/>.
 
-CVEs for the base image packages should be reported to those repositories. Nothing to address those CVEs is in the hands of this repos.
+CVEs for the base image packages should be reported to those repositories. Nothing to address those CVEs is in the hands of this repository.
 
 - [Alpine](https://github.com/alpinelinux/docker-alpine)
 - [Debian (buster, bullseye, bookworm)](https://github.com/debuerreotype/docker-debian-artifacts)

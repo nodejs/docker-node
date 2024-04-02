@@ -38,6 +38,13 @@
         "ppc64le",
         "s390x"
       ],
+      "bookworm-core": [
+        "amd64",
+        "arm32v7",
+        "arm64v8",
+        "ppc64le",
+        "s390x"
+      ],
       "bullseye": [
         "amd64",
         "arm32v7",
@@ -46,6 +53,13 @@
         "s390x"
       ],
       "bullseye-slim": [
+        "amd64",
+        "arm32v7",
+        "arm64v8",
+        "ppc64le",
+        "s390x"
+      ],
+      "bullseye-core": [
         "amd64",
         "arm32v7",
         "arm64v8",
@@ -93,6 +107,13 @@
         "ppc64le",
         "s390x"
       ],
+      "bookworm-core": [
+        "amd64",
+        "arm32v7",
+        "arm64v8",
+        "ppc64le",
+        "s390x"
+      ],
       "bullseye": [
         "amd64",
         "arm32v7",
@@ -107,12 +128,24 @@
         "ppc64le",
         "s390x"
       ],
+      "bullseye-core": [
+        "amd64",
+        "arm32v7",
+        "arm64v8",
+        "ppc64le",
+        "s390x"
+      ],
       "buster": [
         "amd64",
         "arm32v7",
         "arm64v8"
       ],
       "buster-slim": [
+        "amd64",
+        "arm32v7",
+        "arm64v8"
+      ],
+      "buster-core": [
         "amd64",
         "arm32v7",
         "arm64v8"
@@ -158,6 +191,13 @@
         "ppc64le",
         "s390x"
       ],
+      "bookworm-core": [
+        "amd64",
+        "arm32v7",
+        "arm64v8",
+        "ppc64le",
+        "s390x"
+      ],
       "bullseye": [
         "amd64",
         "arm32v7",
@@ -172,12 +212,24 @@
         "ppc64le",
         "s390x"
       ],
+      "bullseye-core": [
+        "amd64",
+        "arm32v7",
+        "arm64v8",
+        "ppc64le",
+        "s390x"
+      ],
       "buster": [
         "amd64",
         "arm32v7",
         "arm64v8"
       ],
       "buster-slim": [
+        "amd64",
+        "arm32v7",
+        "arm64v8"
+      ],
+      "buster-core": [
         "amd64",
         "arm32v7",
         "arm64v8"

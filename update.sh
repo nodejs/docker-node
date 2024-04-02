@@ -134,6 +134,7 @@ function update_node_version() {
 
     sed -Ei -e 's/^FROM (.*)/FROM '"$fromprefix"'\1/' "${dockerfile}-tmp"
     sed -Ei -e 's/^(ENV NODE_VERSION ).*/\1'"${nodeVersion}"'/' "${dockerfile}-tmp"
+    sed -Ei -e 's/^(COPY --from=node:)[^-]*/\1'"${nodeVersion}-${variant%'-core'}"'/' "${dockerfile}-tmp"
 
     currentYarnVersion="$(grep "ENV YARN_VERSION" "${dockerfile}" | cut -d' ' -f3)"
     sed -Ei -e 's/^(ENV YARN_VERSION ).*/\1'"${currentYarnVersion}"'/' "${dockerfile}-tmp"
@@ -167,6 +168,8 @@ function update_node_version() {
       sed -Ei -e "s/(buildpack-deps:)name/\\1${variant}/" "${dockerfile}-tmp"
     elif is_debian_slim "${variant}"; then
       sed -Ei -e "s/(debian:)name-slim/\\1${variant}/" "${dockerfile}-tmp"
+    elif is_debian_core "${variant}"; then
+      sed -Ei -e "s/(debian:)name-slim/\\1${variant%"-core"}-slim/" "${dockerfile}-tmp"
     fi
 
     if diff -q "${dockerfile}-tmp" "${dockerfile}" > /dev/null; then
@@ -221,11 +224,15 @@ for version in "${versions[@]}"; do
       template_file="${parentpath}/Dockerfile-debian.template"
     elif is_debian_slim "${variant}"; then
       template_file="${parentpath}/Dockerfile-slim.template"
+    elif is_debian_core "${variant}"; then
+      template_file="${parentpath}/Dockerfile-debian-core.template"
     elif is_alpine "${variant}"; then
       template_file="${parentpath}/Dockerfile-alpine.template"
     fi
 
-    cp "${parentpath}/docker-entrypoint.sh" "${version}/${variant}/docker-entrypoint.sh"
+    if ! is_debian_core "${variant}"; then
+      cp "${parentpath}/docker-entrypoint.sh" "${version}/${variant}/docker-entrypoint.sh"
+    fi
     if [ "${update_version}" -eq 0 ] && [ "${update_variant}" -eq 0 ]; then
       update_node_version "${baseuri}" "${versionnum}" "${template_file}" "${version}/${variant}/Dockerfile" "${variant}" &
       pids+=($!)

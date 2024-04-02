@@ -68,6 +68,16 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Build core base image
+        if: ${{ endsWith(matrix.variant, '-core') }}
+        uses: docker/build-push-action@v5
+        with:
+          push: false
+          load: true
+          context: .
+          file: ./${{ steps.short-version.outputs.result }}/${{ matrix.base }}/Dockerfile
+          tags: node:${{ matrix.version }}-${{ matrix.base }}
+
       - name: Build image
         uses: docker/build-push-action@v5
         with:
@@ -91,7 +101,9 @@ jobs:
           [ "${output}" = 'success' ]
 
       - name: Test for npm
+        if: ${{ ! endsWith(matrix.variant, '-core') }}
         run: docker run --rm node:${{ matrix.version }}-${{ matrix.variant }} npm --version
 
       - name: Test for yarn
+        if: ${{ ! endsWith(matrix.variant, '-core') }}
         run: docker run --rm node:${{ matrix.version }}-${{ matrix.variant }} yarn --version

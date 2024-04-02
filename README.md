@@ -27,6 +27,7 @@ The official Node.js docker image, made with love by the node community.
   - [`node:bullseye`](#nodebullseye)
   - [`node:bookworm`](#nodebookworm)
   - [`node:slim`](#nodeslim)
+  - [`node:core`](#nodecore)
 - [License](#license)
 - [Supported Docker versions](#supported-docker-versions)
 - [Supported Node.js versions](#supported-nodejs-versions)
@@ -222,6 +223,10 @@ only contains the minimal packages needed to run `node`. Unless you are working
 in an environment where *only* the Node.js image will be deployed and you have
 space constraints, we highly recommend using the default image of this
 repository.
+
+### `node:core`
+
+This image is a variant of the slim image without npm or Yarn.
 
 ## License
 

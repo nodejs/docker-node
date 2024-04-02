@@ -60,6 +60,17 @@ const getDockerfileMatrixEntry = (file) => {
 
   const version = getFullNodeVersionFromDockerfile(file);
 
+  // Specify the base image that needs to be built before the core one
+  if (variant.endsWith('-core')) {
+    const base = variant.replace('-core', '-slim')
+
+    return {
+      version,
+      variant,
+      base,
+    }
+  }
+
   return {
     version,
     variant,

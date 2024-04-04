@@ -1,6 +1,6 @@
 FROM alpine:3.18
 
-ENV NODE_VERSION 21.7.1
+ENV NODE_VERSION 21.7.2
 
 RUN addgroup -g 1000 node \
     && adduser -u 1000 -G node -s /bin/sh -D node \
@@ -10,7 +10,7 @@ RUN addgroup -g 1000 node \
         curl \
     && ARCH= OPENSSL_ARCH='linux*' && alpineArch="$(apk --print-arch)" \
       && case "${alpineArch##*-}" in \
-        x86_64) ARCH='x64' CHECKSUM="80e5f4e1846e0d2692e58a9fc8c36dfba74d558ff02d0a53aa3bf5ba50a06778" OPENSSL_ARCH=linux-x86_64;; \
+        x86_64) ARCH='x64' CHECKSUM="35a8e63673419f5bcbbae319c42651b49549e9941ac38016a2e57a52a2aa593d" OPENSSL_ARCH=linux-x86_64;; \
         x86) OPENSSL_ARCH=linux-elf;; \
         aarch64) OPENSSL_ARCH=linux-aarch64;; \
         arm*) OPENSSL_ARCH=linux-armv4;; \
@@ -51,6 +51,7 @@ RUN addgroup -g 1000 node \
       C82FA3AE1CBEDC6BE46B9360C43CEC45C17AB93C \
       108F52B48DB57BB0CC439B2997B01419BD92F80A \
       A363A499291CBBC940DD62E41F10027AF002F8B0 \
+      CC68F5A3106FF448322E48ED27F5E38D5B0A215F \
     ; do \
       gpg --batch --keyserver hkps://keys.openpgp.org --recv-keys "$key" || \
       gpg --batch --keyserver keyserver.ubuntu.com --recv-keys "$key" ; \

@@ -44,7 +44,7 @@ ENV PATH=$PATH:/home/node/.npm-global/bin # optionally if you want to run npm gl
 
 If you need to upgrade/downgrade `yarn` for a local install, you can do so by issuing the following commands in your `Dockerfile`:
 
-> Note that if you create some other directory which is not a descendant one from where you ran the command, you will end up using the global (dated) version. If you wish to upgrade `yarn` globally follow the instructions in the next section.
+> Note that if you create some other directory which is not a descendant one from where you ran the command, you will end up using the global (dated) version. If you wish to upgrade `yarn` globally, follow the instructions in the next section.
 
 > When following the local install instructions, due to duplicated yarn the image will end up being bigger.
 
@@ -115,7 +115,7 @@ USER node
 
 Note that the `node` user is neither a build-time nor a run-time dependency and it can be removed or altered, as long as the functionality of the application you want to add to the container does not depend on it.
 
-If you do not want nor need the user created in this image you can remove it with the following:
+If you do not want nor need the user created in this image, you can remove it with the following:
 
 ```Dockerfile
 # For debian based images use:
@@ -125,13 +125,13 @@ RUN userdel -r node
 RUN deluser --remove-home node
 ```
 
-If you need to change the uid/gid of the user you can use:
+If you need to change the uid/gid of the user, you can use:
 
 ```Dockerfile
 RUN groupmod -g 999 node && usermod -u 999 -g 999 node
 ```
 
-If you need another name for the user (ex. `myapp`) execute:
+If you need another name for the user (ex. `myapp`), execute:
 
 ```Dockerfile
 RUN usermod -d /home/myapp -l myapp node
@@ -147,7 +147,7 @@ RUN deluser --remove-home node \
 
 ## Memory
 
-By default, any Docker Container may consume as much of the hardware such as CPU and RAM. If you are running multiple containers on the same host you should limit how much memory they can consume.
+By default, any Docker Container may consume as much of the hardware such as CPU and RAM. If you are running multiple containers on the same host, you should limit how much memory they can consume.
 
 ```
 -m "300M" --memory-swap "1G"
@@ -155,7 +155,7 @@ By default, any Docker Container may consume as much of the hardware such as CPU
 
 ## CMD
 
-When creating an image, you can bypass the `package.json`'s `start` command and bake it directly into the image itself. First off this reduces the number of processes running inside of your container. Secondly it causes exit signals such as `SIGTERM` and `SIGINT` to be received by the Node.js process instead of npm swallowing them.
+When creating an image, you can bypass the `package.json`'s `start` command and bake it directly into the image itself. First off, this reduces the number of processes running inside of your container. Secondly, it causes exit signals such as `SIGTERM` and `SIGINT` to be received by the Node.js process instead of npm swallowing them.
 
 ```Dockerfile
 CMD ["node","index.js"]
@@ -192,7 +192,7 @@ RUN apk add --no-cache --virtual .gyp python3 make g++ \
     && apk del .gyp
 ```
 
-And Here's a multistage build example
+And, here's a multistage build example:
 
 ```Dockerfile
 FROM node:alpine as builder

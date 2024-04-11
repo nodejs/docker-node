@@ -184,10 +184,18 @@ requirements. However, most software doesn't have an issue with this, so this
 variant is usually a very safe choice. See
 [this Hacker News comment thread](https://news.ycombinator.com/item?id=10782897)
 for more discussion of the issues that might arise and some pro/con comparisons
-of using Alpine-based images. One common issue that may arise is a missing shared
-library required for use of `process.dlopen`. To add the missing shared libraries
-to your image, adding the [`libc6-compat`](https://pkgs.alpinelinux.org/package/edge/main/x86/libc6-compat)
+of using Alpine-based images.
+
+One common issue that may arise is a missing shared library required for use of
+`process.dlopen`. To add the missing shared libraries to your image:
+
+- For Alpine v3.18 and earlier, adding the
+[`libc6-compat`](https://pkgs.alpinelinux.org/package/v3.18/main/x86/libc6-compat)
 package in your Dockerfile is recommended: `apk add --no-cache libc6-compat`
+
+- Starting from Alpine v3.19, you can use the
+[`gcompat`](https://pkgs.alpinelinux.org/package/v3.19/main/x86/gcompat) package
+to add the missing shared libraries: `apk add --no-cache gcompat`
 
 To minimize image size, it's uncommon for additional related tools
 (such as `git` or `bash`) to be included in Alpine-based images. Using this

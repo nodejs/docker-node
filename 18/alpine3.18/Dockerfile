@@ -107,6 +107,8 @@ RUN apk add --no-cache --virtual .build-deps-yarn curl gnupg tar \
   && rm -rf /tmp/*
 
 COPY docker-entrypoint.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+
 ENTRYPOINT ["docker-entrypoint.sh"]
 
 CMD [ "node" ]

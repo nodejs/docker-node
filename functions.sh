@@ -32,6 +32,9 @@ function get_arch() {
     s390x)
       arch="s390x"
       ;;
+    arm64)
+      arch="amd64"
+      ;;
     aarch64)
       arch="arm64"
       ;;

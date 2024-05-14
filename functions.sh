@@ -32,17 +32,14 @@ function get_arch() {
     s390x)
       arch="s390x"
       ;;
-    arm64)
-      arch="amd64"
-      ;;
-    aarch64)
+    aarch64 | arm64)
       arch="arm64"
       ;;
     armv7l)
       arch="arm32v7"
       ;;
     *)
-      echo "$0 does not support architecture ${arch} ... aborting"
+      echo "$0 does not support architecture ${arch:-unknown} ... aborting"
       exit 1
       ;;
   esac

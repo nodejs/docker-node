@@ -126,7 +126,7 @@ function update_node_version() {
   (
     cp "${template}" "${dockerfile}-tmp"
     local fromprefix=""
-    if [ "${arch}" != "amd64" ]; then
+    if [ "${arch}" != "amd64" ] && [ "${arch}" != "arm64" ]; then
       fromprefix="${arch}\\/"
     fi
 

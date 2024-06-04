@@ -36,6 +36,7 @@ RUN addgroup -g 1000 node \
         linux-headers \
         make \
         python3 \
+        py-setuptools \
     # use pre-existing gpg directory, see https://github.com/nodejs/docker-node/pull/1895#issuecomment-1550389150
     && export GNUPGHOME="$(mktemp -d)" \
     # gpg keys listed at https://github.com/nodejs/node#release-keys

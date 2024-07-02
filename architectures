@@ -1,8 +1,8 @@
 bashbrew-arch  variants
-amd64          alpine3.19,alpine3.20,bookworm,bookworm-slim,bullseye,bullseye-slim,buster,buster-slim
+amd64          alpine3.19,alpine3.20,bookworm,bookworm-slim,bullseye,bullseye-slim
 arm32v6        alpine3.19,alpine3.20
-arm32v7        alpine3.19,alpine3.20,bookworm,bookworm-slim,bullseye,bullseye-slim,buster,buster-slim
-arm64v8        alpine3.19,alpine3.20,bookworm,bookworm-slim,bullseye,bullseye-slim,buster,buster-slim
+arm32v7        alpine3.19,alpine3.20,bookworm,bookworm-slim,bullseye,bullseye-slim
+arm64v8        alpine3.19,alpine3.20,bookworm,bookworm-slim,bullseye,bullseye-slim
 i386           alpine3.19,alpine3.20
-ppc64le        alpine3.19,alpine3.20,bookworm,bookworm-slim,bullseye,bullseye-slim,buster,buster-slim
-s390x          alpine3.19,alpine3.20,bookworm,bookworm-slim,bullseye,bullseye-slim,buster,buster-slim
+ppc64le        alpine3.19,alpine3.20,bookworm,bookworm-slim,bullseye,bullseye-slim
+s390x          alpine3.19,alpine3.20,bookworm,bookworm-slim,bullseye,bullseye-slim

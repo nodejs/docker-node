@@ -23,7 +23,6 @@ The official Node.js docker image, made with love by the node community.
 - [Image Variants](#image-variants)
   - [`node:<version>`](#nodeversion)
   - [`node:alpine`](#nodealpine)
-  - [`node:buster`](#nodebuster)
   - [`node:bullseye`](#nodebullseye)
   - [`node:bookworm`](#nodebookworm)
   - [`node:slim`](#nodeslim)
@@ -204,12 +203,6 @@ image as a base, add the things you need in your own Dockerfile
 examples of how to install packages if you are unfamiliar).
 
 To make the image size even smaller, you can [bundle without npm/yarn](./docs/BestPractices.md#smaller-images-without-npmyarn).
-
-### `node:buster`
-
-This image is based on version 10 of
-[Debian](http://debian.org), available in
-[the `debian` official image](https://hub.docker.com/_/debian).
 
 ### `node:bullseye`
 

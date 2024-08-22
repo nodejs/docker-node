@@ -26,7 +26,7 @@ jobs:
 
       - name: Calculate file differences
         id: diff
-        uses: tj-actions/changed-files@v44
+        uses: tj-actions/changed-files@v45
         with:
           json: true
           escape_json: false

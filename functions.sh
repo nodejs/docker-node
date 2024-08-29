@@ -193,6 +193,16 @@ function is_debian_slim() {
   return 1
 }
 
+function is_windows() {
+  local variant
+  variant=$1
+  shift
+
+  if [ "${variant}" = "${variant#windows}" ]; then
+    return 1
+  fi
+}
+
 function get_fork_name() {
   local version
   version=$1

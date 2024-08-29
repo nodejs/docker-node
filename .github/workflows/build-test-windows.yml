@@ -1,0 +1,113 @@
+name: build-test-windows
+
+on:
+  push:
+    paths:
+      - "**/windows-2019/**"
+      - "**/windows-2022/**"
+      - ".github/workflows/build-test-windows.yml"
+
+  pull_request:
+    paths:
+      - "**/windows-2019/**"
+      - "**/windows-2022/**"
+      - ".github/workflows/build-test-windows.yml"
+
+jobs:
+  build-windows-2019:
+    name: build-windows-2019
+    runs-on: windows-2019
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix: 
+        version: [ 22.7.0 ]
+        variant: [ "windows-2019" ]
+
+    steps:
+      - name: Get short node version
+        uses: actions/github-script@v7
+        id: short-version
+        with:
+          result-encoding: string
+          script: return "${{ matrix.version }}".split('.')[0]
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # We cannot use docker/build-push-action here because it requires buildx, which is not available on Windows
+      - name: Build image
+        run: |
+          docker build --tag node:${{ matrix.version }}-${{ matrix.variant }} ./${{ steps.short-version.outputs.result }}/${{ matrix.variant }}
+
+      - name: Test for node version
+        shell: pwsh
+        run: |
+          $image_node_version = (docker run --rm node:${{ matrix.version }}-${{ matrix.variant }} node --print "process.versions.node").Trim() 
+          Write-Host "Expected: '${{ matrix.version }}', Got: '$image_node_version'"
+          if ($image_node_version -ne "${{ matrix.version }}") {
+            exit 1 
+          }
+        
+      - name: Verify entrypoint runs regular, non-executable files with node
+        shell: pwsh
+        run: |
+          $tempDir = New-Item -ItemType Directory -Path $env:TEMP -Name "tempNodeApp" 
+          $tmp_file = Join-Path $tempDir "index.js"
+          "console.log('success')" | Out-File -FilePath $tmp_file -Encoding utf8
+          $output = (docker run --rm -w /app --mount "type=bind,src=$tempDir,target=c:\app" node:${{ matrix.version }}-${{ matrix.variant }} C:/app/index.js)
+          if ($output -ne 'success') {
+              Write-Host "Invalid"
+          }
+        
+      - name: Test for npm
+        run: docker run --rm node:${{ matrix.version }}-${{ matrix.variant }} npm --version
+
+  build-windows-2022:
+    name: build-windows-2022
+    runs-on: windows-2022
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix: 
+        version: [ "22.7.0" ]
+        variant: [ "windows-2022" ]
+
+    steps:
+      - name: Get short node version
+        uses: actions/github-script@v7
+        id: short-version
+        with:
+          result-encoding: string
+          script: return "${{ matrix.version }}".split('.')[0]
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # We cannot use docker/build-push-action here because it requires buildx, which is not available on Windows
+      - name: Build image
+        run: |
+          docker build --tag node:${{ matrix.version }}-${{ matrix.variant }} ./${{ steps.short-version.outputs.result }}/${{ matrix.variant }}
+
+      - name: Test for node version
+        shell: pwsh
+        run: |
+          $image_node_version = (docker run --rm node:${{ matrix.version }}-${{ matrix.variant }} node --print "process.versions.node").Trim() 
+          Write-Host "Expected: '${{ matrix.version }}', Got: '$image_node_version'"
+          if ($image_node_version -ne "${{ matrix.version }}") {
+            exit 1
+          }
+        
+      - name: Verify entrypoint runs regular, non-executable files with node
+        shell: pwsh
+        run: |
+          $tempDir = New-Item -ItemType Directory -Path $env:TEMP -Name "tempNodeApp" 
+          $tmp_file = Join-Path $tempDir "index.js"
+          "console.log('success')" | Out-File -FilePath $tmp_file -Encoding utf8
+          $output = (docker run --rm -w /app --mount "type=bind,src=$tempDir,target=c:\app" node:${{ matrix.version }}-${{ matrix.variant }} C:/app/index.js)
+          if ($output -ne 'success') {
+              Write-Host "Invalid"
+          }
+        
+      - name: Test for npm
+        run: docker run --rm node:${{ matrix.version }}-${{ matrix.variant }} npm --version

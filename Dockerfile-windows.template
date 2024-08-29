@@ -1,0 +1,51 @@
+FROM mcr.microsoft.com/windows/servercore:version as installer
+
+SHELL ["powershell", "-Command", "$ErrorActionPreference = 'Stop'; $ProgressPreference = 'SilentlyContinue';"]
+
+# PATH isn't actually set in the Docker image, so we have to set it from within the container
+RUN $newPath = ('C:\Program Files (x86)\GnuPG\bin;{0}' -f $env:PATH); \
+	Write-Host ('Updating PATH: {0}' -f $newPath); \
+	[Environment]::SetEnvironmentVariable('PATH', $newPath, [EnvironmentVariableTarget]::Machine)
+# doing this first to share cache across versions more aggressively
+
+ENV NODE_VERSION 0.0.0
+ENV NODE_CHECKSUM CHECKSUM_x64
+
+ENV GPG_VERSION 2.4.5_20240307
+
+RUN Invoke-WebRequest $('https://www.gnupg.org/ftp/gcrypt/binary/gnupg-w32-{0}.exe' -f $env:GPG_VERSION) -OutFile 'gpg-installer.exe'; \
+	Start-Process -FilePath 'gpg-installer.exe' -ArgumentList '/S' -Wait; \
+	gpg --version;
+
+RUN @( \
+      "${NODE_KEYS[@]}"
+    ) | foreach { \
+      gpg --keyserver hkps://keys.openpgp.org --recv-keys $_ ; \
+    } ; \
+    [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12 ; \
+    Invoke-WebRequest $('https://nodejs.org/dist/v{0}/SHASUMS256.txt.asc' -f $env:NODE_VERSION) -OutFile 'SHASUMS256.txt.asc' -UseBasicParsing ; \
+    gpg --batch --decrypt --output SHASUMS256.txt SHASUMS256.txt.asc ; \
+    Invoke-WebRequest $('https://nodejs.org/dist/v{0}/node-v{0}-win-x64.zip' -f $env:NODE_VERSION) -OutFile 'node.zip' -UseBasicParsing ; \
+    $sum = $(cat SHASUMS256.txt.asc | sls $('  node-v{0}-win-x64.zip' -f $env:NODE_VERSION)) -Split ' ' ; \
+    if ((Get-FileHash node.zip -Algorithm sha256).Hash -ne $sum[0]) { Write-Error 'SHA256 mismatch' } ; \
+    Expand-Archive node.zip -DestinationPath C:\ ; \
+    Rename-Item -Path $('C:\node-v{0}-win-x64' -f $env:NODE_VERSION) -NewName 'C:\nodejs'
+
+FROM mcr.microsoft.com/windows/servercore:version as runner
+
+SHELL ["powershell", "-Command", "$ErrorActionPreference = 'Stop'; $ProgressPreference = 'SilentlyContinue';"]
+
+RUN $newPath = ('C:\nodejs;{0}' -f $env:PATH); \
+	Write-Host ('Updating PATH: {0}' -f $newPath); \
+	[Environment]::SetEnvironmentVariable('PATH', $newPath, [EnvironmentVariableTarget]::Machine)
+
+COPY --from=installer C:/nodejs C:/nodejs
+
+COPY docker-entrypoint.ps1 C:/docker-entrypoint.ps1
+ENTRYPOINT [ "powershell.exe" , "C:/docker-entrypoint.ps1" ]
+
+# Smoke test
+RUN node --version; \
+	npm --version;
+	
+CMD [ "node.exe" ]

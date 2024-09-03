@@ -1,6 +1,6 @@
 FROM alpine:3.20
 
-ENV NODE_VERSION 22.7.0
+ENV NODE_VERSION 22.8.0
 
 RUN addgroup -g 1000 node \
     && adduser -u 1000 -G node -s /bin/sh -D node \
@@ -10,7 +10,7 @@ RUN addgroup -g 1000 node \
         curl \
     && ARCH= OPENSSL_ARCH='linux*' && alpineArch="$(apk --print-arch)" \
       && case "${alpineArch##*-}" in \
-        x86_64) ARCH='x64' CHECKSUM="164a9b11ce4ea8cfe87e0db9f29f4becb6fbb59c2ed4f76a64eb1d0e877c3ed4" OPENSSL_ARCH=linux-x86_64;; \
+        x86_64) ARCH='x64' CHECKSUM="03684363352ac907758b53f3bc094bcf128fa8570de9a4657531c1c54f9a335c" OPENSSL_ARCH=linux-x86_64;; \
         x86) OPENSSL_ARCH=linux-elf;; \
         aarch64) OPENSSL_ARCH=linux-aarch64;; \
         arm*) OPENSSL_ARCH=linux-armv4;; \

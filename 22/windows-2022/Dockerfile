@@ -34,7 +34,10 @@ RUN @( \
       'A363A499291CBBC940DD62E41F10027AF002F8B0', \
       'CC68F5A3106FF448322E48ED27F5E38D5B0A215F' \
     ) | foreach { \
-      gpg --keyserver hkps://keys.openpgp.org --recv-keys $_ ; \
+      gpg --batch --keyserver hkps://keys.openpgp.org --recv-keys $_ ; \
+      if (-not $?) { \
+        gpg --batch --keyserver keyserver.ubuntu.com --recv-keys $_ ; \
+      } \
     } ; \
     [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12 ; \
     Invoke-WebRequest $('https://nodejs.org/dist/v{0}/SHASUMS256.txt.asc' -f $env:NODE_VERSION) -OutFile 'SHASUMS256.txt.asc' -UseBasicParsing ; \

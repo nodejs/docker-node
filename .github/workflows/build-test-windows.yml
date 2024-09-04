@@ -20,8 +20,8 @@ jobs:
     timeout-minutes: 60
     strategy:
       fail-fast: false
-      matrix: 
-        version: [ 22.7.0 ]
+      matrix:
+        version: [ "22.8.0" ]
         variant: [ "windows-2019" ]
 
     steps:
@@ -43,23 +43,23 @@ jobs:
       - name: Test for node version
         shell: pwsh
         run: |
-          $image_node_version = (docker run --rm node:${{ matrix.version }}-${{ matrix.variant }} node --print "process.versions.node").Trim() 
+          $image_node_version = (docker run --rm node:${{ matrix.version }}-${{ matrix.variant }} node --print "process.versions.node").Trim()
           Write-Host "Expected: '${{ matrix.version }}', Got: '$image_node_version'"
           if ($image_node_version -ne "${{ matrix.version }}") {
-            exit 1 
+            exit 1
           }
-        
+
       - name: Verify entrypoint runs regular, non-executable files with node
         shell: pwsh
         run: |
-          $tempDir = New-Item -ItemType Directory -Path $env:TEMP -Name "tempNodeApp" 
+          $tempDir = New-Item -ItemType Directory -Path $env:TEMP -Name "tempNodeApp"
           $tmp_file = Join-Path $tempDir "index.js"
           "console.log('success')" | Out-File -FilePath $tmp_file -Encoding utf8
           $output = (docker run --rm -w /app --mount "type=bind,src=$tempDir,target=c:\app" node:${{ matrix.version }}-${{ matrix.variant }} C:/app/index.js)
           if ($output -ne 'success') {
               Write-Host "Invalid"
           }
-        
+
       - name: Test for npm
         run: docker run --rm node:${{ matrix.version }}-${{ matrix.variant }} npm --version
 
@@ -69,8 +69,8 @@ jobs:
     timeout-minutes: 60
     strategy:
       fail-fast: false
-      matrix: 
-        version: [ "22.7.0" ]
+      matrix:
+        version: [ "22.8.0" ]
         variant: [ "windows-2022" ]
 
     steps:
@@ -92,22 +92,22 @@ jobs:
       - name: Test for node version
         shell: pwsh
         run: |
-          $image_node_version = (docker run --rm node:${{ matrix.version }}-${{ matrix.variant }} node --print "process.versions.node").Trim() 
+          $image_node_version = (docker run --rm node:${{ matrix.version }}-${{ matrix.variant }} node --print "process.versions.node").Trim()
           Write-Host "Expected: '${{ matrix.version }}', Got: '$image_node_version'"
           if ($image_node_version -ne "${{ matrix.version }}") {
             exit 1
           }
-        
+
       - name: Verify entrypoint runs regular, non-executable files with node
         shell: pwsh
         run: |
-          $tempDir = New-Item -ItemType Directory -Path $env:TEMP -Name "tempNodeApp" 
+          $tempDir = New-Item -ItemType Directory -Path $env:TEMP -Name "tempNodeApp"
           $tmp_file = Join-Path $tempDir "index.js"
           "console.log('success')" | Out-File -FilePath $tmp_file -Encoding utf8
           $output = (docker run --rm -w /app --mount "type=bind,src=$tempDir,target=c:\app" node:${{ matrix.version }}-${{ matrix.variant }} C:/app/index.js)
           if ($output -ne 'success') {
               Write-Host "Invalid"
           }
-        
+
       - name: Test for npm
         run: docker run --rm node:${{ matrix.version }}-${{ matrix.variant }} npm --version

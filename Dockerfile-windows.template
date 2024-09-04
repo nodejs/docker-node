@@ -23,7 +23,10 @@ RUN Invoke-WebRequest $('https://www.gnupg.org/ftp/gcrypt/binary/gnupg-w32-{0}.e
 RUN @( \
       "${NODE_KEYS[@]}"
     ) | foreach { \
-      gpg --keyserver hkps://keys.openpgp.org --recv-keys $_ ; \
+      gpg --batch --keyserver hkps://keys.openpgp.org --recv-keys $_ ; \
+      if (-not $?) { \
+        gpg --batch --keyserver keyserver.ubuntu.com --recv-keys $_ ; \
+      } \
     } ; \
     [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12 ; \
     Invoke-WebRequest $('https://nodejs.org/dist/v{0}/SHASUMS256.txt.asc' -f $env:NODE_VERSION) -OutFile 'SHASUMS256.txt.asc' -UseBasicParsing ; \

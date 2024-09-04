@@ -8,12 +8,15 @@ RUN $newPath = ('C:\Program Files (x86)\GnuPG\bin;{0}' -f $env:PATH); \
 	[Environment]::SetEnvironmentVariable('PATH', $newPath, [EnvironmentVariableTarget]::Machine)
 # doing this first to share cache across versions more aggressively
 
-ENV NODE_VERSION 22.7.0
-ENV NODE_CHECKSUM 3fc638727974262b4f65a6b1b43c22fb2d80671cdcb50e1237e0b05d1330aaf7
+ENV NODE_VERSION 22.8.0
+ENV NODE_CHECKSUM d6e1c4fca93997224cac0bec09b4201aa018f50171d38c6b85abe483012839c9
 
-ENV GPG_VERSION 2.4.5_20240307
+# Version and checksum of the GPG installer (Source: https://lists.gnupg.org/pipermail/gnupg-announce/2024q3/000484.html)
+ENV GPG_VERSION 2.5.0_20240705
+ENV GPG_CHECKSUM 35caef9965b10eed53b8d09b48fba5d1479f3512
 
 RUN Invoke-WebRequest $('https://www.gnupg.org/ftp/gcrypt/binary/gnupg-w32-{0}.exe' -f $env:GPG_VERSION) -OutFile 'gpg-installer.exe'; \
+  if ((Get-FileHash gpg-installer.exe -Algorithm sha1).Hash -ne $env:GPG_CHECKSUM) { Write-Error 'GPG checksum mismatch' }; \
 	Start-Process -FilePath 'gpg-installer.exe' -ArgumentList '/S' -Wait; \
 	gpg --version;
 
@@ -58,5 +61,5 @@ ENTRYPOINT [ "powershell.exe" , "C:/docker-entrypoint.ps1" ]
 # Smoke test
 RUN node --version; \
 	npm --version;
-	
+
 CMD [ "node.exe" ]

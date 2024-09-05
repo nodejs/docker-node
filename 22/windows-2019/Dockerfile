@@ -12,11 +12,11 @@ ENV NODE_VERSION 22.8.0
 ENV NODE_CHECKSUM d6e1c4fca93997224cac0bec09b4201aa018f50171d38c6b85abe483012839c9
 
 # Version and checksum of the GPG installer (Source: https://lists.gnupg.org/pipermail/gnupg-announce/2024q3/000484.html)
-ENV GPG_VERSION 2.5.0_20240705
-ENV GPG_CHECKSUM 35caef9965b10eed53b8d09b48fba5d1479f3512
+ENV GPG_VERSION 2.4.5_20240307
+ENV GPG_CHECKSUM d2ac821ceacf9409ebcdb42ae330087ada30c732981f00b356f9c2f08fac4dc1
 
 RUN Invoke-WebRequest $('https://www.gnupg.org/ftp/gcrypt/binary/gnupg-w32-{0}.exe' -f $env:GPG_VERSION) -OutFile 'gpg-installer.exe'; \
-  if ((Get-FileHash gpg-installer.exe -Algorithm sha1).Hash -ne $env:GPG_CHECKSUM) { Write-Error 'GPG checksum mismatch' }; \
+  if ((Get-FileHash gpg-installer.exe -Algorithm sha256).Hash -ne $env:GPG_CHECKSUM) { Write-Error 'GPG checksum mismatch' }; \
 	Start-Process -FilePath 'gpg-installer.exe' -ArgumentList '/S' -Wait; \
 	gpg --version;
 
@@ -34,9 +34,9 @@ RUN @( \
       'A363A499291CBBC940DD62E41F10027AF002F8B0', \
       'CC68F5A3106FF448322E48ED27F5E38D5B0A215F' \
     ) | foreach { \
-      gpg --batch --keyserver hkps://keys.openpgp.org --recv-keys $_ ; \
+      gpg --batch --keyserver hkps://keys.openpgp.org --verbose --recv-keys $_ ; \
       if (-not $?) { \
-        gpg --batch --keyserver keyserver.ubuntu.com --recv-keys $_ ; \
+        gpg --batch --keyserver keyserver.ubuntu.com --verbose --recv-keys $_ ; \
       } \
     } ; \
     [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12 ; \

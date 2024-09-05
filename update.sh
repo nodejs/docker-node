@@ -77,6 +77,10 @@ if [ "${SKIP}" != true ]; then
   yarnVersion="$(curl -sSL --compressed https://yarnpkg.com/latest-version)"
 fi
 
+if [ "${WINDOWS_ONLY}" = true ]; then
+  echo "Updating Windows images only..."
+fi
+
 function in_versions_to_update() {
   local version=$1
 
@@ -129,6 +133,10 @@ function update_node_version() {
     shift
   fi
 
+  if [ "${WINDOWS_ONLY}" = true ] && ! is_windows "${variant}"; then
+    return
+  fi
+
   fullVersion="$(curl -sSL --compressed "${baseuri}" | grep '<a href="v'"${version}." | sed -E 's!.*<a href="v([^"/]+)/?".*!\1!' | cut -d'.' -f2,3 | sort -V | tail -1)"
   (
     cp "${template}" "${dockerfile}-tmp"
@@ -155,7 +163,7 @@ function update_node_version() {
       while read -r line; do
         pattern='"\$\{'$(echo "${key_type}" | tr '[:lower:]' '[:upper:]')'_KEYS\[@\]\}"'
         if is_windows "${variant}"; then
-          if [ "$line" = "$last_line" ]; then  # Check if it's the last key
+          if [ "$line" = "$last_line" ]; then # Check if it's the last key
             sed -Ei -e "s/([ \\t]*)(${pattern})/\\1'${line}'${new_line}\\1\\2/" "${dockerfile}-tmp"
           else
             sed -Ei -e "s/([ \\t]*)(${pattern})/\\1'${line}',${new_line}\\1\\2/" "${dockerfile}-tmp"
@@ -167,23 +175,26 @@ function update_node_version() {
       sed -Ei -e "/${pattern}/d" "${dockerfile}-tmp"
     done
 
-    if is_alpine "${variant}"; then
-      alpine_version="${variant#*alpine}"
-      checksum=$(
-        curl -sSL --compressed "https://unofficial-builds.nodejs.org/download/release/v${nodeVersion}/SHASUMS256.txt" | grep "node-v${nodeVersion}-linux-x64-musl.tar.xz" | cut -d' ' -f1
-      )
-      if [ -z "$checksum" ]; then
-        rm -f "${dockerfile}-tmp"
-        fatal "Failed to fetch checksum for version ${nodeVersion}"
+    if [ "${WINDOWS_ONLY}" = false ]; then
+      if is_alpine "${variant}"; then
+        alpine_version="${variant#*alpine}"
+        checksum=$(
+          curl -sSL --compressed "https://unofficial-builds.nodejs.org/download/release/v${nodeVersion}/SHASUMS256.txt" | grep "node-v${nodeVersion}-linux-x64-musl.tar.xz" | cut -d' ' -f1
+        )
+        if [ -z "$checksum" ]; then
+          rm -f "${dockerfile}-tmp"
+          fatal "Failed to fetch checksum for version ${nodeVersion}"
+        fi
+        sed -Ei -e "s/(alpine:)0.0/\\1${alpine_version}/" "${dockerfile}-tmp"
+        sed -Ei -e "s/CHECKSUM=CHECKSUM_x64/CHECKSUM=\"${checksum}\"/" "${dockerfile}-tmp"
+      elif is_debian "${variant}"; then
+        sed -Ei -e "s/(buildpack-deps:)name/\\1${variant}/" "${dockerfile}-tmp"
+      elif is_debian_slim "${variant}"; then
+        sed -Ei -e "s/(debian:)name-slim/\\1${variant}/" "${dockerfile}-tmp"
       fi
-      sed -Ei -e "s/(alpine:)0.0/\\1${alpine_version}/" "${dockerfile}-tmp"
-      sed -Ei -e "s/CHECKSUM=CHECKSUM_x64/CHECKSUM=\"${checksum}\"/" "${dockerfile}-tmp"
+    fi
 
-    elif is_debian "${variant}"; then
-      sed -Ei -e "s/(buildpack-deps:)name/\\1${variant}/" "${dockerfile}-tmp"
-    elif is_debian_slim "${variant}"; then
-      sed -Ei -e "s/(debian:)name-slim/\\1${variant}/" "${dockerfile}-tmp"
-    elif is_windows "${variant}"; then
+    if is_windows "${variant}"; then
       windows_version="${variant#*windows-}"
       checksum=$(
         curl -sSL --compressed "https://nodejs.org/dist/v${nodeVersion}/SHASUMS256.txt" | grep "node-v${nodeVersion}-win-x64.zip" | cut -d' ' -f1
@@ -254,7 +265,7 @@ for version in "${versions[@]}"; do
     elif is_windows "${variant}"; then
       template_file="${parentpath}/Dockerfile-windows.template"
     fi
-    
+
     # Copy .sh only if not is_windows
     if ! is_windows "${variant}"; then
       cp "${parentpath}/docker-entrypoint.sh" "${version}/${variant}/docker-entrypoint.sh"

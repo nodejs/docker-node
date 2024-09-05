@@ -4,14 +4,14 @@ SHELL ["powershell", "-Command", "$ErrorActionPreference = 'Stop'; $ProgressPref
 
 # PATH isn't actually set in the Docker image, so we have to set it from within the container
 RUN $newPath = ('C:\Program Files (x86)\GnuPG\bin;{0}' -f $env:PATH); \
-	Write-Host ('Updating PATH: {0}' -f $newPath); \
-	[Environment]::SetEnvironmentVariable('PATH', $newPath, [EnvironmentVariableTarget]::Machine)
+	  Write-Host ('Updating PATH: {0}' -f $newPath); \
+	  [Environment]::SetEnvironmentVariable('PATH', $newPath, [EnvironmentVariableTarget]::Machine)
 # doing this first to share cache across versions more aggressively
 
 ENV NODE_VERSION 22.8.0
 ENV NODE_CHECKSUM d6e1c4fca93997224cac0bec09b4201aa018f50171d38c6b85abe483012839c9
 
-# Version and checksum of the GPG installer (Source: https://lists.gnupg.org/pipermail/gnupg-announce/2024q3/000484.html)
+# Version and checksum of the GPG installer (Source: https://www.gnupg.org/download/integrity_check.html)
 ENV GPG_VERSION 2.4.5_20240307
 ENV GPG_CHECKSUM d2ac821ceacf9409ebcdb42ae330087ada30c732981f00b356f9c2f08fac4dc1
 
@@ -34,9 +34,9 @@ RUN @( \
       'A363A499291CBBC940DD62E41F10027AF002F8B0', \
       'CC68F5A3106FF448322E48ED27F5E38D5B0A215F' \
     ) | foreach { \
-      gpg --batch --keyserver hkps://keys.openpgp.org --verbose --recv-keys $_ ; \
+      gpg --batch --keyserver hkps://keys.openpgp.org --recv-keys $_ ; \
       if (-not $?) { \
-        gpg --batch --keyserver keyserver.ubuntu.com --verbose --recv-keys $_ ; \
+        gpg --batch --keyserver keyserver.ubuntu.com --recv-keys $_ ; \
       } \
     } ; \
     [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12 ; \
@@ -53,8 +53,8 @@ FROM mcr.microsoft.com/windows/servercore:ltsc2022 as runner
 SHELL ["powershell", "-Command", "$ErrorActionPreference = 'Stop'; $ProgressPreference = 'SilentlyContinue';"]
 
 RUN $newPath = ('C:\nodejs;{0}' -f $env:PATH); \
-	Write-Host ('Updating PATH: {0}' -f $newPath); \
-	[Environment]::SetEnvironmentVariable('PATH', $newPath, [EnvironmentVariableTarget]::Machine)
+	  Write-Host ('Updating PATH: {0}' -f $newPath); \
+	  [Environment]::SetEnvironmentVariable('PATH', $newPath, [EnvironmentVariableTarget]::Machine)
 
 COPY --from=installer C:/nodejs C:/nodejs
 
@@ -63,6 +63,6 @@ ENTRYPOINT [ "powershell.exe" , "C:/docker-entrypoint.ps1" ]
 
 # Smoke test
 RUN node --version; \
-	npm --version;
+	  npm --version;
 
 CMD [ "node.exe" ]

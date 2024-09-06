@@ -47,7 +47,7 @@ COPY docker-entrypoint.ps1 C:/docker-entrypoint.ps1
 RUN $newPath = ('C:\nodejs;{0}' -f $env:PATH); \
 	  Write-Host ('Updating PATH: {0}' -f $newPath); \
 	  [Environment]::SetEnvironmentVariable('PATH', $newPath, [EnvironmentVariableTarget]::Machine); \
-	   # Because we need to use it in the current session
+	  # Because we need to use it in the current session
 	  $env:PATH = $newPath; \
 	  node --version; \
 	  npm --version;

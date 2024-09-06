@@ -52,17 +52,17 @@ FROM mcr.microsoft.com/windows/servercore:ltsc2022 as runner
 
 SHELL ["powershell", "-Command", "$ErrorActionPreference = 'Stop'; $ProgressPreference = 'SilentlyContinue';"]
 
+COPY --from=installer C:/nodejs C:/nodejs
+COPY docker-entrypoint.ps1 C:/docker-entrypoint.ps1
+
 RUN $newPath = ('C:\nodejs;{0}' -f $env:PATH); \
 	  Write-Host ('Updating PATH: {0}' -f $newPath); \
-	  [Environment]::SetEnvironmentVariable('PATH', $newPath, [EnvironmentVariableTarget]::Machine)
-
-COPY --from=installer C:/nodejs C:/nodejs
-
-COPY docker-entrypoint.ps1 C:/docker-entrypoint.ps1
-ENTRYPOINT [ "powershell.exe" , "C:/docker-entrypoint.ps1" ]
-
-# Smoke test
-RUN node --version; \
+	  [Environment]::SetEnvironmentVariable('PATH', $newPath, [EnvironmentVariableTarget]::Machine); \
+	   # Because we need to use it in the current session
+	  $env:PATH = $newPath; \
+	  node --version; \
 	  npm --version;
+
+ENTRYPOINT [ "powershell.exe" , "C:/docker-entrypoint.ps1" ]
 
 CMD [ "node.exe" ]

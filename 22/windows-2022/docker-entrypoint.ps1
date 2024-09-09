@@ -5,9 +5,9 @@ $ErrorActionPreference = 'Stop'
 # 1. Contains a "-"
 # 2. Is NOT a recognized command
 # 3. Is a file that's NOT executable
-if (($args[0] -like '*-') -or  
+if (($args[0] -like '*-') -or
     (!(Get-Command $args[0] -ErrorAction SilentlyContinue)) -or
-    (((Test-Path $args[0] -PathType Leaf)) -and -not ((Get-Item $args[0]).Attributes -band 'ReadOnly'))) { 
+    (((Test-Path $args[0] -PathType Leaf)) -and -not ((Get-Item $args[0]).Attributes -band 'ReadOnly'))) {
     # Prepend 'node' to the argument list
     $args = @('node') + $args
 }

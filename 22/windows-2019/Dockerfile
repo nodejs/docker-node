@@ -4,8 +4,8 @@ SHELL ["powershell", "-Command", "$ErrorActionPreference = 'Stop'; $ProgressPref
 
 # PATH isn't actually set in the Docker image, so we have to set it from within the container
 RUN $newPath = ('C:\Program Files (x86)\GnuPG\bin;{0}' -f $env:PATH); \
-	  Write-Host ('Updating PATH: {0}' -f $newPath); \
-	  [Environment]::SetEnvironmentVariable('PATH', $newPath, [EnvironmentVariableTarget]::Machine)
+    Write-Host ('Updating PATH: {0}' -f $newPath); \
+    [Environment]::SetEnvironmentVariable('PATH', $newPath, [EnvironmentVariableTarget]::Machine)
 # doing this first to share cache across versions more aggressively
 
 ENV NODE_VERSION 22.8.0
@@ -17,8 +17,8 @@ ENV GPG_CHECKSUM d2ac821ceacf9409ebcdb42ae330087ada30c732981f00b356f9c2f08fac4dc
 
 RUN Invoke-WebRequest $('https://www.gnupg.org/ftp/gcrypt/binary/gnupg-w32-{0}.exe' -f $env:GPG_VERSION) -OutFile 'gpg-installer.exe'; \
   if ((Get-FileHash gpg-installer.exe -Algorithm sha256).Hash -ne $env:GPG_CHECKSUM) { Write-Error 'GPG checksum mismatch' }; \
-	Start-Process -FilePath 'gpg-installer.exe' -ArgumentList '/S' -Wait; \
-	gpg --version;
+  Start-Process -FilePath 'gpg-installer.exe' -ArgumentList '/S' -Wait; \
+  gpg --version;
 
 RUN @( \
       '4ED778F539E3634C779C87C6D7062848A1AB005C', \
@@ -56,12 +56,12 @@ COPY --from=installer C:/nodejs C:/nodejs
 COPY docker-entrypoint.ps1 C:/docker-entrypoint.ps1
 
 RUN $newPath = ('C:\nodejs;{0}' -f $env:PATH); \
-	  Write-Host ('Updating PATH: {0}' -f $newPath); \
-	  [Environment]::SetEnvironmentVariable('PATH', $newPath, [EnvironmentVariableTarget]::Machine); \
-	  # Because we need to use it in the current session
-	  $env:PATH = $newPath; \
-	  node --version; \
-	  npm --version;
+    Write-Host ('Updating PATH: {0}' -f $newPath); \
+    [Environment]::SetEnvironmentVariable('PATH', $newPath, [EnvironmentVariableTarget]::Machine); \
+    # Because we need to use it in the current session
+    $env:PATH = $newPath; \
+    node --version; \
+    npm --version;
 
 ENTRYPOINT [ "powershell.exe" , "C:/docker-entrypoint.ps1" ]
 

@@ -3,14 +3,14 @@ name: build-test-windows
 on:
   push:
     paths:
-      - "**/windowsservercore-2019/**"
-      - "**/windowsservercore-2022/**"
+      - "**/windowsservercore-ltsc2019/**"
+      - "**/windowsservercore-ltsc2022/**"
       - ".github/workflows/build-test-windows.yml"
 
   pull_request:
     paths:
-      - "**/windowsservercore-2019/**"
-      - "**/windowsservercore-2022/**"
+      - "**/windowsservercore-ltsc2019/**"
+      - "**/windowsservercore-ltsc2022/**"
       - ".github/workflows/build-test-windows.yml"
 
 jobs:
@@ -22,7 +22,7 @@ jobs:
       fail-fast: false
       matrix:
         version: [ "22.8.0" ]
-        variant: [ "windowsservercore-2019" ]
+        variant: [ "windowsservercore-ltsc2019" ]
 
     steps:
       - name: Get short node version
@@ -71,7 +71,7 @@ jobs:
       fail-fast: false
       matrix:
         version: [ "22.8.0" ]
-        variant: [ "windowsservercore-2022" ]
+        variant: [ "windowsservercore-ltsc2022" ]
 
     steps:
       - name: Get short node version

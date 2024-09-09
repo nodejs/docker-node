@@ -8,8 +8,8 @@ const testFiles = [
 ];
 
 const nodeDirRegex = /^\d+$/;
-// Directories starting with 'windows-' are excluded from the matrix windows-2019 are excluded for example
-const windowsDirRegex = /^windows-/;
+// Directories starting with 'windowsservercore-' are excluded from the matrix windows-2019 are excluded for example
+const windowsDirRegex = /^windowsservercore-/;
 
 const areTestFilesChanged = (changedFiles) => changedFiles
   .some((file) => testFiles.includes(file));

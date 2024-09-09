@@ -11,14 +11,14 @@ function usage() {
     $0 [-s] [-w] [MAJOR_VERSION(S)] [VARIANT(S)]
 
   Examples:
-    - update.sh                       # Update all images
-    - update.sh -s                    # Update all images, skip updating Alpine and Yarn
-    - update.sh -w                    # Update only Windows images
-    - update.sh 8,10                  # Update all variants of version 8 and 10
-    - update.sh -s 8                  # Update version 8 and variants, skip updating Alpine and Yarn
-    - update.sh 8 alpine              # Update only Alpine variants for version 8
-    - update.sh -w 8 windows-2022     # Update only Windows 2022 variant for version 8
-    - update.sh . alpine              # Update the Alpine variant for all versions
+    - update.sh                                 # Update all images
+    - update.sh -s                              # Update all images, skip updating Alpine and Yarn
+    - update.sh -w                              # Update only Windows images
+    - update.sh 8,10                            # Update all variants of version 8 and 10
+    - update.sh -s 8                            # Update version 8 and variants, skip updating Alpine and Yarn
+    - update.sh 8 alpine                        # Update only Alpine variants for version 8
+    - update.sh -w 8 windowsservercore-2022     # Update only Windows Server Core 2022 variant for version 8
+    - update.sh . alpine                        # Update the Alpine variant for all versions
 
   OPTIONS:
     -s Security update; skip updating the Yarn and Alpine versions.

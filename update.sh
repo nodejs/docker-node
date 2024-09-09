@@ -195,7 +195,7 @@ function update_node_version() {
     fi
 
     if is_windows "${variant}"; then
-      windows_version="${variant#*windows-}"
+      windows_version="${variant#*windowsservercore-ltsc}"
       checksum=$(
         curl -sSL --compressed "https://nodejs.org/dist/v${nodeVersion}/SHASUMS256.txt" | grep "node-v${nodeVersion}-win-x64.zip" | cut -d' ' -f1
       )

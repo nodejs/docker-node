@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/windows/servercore:ltsc2022 as installer
+FROM mcr.microsoft.com/windows/servercore:ltsc2019 as installer
 
 SHELL ["powershell", "-Command", "$ErrorActionPreference = 'Stop'; $ProgressPreference = 'SilentlyContinue';"]
 
@@ -16,9 +16,9 @@ ENV GPG_VERSION 2.4.5_20240307
 ENV GPG_CHECKSUM d2ac821ceacf9409ebcdb42ae330087ada30c732981f00b356f9c2f08fac4dc1
 
 RUN Invoke-WebRequest $('https://www.gnupg.org/ftp/gcrypt/binary/gnupg-w32-{0}.exe' -f $env:GPG_VERSION) -OutFile 'gpg-installer.exe'; \
-  if ((Get-FileHash gpg-installer.exe -Algorithm sha256).Hash -ne $env:GPG_CHECKSUM) { Write-Error 'GPG checksum mismatch' }; \
-  Start-Process -FilePath 'gpg-installer.exe' -ArgumentList '/S' -Wait; \
-  gpg --version;
+    if ((Get-FileHash gpg-installer.exe -Algorithm sha256).Hash -ne $env:GPG_CHECKSUM) { Write-Error 'GPG checksum mismatch' }; \
+    Start-Process -FilePath 'gpg-installer.exe' -ArgumentList '/S' -Wait; \
+    gpg --version;
 
 RUN @( \
       '4ED778F539E3634C779C87C6D7062848A1AB005C', \
@@ -48,7 +48,7 @@ RUN @( \
     Expand-Archive node.zip -DestinationPath C:\ ; \
     Rename-Item -Path $('C:\node-v{0}-win-x64' -f $env:NODE_VERSION) -NewName 'C:\nodejs'
 
-FROM mcr.microsoft.com/windows/servercore:ltsc2022 as runner
+FROM mcr.microsoft.com/windows/servercore:ltsc2019 as runner
 
 SHELL ["powershell", "-Command", "$ErrorActionPreference = 'Stop'; $ProgressPreference = 'SilentlyContinue';"]
 

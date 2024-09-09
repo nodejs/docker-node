@@ -26,6 +26,7 @@ The official Node.js docker image, made with love by the node community.
   - [`node:bullseye`](#nodebullseye)
   - [`node:bookworm`](#nodebookworm)
   - [`node:slim`](#nodeslim)
+  - [`node:windowsservercore-ltsc<2019|2022>`](#nodewindowsservercore-ltsc20192022)
 - [License](#license)
 - [Supported Docker versions](#supported-docker-versions)
 - [Supported Node.js versions](#supported-nodejs-versions)
@@ -189,12 +190,12 @@ One common issue that may arise is a missing shared library required for use of
 `process.dlopen`. To add the missing shared libraries to your image:
 
 - For Alpine v3.18 and earlier, adding the
-[`libc6-compat`](https://pkgs.alpinelinux.org/package/v3.18/main/x86/libc6-compat)
-package in your Dockerfile is recommended: `apk add --no-cache libc6-compat`
+  [`libc6-compat`](https://pkgs.alpinelinux.org/package/v3.18/main/x86/libc6-compat)
+  package in your Dockerfile is recommended: `apk add --no-cache libc6-compat`
 
 - Starting from Alpine v3.19, you can use the
-[`gcompat`](https://pkgs.alpinelinux.org/package/v3.19/main/x86/gcompat) package
-to add the missing shared libraries: `apk add --no-cache gcompat`
+  [`gcompat`](https://pkgs.alpinelinux.org/package/v3.19/main/x86/gcompat) package
+  to add the missing shared libraries: `apk add --no-cache gcompat`
 
 To minimize image size, it's uncommon for additional related tools
 (such as `git` or `bash`) to be included in Alpine-based images. Using this
@@ -223,6 +224,16 @@ only contains the minimal packages needed to run `node`. Unless you are working
 in an environment where *only* the Node.js image will be deployed and you have
 space constraints, we highly recommend using the default image of this
 repository.
+
+### `node:windowsservercore-ltsc<2019|2022>`
+
+This image is based on Windows Server Core and is the recommended image
+for users who require Windows-based environments.
+It is available in two versions:`node:windowsservercore-ltsc2019` and `node:windowsservercore-ltsc2022`.
+You can run this image on Windows Server 2019 or Windows Server 2022 or on Windows desktop versions
+that support Windows containers.
+Keep in mind that these images are significantly larger than the Linux-based
+variants due to the Windows Server Core base.
 
 ## License
 

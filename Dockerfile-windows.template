@@ -3,55 +3,20 @@ FROM mcr.microsoft.com/windows/servercore:version as installer
 SHELL ["powershell", "-Command", "$ErrorActionPreference = 'Stop'; $ProgressPreference = 'SilentlyContinue';"]
 
 # PATH isn't actually set in the Docker image, so we have to set it from within the container
-RUN $newPath = ('C:\Program Files (x86)\GnuPG\bin;{0}' -f $env:PATH); \
-    Write-Host ('Updating PATH: {0}' -f $newPath); \
+RUN $newPath = ('C:\nodejs;{0};{0}' -f $env:PATH); \
     [Environment]::SetEnvironmentVariable('PATH', $newPath, [EnvironmentVariableTarget]::Machine)
 # doing this first to share cache across versions more aggressively
 
 ENV NODE_VERSION 0.0.0
 ENV NODE_CHECKSUM CHECKSUM_x64
 
-# Version and checksum of the GPG installer (Source: https://www.gnupg.org/download/integrity_check.html)
-ENV GPG_VERSION 2.4.5_20240307
-ENV GPG_CHECKSUM d2ac821ceacf9409ebcdb42ae330087ada30c732981f00b356f9c2f08fac4dc1
-
-RUN Invoke-WebRequest $('https://www.gnupg.org/ftp/gcrypt/binary/gnupg-w32-{0}.exe' -f $env:GPG_VERSION) -OutFile 'gpg-installer.exe'; \
-    if ((Get-FileHash gpg-installer.exe -Algorithm sha256).Hash -ne $env:GPG_CHECKSUM) { Write-Error 'GPG checksum mismatch' }; \
-    Start-Process -FilePath 'gpg-installer.exe' -ArgumentList '/S' -Wait; \
-    gpg --version;
-
-RUN @( \
-      "${NODE_KEYS[@]}"
-    ) | foreach { \
-      gpg --batch --keyserver hkps://keys.openpgp.org --recv-keys $_ ; \
-      if (-not $?) { \
-        gpg --batch --keyserver keyserver.ubuntu.com --recv-keys $_ ; \
-      } \
-    } ; \
-    [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12 ; \
-    Invoke-WebRequest $('https://nodejs.org/dist/v{0}/SHASUMS256.txt.asc' -f $env:NODE_VERSION) -OutFile 'SHASUMS256.txt.asc' -UseBasicParsing ; \
-    gpg --batch --decrypt --output SHASUMS256.txt SHASUMS256.txt.asc ; \
+RUN [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12 ; \
     Invoke-WebRequest $('https://nodejs.org/dist/v{0}/node-v{0}-win-x64.zip' -f $env:NODE_VERSION) -OutFile 'node.zip' -UseBasicParsing ; \
-    $sum = $(cat SHASUMS256.txt.asc | sls $('  node-v{0}-win-x64.zip' -f $env:NODE_VERSION)) -Split ' ' ; \
-    if ((Get-FileHash node.zip -Algorithm sha256).Hash -ne $sum[0]) { Write-Error 'SHA256 mismatch' } ; \
+    if ((Get-FileHash node.zip -Algorithm sha256).Hash -ne $env:NODE_CHECKSUM) { Write-Error 'SHA256 mismatch' } ; \
     Expand-Archive node.zip -DestinationPath C:\ ; \
-    Rename-Item -Path $('C:\node-v{0}-win-x64' -f $env:NODE_VERSION) -NewName 'C:\nodejs'
-
-FROM mcr.microsoft.com/windows/servercore:version as runner
-
-SHELL ["powershell", "-Command", "$ErrorActionPreference = 'Stop'; $ProgressPreference = 'SilentlyContinue';"]
-
-COPY --from=installer C:/nodejs C:/nodejs
-COPY docker-entrypoint.ps1 C:/docker-entrypoint.ps1
-
-RUN $newPath = ('C:\nodejs;{0}' -f $env:PATH); \
-    Write-Host ('Updating PATH: {0}' -f $newPath); \
-    [Environment]::SetEnvironmentVariable('PATH', $newPath, [EnvironmentVariableTarget]::Machine); \
-    # Because we need to use it in the current session
-    $env:PATH = $newPath; \
+    Rename-Item -Path $('C:\node-v{0}-win-x64' -f $env:NODE_VERSION) -NewName 'C:\nodejs' ; \
+    Remove-Item node.zip -Force ; \
     node --version; \
     npm --version;
-
-ENTRYPOINT [ "powershell.exe" , "C:/docker-entrypoint.ps1" ]
 
 CMD [ "node.exe" ]

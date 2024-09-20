@@ -269,8 +269,6 @@ for version in "${versions[@]}"; do
     # Copy .sh only if not is_windows
     if ! is_windows "${variant}"; then
       cp "${parentpath}/docker-entrypoint.sh" "${version}/${variant}/docker-entrypoint.sh"
-    elif is_windows "${variant}"; then
-      cp "${parentpath}/docker-entrypoint.ps1" "${version}/${variant}/docker-entrypoint.ps1"
     fi
 
     if [ "${update_version}" -eq 0 ] && [ "${update_variant}" -eq 0 ]; then

@@ -98,15 +98,15 @@ jobs:
             exit 1
           }
 
-      - name: Verify entrypoint runs regular, non-executable files with node
+      - name: Verify node runs regular files
         shell: pwsh
         run: |
           $tempDir = New-Item -ItemType Directory -Path $env:TEMP -Name "tempNodeApp"
           $tmp_file = Join-Path $tempDir "index.js"
           "console.log('success')" | Out-File -FilePath $tmp_file -Encoding utf8
-          $output = (docker run --rm -w /app --mount "type=bind,src=$tempDir,target=c:\app" node:${{ matrix.version }}-${{ matrix.variant }} C:/app/index.js)
+          $output = (docker run --rm -w /app --mount "type=bind,src=$tempDir,target=c:\app" node:${{ matrix.version }}-${{ matrix.variant }} node C:/app/index.js)
           if ($output -ne 'success') {
-              Write-Host "Invalid"
+              exit 1
           }
 
       - name: Test for npm

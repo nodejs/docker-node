@@ -21,7 +21,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        version: [ "22.8.0" ]
+        version: [ "22.9.0" ]
         variant: [ "windowsservercore-ltsc2019" ]
 
     steps:
@@ -49,19 +49,19 @@ jobs:
             exit 1
           }
 
-      - name: Verify entrypoint runs regular, non-executable files with node
+      - name: Verify node runs regular files
         shell: pwsh
         run: |
           $tempDir = New-Item -ItemType Directory -Path $env:TEMP -Name "tempNodeApp"
           $tmp_file = Join-Path $tempDir "index.js"
           "console.log('success')" | Out-File -FilePath $tmp_file -Encoding utf8
-          $output = (docker run --rm -w /app --mount "type=bind,src=$tempDir,target=c:\app" node:${{ matrix.version }}-${{ matrix.variant }} C:/app/index.js)
+          $output = (docker run --rm -w /app --mount "type=bind,src=$tempDir,target=c:\app" node:${{ matrix.version }}-${{ matrix.variant }} node C:/app/index.js)
           if ($output -ne 'success') {
-              Write-Host "Invalid"
+              exit 1
           }
 
       - name: Test for npm
-        run: docker run --rm node:${{ matrix.version }}-${{ matrix.variant }} npm --version
+        run: docker run --rm node:${{ matrix.version }}-${{ matrix.variant }} powershell.exe npm --version
 
   build-windows-2022:
     name: build-windows-2022
@@ -70,7 +70,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        version: [ "22.8.0" ]
+        version: [ "22.9.0" ]
         variant: [ "windowsservercore-ltsc2022" ]
 
     steps:
@@ -110,4 +110,5 @@ jobs:
           }
 
       - name: Test for npm
-        run: docker run --rm node:${{ matrix.version }}-${{ matrix.variant }} npm --version
+        # We need to use powershell.exe to run npm because docker needs to attach to process and npm is a batch file/powershell script
+        run: docker run --rm node:${{ matrix.version }}-${{ matrix.variant }} powershell.exe npm --version

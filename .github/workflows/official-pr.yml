@@ -16,6 +16,8 @@ jobs:
   pr:
     runs-on: ubuntu-latest
     if: github.repository_owner == 'nodejs' && github.event.pull_request.merged_by != ''
+    permissions:
+      pull-requests: write
 
     steps:
       - name: Checkout the docker-node repo

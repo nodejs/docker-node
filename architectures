@@ -1,5 +1,5 @@
 bashbrew-arch  variants
-amd64          alpine3.19,alpine3.20,bookworm,bookworm-slim,bullseye,bullseye-slim
+amd64          alpine3.19,alpine3.20,bookworm,bookworm-slim,bullseye,bullseye-slim,windowsservercore-ltsc2019,windowsservercore-ltsc2022
 arm32v6        alpine3.19,alpine3.20
 arm32v7        alpine3.19,alpine3.20,bookworm,bookworm-slim,bullseye,bullseye-slim
 arm64v8        alpine3.19,alpine3.20,bookworm,bookworm-slim,bullseye,bullseye-slim

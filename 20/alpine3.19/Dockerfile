@@ -41,6 +41,7 @@ RUN addgroup -g 1000 node \
     && export GNUPGHOME="$(mktemp -d)" \
     # gpg keys listed at https://github.com/nodejs/node#release-keys
     && for key in \
+      C0D6248439F1D5604AAFFB4021D900FFDB233756 \
       4ED778F539E3634C779C87C6D7062848A1AB005C \
       141F07595B7B3FFE74309A937405533BE57C7D57 \
       74F12602B6F1C4E913FAA37AD3A89613643B6201 \

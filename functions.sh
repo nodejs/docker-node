@@ -137,12 +137,16 @@ function get_config() {
 #
 # The result is a list of valid versions.
 function get_versions() {
+  shift
+
   local versions=()
-  local dirs=()
+  local dirs=("$@")
 
   local default_variant
   default_variant=$(get_config "./" "default_variant")
-  IFS=' ' read -ra dirs <<< "$(echo "./"*/)"
+  if [ ${#dirs[@]} -eq 0 ]; then
+    IFS=' ' read -ra dirs <<< "$(echo "./"*/)"
+  fi
 
   for dir in "${dirs[@]}"; do
     if [ -a "${dir}/Dockerfile" ] || [ -a "${dir}/${default_variant}/Dockerfile" ]; then

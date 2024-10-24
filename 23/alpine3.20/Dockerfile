@@ -1,6 +1,6 @@
 FROM alpine:3.20
 
-ENV NODE_VERSION 23.0.0
+ENV NODE_VERSION 23.1.0
 
 RUN addgroup -g 1000 node \
     && adduser -u 1000 -G node -s /bin/sh -D node \
@@ -10,7 +10,7 @@ RUN addgroup -g 1000 node \
         curl \
     && ARCH= OPENSSL_ARCH='linux*' && alpineArch="$(apk --print-arch)" \
       && case "${alpineArch##*-}" in \
-        x86_64) ARCH='x64' CHECKSUM="738b28f80f9aedaae3a7e91db8294cb96e2f87078fe7ff8826d612405ee2d8cb" OPENSSL_ARCH=linux-x86_64;; \
+        x86_64) ARCH='x64' CHECKSUM="32328ab3c3c91e737d165352dab0c7ee67b89a1d00b5226d711c8bf9d15f3bfd" OPENSSL_ARCH=linux-x86_64;; \
         x86) OPENSSL_ARCH=linux-elf;; \
         aarch64) OPENSSL_ARCH=linux-aarch64;; \
         arm*) OPENSSL_ARCH=linux-armv4;; \
@@ -42,9 +42,6 @@ RUN addgroup -g 1000 node \
     # gpg keys listed at https://github.com/nodejs/node#release-keys
     && for key in \
       C0D6248439F1D5604AAFFB4021D900FFDB233756 \
-      4ED778F539E3634C779C87C6D7062848A1AB005C \
-      141F07595B7B3FFE74309A937405533BE57C7D57 \
-      74F12602B6F1C4E913FAA37AD3A89613643B6201 \
       DD792F5973C6DE52C432CBDAC77ABFA00DDBF2B7 \
       CC68F5A3106FF448322E48ED27F5E38D5B0A215F \
       8FCCA13FEF1D0C2E91008E09770F7A9A5AE15600 \

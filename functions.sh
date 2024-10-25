@@ -136,6 +136,7 @@ function get_config() {
 # Get available versions for a given path
 #
 # The result is a list of valid versions.
+# shellcheck disable=SC2120
 function get_versions() {
   shift
 

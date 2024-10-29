@@ -3,7 +3,7 @@ FROM debian:bookworm-slim
 RUN groupadd --gid 1000 node \
   && useradd --uid 1000 --gid node --shell /bin/bash --create-home node
 
-ENV NODE_VERSION 22.10.0
+ENV NODE_VERSION 22.11.0
 
 RUN ARCH= OPENSSL_ARCH= && dpkgArch="$(dpkg --print-architecture)" \
     && case "${dpkgArch##*-}" in \
@@ -24,9 +24,6 @@ RUN ARCH= OPENSSL_ARCH= && dpkgArch="$(dpkg --print-architecture)" \
     # gpg keys listed at https://github.com/nodejs/node#release-keys
     && for key in \
       C0D6248439F1D5604AAFFB4021D900FFDB233756 \
-      4ED778F539E3634C779C87C6D7062848A1AB005C \
-      141F07595B7B3FFE74309A937405533BE57C7D57 \
-      74F12602B6F1C4E913FAA37AD3A89613643B6201 \
       DD792F5973C6DE52C432CBDAC77ABFA00DDBF2B7 \
       CC68F5A3106FF448322E48ED27F5E38D5B0A215F \
       8FCCA13FEF1D0C2E91008E09770F7A9A5AE15600 \

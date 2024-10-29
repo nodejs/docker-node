@@ -53,7 +53,7 @@
     "lts": "2024-10-29",
     "maintenance": "2025-10-21",
     "end": "2027-04-30",
-    "codename": "",
+    "codename": "jod",
     "alpine-default": "alpine3.20",
     "debian-default": "bookworm",
     "variants": {

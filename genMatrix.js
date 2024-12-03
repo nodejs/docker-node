@@ -8,23 +8,25 @@ const testFiles = [
 ];
 
 const nodeDirRegex = /^\d+$/;
+// Directories starting with 'windowsservercore-' are excluded from the matrix windows-2019 are excluded for example
+const windowsDirRegex = /^windowsservercore-/;
 
 const areTestFilesChanged = (changedFiles) => changedFiles
   .some((file) => testFiles.includes(file));
 
-// Returns a list of the child directories in the given path
+// Returns a list of the child directories in the given path, excluding those starting with 'windows-'
 const getChildDirectories = (parent) => fs.readdirSync(parent, { withFileTypes: true })
-  .filter((dirent) => dirent.isDirectory())
+  .filter((directory) => directory.isDirectory())
   .map(({ name }) => path.resolve(parent, name));
 
-const getNodeVerionDirs = (base) => getChildDirectories(base)
+const getNodeVersionDirs = (base) => getChildDirectories(base)
   .filter((childPath) => nodeDirRegex.test(path.basename(childPath)));
 
 // Returns the paths of Dockerfiles that are at: base/*/Dockerfile
 const getDockerfilesInChildDirs = (base) => getChildDirectories(base)
   .map((childDir) => path.resolve(childDir, 'Dockerfile'));
 
-const getAllDockerfiles = (base) => getNodeVerionDirs(base).flatMap(getDockerfilesInChildDirs);
+const getAllDockerfiles = (base) => getNodeVersionDirs(base).flatMap(getDockerfilesInChildDirs);
 
 const getAffectedDockerfiles = (filesAdded, filesModified, filesRenamed) => {
   const files = [
@@ -69,7 +71,8 @@ const getDockerfileMatrixEntry = (file) => {
 const generateBuildMatrix = (filesAdded, filesModified, filesRenamed) => {
   const dockerfiles = [...new Set(getAffectedDockerfiles(filesAdded, filesModified, filesRenamed))];
 
-  const entries = dockerfiles.map(getDockerfileMatrixEntry);
+  let entries = dockerfiles.map(getDockerfileMatrixEntry);
+  entries = entries.filter((entry) => !windowsDirRegex.test(entry.variant));
 
   // Return null if there are no entries so we can skip the matrix step
   return entries.length

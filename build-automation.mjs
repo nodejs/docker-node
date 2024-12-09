@@ -87,13 +87,13 @@ export default async function(github) {
   } else {
     const newVersions = await checkForMuslVersionsAndSecurityReleases(github, versions);
     let updatedVersions = [];
-    for (let version of Object.keys(newVersions)) {
-      if (newVersions[version].muslBuildExists) {
-        const { stdout } = await exec(`./update.sh ${newVersions[version].isSecurityRelease ? "-s " : ""}${version}`);
+    for (const [version, newVersion] of Object.entries(newVersions)) {
+      if (newVersion.muslBuildExists) {
+        const { stdout } = await exec(`./update.sh ${newVersion.isSecurityRelease ? "-s " : ""}${version}`);
         console.log(stdout);
-        updatedVersions.push(newVersions[version].fullVersion);
+        updatedVersions.push(newVersion.fullVersion);
       } else {
-        console.log(`There's no musl build for version ${newVersions[version].fullVersion} yet.`);
+        console.log(`There's no musl build for version ${newVersion.fullVersion} yet.`);
         process.exit(0);
       }
     }

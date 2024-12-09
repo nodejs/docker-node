@@ -189,6 +189,8 @@ function update_node_version() {
   )
 }
 
+pids=()
+
 for version in "${versions[@]}"; do
   parentpath=$(dirname "${version}")
   versionnum=$(basename "${version}")
@@ -200,8 +202,6 @@ for version in "${versions[@]}"; do
   # Get supported variants according the target architecture
   # See details in function.sh
   IFS=' ' read -ra variants <<< "$(get_variants "${parentpath}")"
-
-  pids=()
 
   if [ -f "${version}/Dockerfile" ]; then
     if [ "${update_version}" -eq 0 ]; then

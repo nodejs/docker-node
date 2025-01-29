@@ -75,7 +75,17 @@ RUN addgroup -g 1000 node \
   && apk del .build-deps \
   # smoke tests
   && node --version \
-  && npm --version
+  && npm --version \
+  # FORCE correct version of cross-spawn in system
+  && mkdir /tmp/npm-install \
+  && cd /tmp/npm-install \
+  && npm init -y \
+  && npm install cross-spawn@7.0.6 \
+  # Now move the installed cross-spawn to the target directory
+  && cp -R node_modules/cross-spawn /usr/local/lib/node_modules/npm/node_modules/ \
+  # Clean up
+  && cd / \
+  && rm -rf /tmp/npm-install
 
 ENV YARN_VERSION 1.22.22
 

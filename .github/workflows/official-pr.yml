@@ -21,14 +21,14 @@ jobs:
 
     steps:
       - name: Checkout the docker-node repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
           path: docker-node
           ref: ${{ github.base_ref }}
           fetch-depth: 50
 
       - name: Checkout the official-images repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
           path: official-images
           repository: docker-library/official-images
@@ -40,7 +40,7 @@ jobs:
 
       - name: Create PR in official-images
         id: create-pr
-        uses: peter-evans/create-pull-request@v7
+        uses: peter-evans/create-pull-request@271a8d0340265f705b14b6d32b9829c1cb33d45e # v7.0.8
         with:
           token: ${{ secrets.GH_API_TOKEN }}
           push-to-fork: nodejs/official-images
@@ -58,13 +58,9 @@ jobs:
           echo "Pull Request URL - ${{ steps.create-pr.outputs.pull-request-url }}"
 
       - name: Create PR comment
-        uses: peter-evans/create-or-update-comment@v4
+        uses: peter-evans/create-or-update-comment@71345be0265236311c031f5c7866368bd1eff043 # v4.0.0
         if: ${{ steps.create-pr.outputs.pull-request-url != '' }}
         with:
           issue-number: ${{ github.event.pull_request.number }}
           body: |
             Created PR on the official-images repo (${{ steps.create-pr.outputs.pull-request-url }}). See https://github.com/docker-library/faq#an-images-source-changed-in-git-now-what if you are wondering when it will be available on the Docker Hub.
-
-      - name: Dump context
-        if: always()
-        uses: crazy-max/ghaction-dump-context@v2

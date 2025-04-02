@@ -50,7 +50,8 @@ RUN ARCH= OPENSSL_ARCH= && dpkgArch="$(dpkg --print-architecture)" \
     && ln -s /usr/local/bin/node /usr/local/bin/nodejs \
     # smoke tests
     && node --version \
-    && npm --version
+    && npm --version \
+    && rm -rf /tmp/*
 
 ENV YARN_VERSION 0.0.0
 

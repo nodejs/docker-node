@@ -1,12 +1,5 @@
 # Node.js
 
-[![dockeri.co](https://dockerico.blankenship.io/image/node)](https://hub.docker.com/_/node)
-
-[![GitHub issues](https://img.shields.io/github/issues/nodejs/docker-node.svg "GitHub issues")](https://github.com/nodejs/docker-node)
-[![GitHub stars](https://img.shields.io/github/stars/nodejs/docker-node.svg "GitHub stars")](https://github.com/nodejs/docker-node)
-
-The official Node.js docker image, made with love by the node community.
-
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 ## Table of Contents
@@ -29,11 +22,6 @@ The official Node.js docker image, made with love by the node community.
 - [License](#license)
 - [Supported Docker versions](#supported-docker-versions)
 - [Supported Node.js versions](#supported-nodejs-versions)
-- [Governance and Current Members](#governance-and-current-members)
-  - [Docker Working Group Members](#docker-working-group-members)
-  - [Docker Working Group Collaborators](#docker-working-group-collaborators)
-  - [Emeritus](#emeritus)
-    - [Docker Working Group Members](#docker-working-group-members-1)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -243,30 +231,3 @@ upgrade your Docker daemon.
 ## Supported Node.js versions
 
 This project will support Node.js versions as still under active support as per the [Node.js release schedule](https://github.com/nodejs/Release).
-
-## Governance and Current Members
-
-The Node.js Docker Image is governed by the Docker Working Group. See
-[GOVERNANCE.md](GOVERNANCE.md)
-to learn more about the group's structure and [CONTRIBUTING.md](CONTRIBUTING.md) for guidance
-about the expectations for all contributors to this project.
-
-### Docker Working Group Members
-
-- Hans Kristian Flaatten ([starefossen](https://github.com/starefossen))
-- Hugues Malphettes ([hmalphettes](https://github.com/hmalphettes))
-- John Mitchell ([jlmitch5](https://github.com/jlmitch5))
-
-### Docker Working Group Collaborators
-
-- Mikeal Rogers ([mikeal](https://github.com/mikeal))
-- Laurent Goderre ([LaurentGoderre](https://github.com/LaurentGoderre))
-- Simen Bekkhus ([SimenB](https://github.com/SimenB))
-- Peter Dave Hello ([PeterDaveHello](https://github.com/PeterDaveHello))
-
-### Emeritus
-
-#### Docker Working Group Members
-
-- Christopher Horrell ([chorrell](https://github.com/chorrell))
-- Peter Petrov ([pesho](https://github.com/pesho))

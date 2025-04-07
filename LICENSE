@@ -1,3 +1,20 @@
+# This project contains IP governed by two licenses
+
+This project originated from the Open Source contributions to {{ Product }}, which is licensed under the license(s) listed below or as may be included in the source code files. As such, all unmodified code and materials are subject to the terms of {{ Product }}'s original license(s).
+All other materials, including new files or modifications to existing files (the "Updates" or "Services") are original works of HeroDevs, Inc. and licensed under the HeroDevs NES License.
+Access to this project, via any medium, is restricted to parties explicitly authorized by HeroDevs, Inc. Contact <support@herodevs.com> to learn more.
+
+## HeroDevs NES License
+
+Copyright © 2023-present, HeroDevs, Inc. All Rights Reserved.
+
+Access to this source code is restricted, regardless of medium, to parties who have a current commercial agreement with HeroDevs that authorizes such access. Unless otherwise executed in writing by HeroDevs, Inc., use of this source code, as well as any other associated asset, is subject to the terms and conditions of the applicable agreement located at <https://docs.herodevs.com/tos/agreements>.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+--------
+
 The MIT License (MIT)
 
 Copyright (c) 2015 Joyent, Inc.

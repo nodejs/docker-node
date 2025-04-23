@@ -1,6 +1,6 @@
 FROM alpine:3.20
 
-ENV NODE_VERSION 22.14.0
+ENV NODE_VERSION 22.15.0
 
 RUN addgroup -g 1000 node \
     && adduser -u 1000 -G node -s /bin/sh -D node \
@@ -10,7 +10,7 @@ RUN addgroup -g 1000 node \
         curl \
     && ARCH= OPENSSL_ARCH='linux*' && alpineArch="$(apk --print-arch)" \
       && case "${alpineArch##*-}" in \
-        x86_64) ARCH='x64' CHECKSUM="87f163387ac85df69df6eeb863a6b6a1aa789b49cda1c495871c0fe360634db3" OPENSSL_ARCH=linux-x86_64;; \
+        x86_64) ARCH='x64' CHECKSUM="60198941802e88659bb3b30b9a45b694b1c695cf33c1ef58863f854996d11d5d" OPENSSL_ARCH=linux-x86_64;; \
         x86) OPENSSL_ARCH=linux-elf;; \
         aarch64) OPENSSL_ARCH=linux-aarch64;; \
         arm*) OPENSSL_ARCH=linux-armv4;; \
@@ -75,7 +75,8 @@ RUN addgroup -g 1000 node \
   && apk del .build-deps \
   # smoke tests
   && node --version \
-  && npm --version
+  && npm --version \
+  && rm -rf /tmp/*
 
 ENV YARN_VERSION 1.22.22
 

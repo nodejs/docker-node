@@ -3,7 +3,7 @@ FROM debian:bullseye-slim
 RUN groupadd --gid 1000 node \
   && useradd --uid 1000 --gid node --shell /bin/bash --create-home node
 
-ENV NODE_VERSION 22.14.0
+ENV NODE_VERSION 22.15.0
 
 RUN ARCH= OPENSSL_ARCH= && dpkgArch="$(dpkg --print-architecture)" \
     && case "${dpkgArch##*-}" in \
@@ -57,7 +57,8 @@ RUN ARCH= OPENSSL_ARCH= && dpkgArch="$(dpkg --print-architecture)" \
     && ln -s /usr/local/bin/node /usr/local/bin/nodejs \
     # smoke tests
     && node --version \
-    && npm --version
+    && npm --version \
+    && rm -rf /tmp/*
 
 ENV YARN_VERSION 1.22.22
 

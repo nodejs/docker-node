@@ -9,7 +9,7 @@ RUN ARCH= OPENSSL_ARCH= && dpkgArch="$(dpkg --print-architecture)" \
     && case "${dpkgArch##*-}" in \
       amd64) ARCH='x64' OPENSSL_ARCH='linux-x86_64';; \
       ppc64el) ARCH='ppc64le' OPENSSL_ARCH='linux-ppc64le';; \
-      s390x) ARCH='s390x' OPENSSL_ARCH='linux*-s390x';; \
+      s390x) ARCH='s390x' OPENSSL_ARCH='linux-s390x';; \
       arm64) ARCH='arm64' OPENSSL_ARCH='linux-aarch64';; \
       armhf) ARCH='armv7l' OPENSSL_ARCH='linux-armv4';; \
       i386) ARCH='x86' OPENSSL_ARCH='linux-elf';; \

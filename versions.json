@@ -37,6 +37,18 @@
       "bullseye-slim": [
         "amd64",
         "arm64v8"
+      ],
+      "trixie": [
+        "amd64",
+        "arm64v8",
+        "ppc64le",
+        "s390x"
+      ],
+      "trixie-slim": [
+        "amd64",
+        "arm64v8",
+        "ppc64le",
+        "s390x"
       ]
     }
   },
@@ -86,6 +98,18 @@
         "amd64",
         "arm32v7",
         "arm64v8"
+      ],
+      "trixie": [
+        "amd64",
+        "arm64v8",
+        "ppc64le",
+        "s390x"
+      ],
+      "trixie-slim": [
+        "amd64",
+        "arm64v8",
+        "ppc64le",
+        "s390x"
       ]
     }
   },
@@ -137,6 +161,18 @@
         "amd64",
         "arm32v7",
         "arm64v8"
+      ],
+      "trixie": [
+        "amd64",
+        "arm64v8",
+        "ppc64le",
+        "s390x"
+      ],
+      "trixie-slim": [
+        "amd64",
+        "arm64v8",
+        "ppc64le",
+        "s390x"
       ]
     }
   }

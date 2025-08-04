@@ -239,7 +239,7 @@ function get_full_version() {
     default_dockerfile="${version}/Dockerfile"
   fi
 
-  grep -m1 'ENV NODE_VERSION ' "${default_dockerfile}" | cut -d' ' -f3
+  grep -m1 'ENV NODE_VERSION=' "${default_dockerfile}" | cut -d= -f2
 }
 
 function get_major_minor_version() {

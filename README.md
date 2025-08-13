@@ -69,7 +69,9 @@ If you prefer Docker Compose:
 ```yml
 services:
   node:
-    image: "node:22"
+    image: node:22
+    user: node
+    working_dir: /home/node/app
     environment:
       - NODE_ENV=production
     volumes:

@@ -124,7 +124,7 @@ simply use `ENV` to override `NPM_CONFIG_LOGLEVEL`.
 
 ```dockerfile
 FROM node
-ENV NPM_CONFIG_LOGLEVEL info
+ENV NPM_CONFIG_LOGLEVEL=info
 ...
 ```
 

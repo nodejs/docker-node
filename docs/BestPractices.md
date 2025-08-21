@@ -115,6 +115,12 @@ USER 1000  # node
 
 Note that the `node` user is neither a build-time nor a run-time dependency and it can be removed or altered, as long as the functionality of the application you want to add to the container does not depend on it.
 
+Also note that if your image was running as the default `root` user and you're now using user `1000`, you may need to update your `COPY` commands so that the files are fully accessible to the `1000` user.  You can use the `--chown` flag as seen here for the `node_modules` directory:
+
+```Dockerfile
+COPY --chown=1000 ./node_modules ./node_modules
+```
+
 If you do not want nor need the user created in this image, you can remove it with the following:
 
 ```Dockerfile

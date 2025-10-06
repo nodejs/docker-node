@@ -95,6 +95,7 @@ defining [start script](https://docs.npmjs.com/misc/scripts#default-values).
 ### Best Practices
 
 We have assembled a [Best Practices Guide](./docs/BestPractices.md) for those using these images on a daily basis.
+This includes **security relevant** information e.g. on [how to run use a non-root user](./docs/BestPractices.md#non-root-user).
 
 ### Run a single Node.js script
 

@@ -263,7 +263,6 @@ about the expectations for all contributors to this project.
 
 ### Docker Working Group Collaborators
 
-- Mikeal Rogers ([mikeal](https://github.com/mikeal))
 - Laurent Goderre ([LaurentGoderre](https://github.com/LaurentGoderre))
 - Simen Bekkhus ([SimenB](https://github.com/SimenB))
 - Peter Dave Hello ([PeterDaveHello](https://github.com/PeterDaveHello))
@@ -272,5 +271,6 @@ about the expectations for all contributors to this project.
 
 #### Docker Working Group Members
 
+- Mikeal Rogers ([mikeal](https://github.com/mikeal))
 - Christopher Horrell ([chorrell](https://github.com/chorrell))
 - Peter Petrov ([pesho](https://github.com/pesho))

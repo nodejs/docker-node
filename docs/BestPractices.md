@@ -51,7 +51,7 @@ If you need to upgrade/downgrade `yarn` for a local install, you can do so by is
 ```Dockerfile
 FROM node:6
 
-ENV YARN_VERSION 1.16.0
+ENV YARN_VERSION=1.16.0
 
 RUN yarn policies set-version $YARN_VERSION
 ```
@@ -61,7 +61,7 @@ RUN yarn policies set-version $YARN_VERSION
 ```Dockerfile
 FROM node:6
 
-ENV YARN_VERSION 1.16.0
+ENV YARN_VERSION=1.16.0
 
 RUN curl -fSLO --compressed "https://yarnpkg.com/downloads/$YARN_VERSION/yarn-v$YARN_VERSION.tar.gz" \
     && tar -xzf yarn-v$YARN_VERSION.tar.gz -C /opt/ \
@@ -75,7 +75,7 @@ If you're using an Alpine-based image, `curl` won't be present, so you'll need t
 ```Dockerfile
 FROM node:6-alpine
 
-ENV YARN_VERSION 1.5.1
+ENV YARN_VERSION=1.5.1
 
 RUN apk add --no-cache --virtual .build-deps-yarn curl \
     && curl -fSLO --compressed "https://yarnpkg.com/downloads/$YARN_VERSION/yarn-v$YARN_VERSION.tar.gz" \

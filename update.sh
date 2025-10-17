@@ -132,7 +132,7 @@ function update_node_version() {
     nodeVersion="${version}.${fullVersion:-0}"
 
     sed -Ei -e 's/^FROM (.*)/FROM '"$fromprefix"'\1/' "${dockerfile}-tmp"
-    sed -Ei -e 's/^(ENV NODE_VERSION ).*/\1'"${nodeVersion}"'/' "${dockerfile}-tmp"
+    sed -Ei -e 's/^(ENV NODE_VERSION)=.*/\1='"${nodeVersion}"'/' "${dockerfile}-tmp"
 
     # shellcheck disable=SC1004
     new_line=' \\\
@@ -169,7 +169,7 @@ function update_node_version() {
       echo "${dockerfile} is already up to date!"
     else
       if [ "${SKIP}" != true ]; then
-        sed -Ei -e 's/^(ENV YARN_VERSION ).*/\1'"${yarnVersion}"'/' "${dockerfile}-tmp"
+        sed -Ei -e 's/^(ENV YARN_VERSION)=.*/\1='"${yarnVersion}"'/' "${dockerfile}-tmp"
       fi
       echo "${dockerfile} updated!"
     fi

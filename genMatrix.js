@@ -53,7 +53,7 @@ const getAffectedDockerfiles = (filesAdded, filesModified, filesRenamed) => {
 };
 
 const getFullNodeVersionFromDockerfile = (file) => fs.readFileSync(file, 'utf8')
-  .match(/^ENV NODE_VERSION (\d*\.*\d*\.\d*)/m)[1];
+  .match(/^ENV NODE_VERSION=(\d*\.*\d*\.\d*)/m)[1];
 
 const getDockerfileMatrixEntry = (file) => {
   const [variant] = path.dirname(file).split(path.sep).slice(-1);

@@ -8,5 +8,8 @@
         "Accept-Encoding": "br, gzip, deflate"
       }
     }
+  ],
+  "ignorePatterns": [
+    { "pattern": "^https://www\\.npmjs\\.com/" }
   ]
 }

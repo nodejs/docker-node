@@ -92,7 +92,7 @@ discussion in a non-voting capacity.
 ## Consensus Seeking Process
 
 The WG follows a [Consensus
-Seeking](http://en.wikipedia.org/wiki/Consensus-seeking_decision-making)
+Seeking](https://en.wikipedia.org/wiki/Consensus-seeking_decision-making)
 decision-making model.
 
 All proposed changes to the project must be made in the form of a pull

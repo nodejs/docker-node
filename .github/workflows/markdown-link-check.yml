@@ -14,10 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
-      - uses: actions/setup-node@2028fbc5c25fe9cf00d9f06a71cc4710d4507903 # v6.0.0
+      - uses: tcort/github-action-markdown-link-check@f3d33029dca1c4a24b87e2df648f9f4604ef6533 # v1.1.1
         with:
-          node-version: 'lts/*'
-      - name: Install markdown-link-check
-        run: npm i -g markdown-link-check@3.11.0
-      - name: Run markdown-link-check on MD files
-        run: find . -name "*.md" | xargs -n 1 markdown-link-check -c markdown_link_check_config.json -q
+          use-verbose-mode: 'yes'
+          config-file: 'markdown_link_check_config.json'

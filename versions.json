@@ -57,7 +57,7 @@
     "lts": "2025-10-28",
     "maintenance": "2026-10-20",
     "end": "2028-04-30",
-    "codename": "",
+    "codename": "krypton",
     "alpine-default": "alpine3.22",
     "debian-default": "bookworm",
     "variants": {

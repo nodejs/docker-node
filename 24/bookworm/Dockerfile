@@ -46,7 +46,7 @@ RUN ARCH= && dpkgArch="$(dpkg --print-architecture)" \
   && npm --version \
   && rm -rf /tmp/*
 
-ENV YARN_VERSION=1.22.22
+ENV YARN_VERSION=0.0.0
 
 RUN set -ex \
   # use pre-existing gpg directory, see https://github.com/nodejs/docker-node/pull/1895#issuecomment-1550389150

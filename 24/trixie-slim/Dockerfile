@@ -60,7 +60,7 @@ RUN ARCH= OPENSSL_ARCH= && dpkgArch="$(dpkg --print-architecture)" \
     && npm --version \
     && rm -rf /tmp/*
 
-ENV YARN_VERSION=1.22.22
+ENV YARN_VERSION=0.0.0
 
 RUN set -ex \
   && savedAptMark="$(apt-mark showmanual)" \

@@ -3,7 +3,7 @@ FROM debian:trixie-slim
 RUN groupadd --gid 1000 node \
   && useradd --uid 1000 --gid node --shell /bin/bash --create-home node
 
-ENV NODE_VERSION=22.21.1
+ENV NODE_VERSION=22.22.0
 
 RUN ARCH= OPENSSL_ARCH= && dpkgArch="$(dpkg --print-architecture)" \
     && case "${dpkgArch##*-}" in \
@@ -60,7 +60,7 @@ RUN ARCH= OPENSSL_ARCH= && dpkgArch="$(dpkg --print-architecture)" \
     && npm --version \
     && rm -rf /tmp/*
 
-ENV YARN_VERSION=1.22.22
+ENV YARN_VERSION=0.0.0
 
 RUN set -ex \
   && savedAptMark="$(apt-mark showmanual)" \

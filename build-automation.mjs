@@ -17,12 +17,22 @@ const checkIfThereAreNewVersions = async (github) => {
 
     for (let supportedVersion of supportedVersions) {
       const { stdout } = await exec(`ls ${supportedVersion}`);
+      const baseVersions = stdout.trim().split("\n");
 
-      const { stdout: fullVersionOutput } = await exec(`. ./functions.sh && get_full_version ./${supportedVersion}/${stdout.trim().split("\n")[0]}`, { shell: "bash" });
+      const debianVersion = baseVersions.find(v => !v.startsWith("alpine"));
+      const { stdout: debianVersionOutput } = await exec(`. ./functions.sh && get_full_version ./${supportedVersion}/${debianVersion}`, { shell: "bash" });
 
-      console.log(fullVersionOutput);
+      const alpineVersion = baseVersions.find(v => v.startsWith("alpine"));
+      const { stdout: alpineVersionOutput } = await exec(`. ./functions.sh && get_full_version ./${supportedVersion}/${alpineVersion}`, { shell: "bash" });
+      
+      const fullVersion = { debian : debianVersionOutput.trim(), alpine: alpineVersionOutput.trim() };
+      console.log(`${supportedVersion}: debian=${fullVersion.debian}, alpine=${fullVersion.alpine}`);
 
-      latestSupportedVersions[supportedVersion] = { fullVersion: fullVersionOutput.trim() };
+      latestSupportedVersions[supportedVersion] = {
+        fullVersion: fullVersion.debian,
+        alpineVersion: fullVersion.alpine,
+        alpineIsBehind: fullVersion.debian !== fullVersion.alpine
+      };
     }
 
     const { data: availableVersionsJson } = await github.request('https://nodejs.org/download/release/index.json');
@@ -39,9 +49,25 @@ const checkIfThereAreNewVersions = async (github) => {
       if (latestSupportedVersions[availableMajor] == null) {
         continue;
       }
-      const [_latestMajor, latestMinor, latestPatch] = latestSupportedVersions[availableMajor].fullVersion.split(".");
-      if (latestSupportedVersions[availableMajor] && (Number(availableMinor) > Number(latestMinor) || (availableMinor === latestMinor && Number(availablePatch) > Number(latestPatch)))) {
-        filteredNewerVersions[availableMajor] = { fullVersion: `${availableMajor}.${availableMinor}.${availablePatch}` };
+
+      const supported = latestSupportedVersions[availableMajor];
+      const [_latestMajor, latestMinor, latestPatch] = supported.fullVersion.split(".");
+      const [_alpineMajor, alpineMinor, alpinePatch] = supported.alpineVersion.split(".");
+
+      const availableFullVersion = `${availableMajor}.${availableMinor}.${availablePatch}`;
+
+      const newDebian = Number(availableMinor) > Number(latestMinor) || (availableMinor === latestMinor && Number(availablePatch) > Number(latestPatch));
+      const newAlpine = Number(availableMinor) > Number(alpineMinor) || (availableMinor === alpineMinor && Number(availablePatch) > Number(alpinePatch));
+
+      const isCatchup = supported.alpineIsBehind && newAlpine && availableFullVersion === supported.fullVersion;
+
+      // Alpine will be always behind or equal to Debian
+      // So if Debian is new version, then alpineOnly is always false. And vice versa
+      if (newDebian || isCatchup) {
+        filteredNewerVersions[availableMajor] = { 
+          fullVersion: availableFullVersion, 
+          alpineOnly: !newDebian 
+        };
       }
     }
 
@@ -88,13 +114,30 @@ export default async function(github) {
     const newVersions = await checkForMuslVersionsAndSecurityReleases(github, versions);
     let updatedVersions = [];
     for (const [version, newVersion] of Object.entries(newVersions)) {
-      if (newVersion.muslBuildExists) {
-        const { stdout } = await exec(`./update.sh ${newVersion.isSecurityRelease ? "-s " : ""}${version}`);
+      if (newVersion.alpineOnly) {
+        if (newVersion.muslBuildExists) {
+          console.log(`Catch-up Alpine build for version ${newVersion.fullVersion}`);
+          const { stdout } = await exec(`./update.sh ${version} alpine`);
+          console.log(stdout);
+          updatedVersions.push(`${newVersion.fullVersion} (alpine)`);
+        } else {
+          console.log(`There's no musl build for version ${newVersion.fullVersion} yet. Skipping Alpine catch-up.`);
+        }
+      } else if (newVersion.isSecurityRelease) {
+        console.log(`Processing security release ${newVersion.fullVersion}`);
+        const { stdout } = await exec(`./update.sh -s ${version}`);
+        console.log(stdout);
+        updatedVersions.push(newVersion.fullVersion);
+      } else if (newVersion.muslBuildExists) {
+        const { stdout } = await exec(`./update.sh ${version}`);
         console.log(stdout);
         updatedVersions.push(newVersion.fullVersion);
       } else {
-        console.log(`There's no musl build for version ${newVersion.fullVersion} yet.`);
-        process.exit(0);
+        // No musl build - update non-alpine only
+        console.log(`There's no musl build for version ${newVersion.fullVersion} yet. Updating non-alpine only.`);
+        const { stdout } = await exec(`./update.sh ${version} bookworm,bookworm-slim,bullseye,bullseye-slim,trixie,trixie-slim`);
+        console.log(stdout);
+        updatedVersions.push(`${newVersion.fullVersion} (non-alpine)`);
       }
     }
     const { stdout } = (await exec(`git diff`));

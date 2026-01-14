@@ -60,7 +60,7 @@ if [ ${#versions[@]} -eq 0 ]; then
 fi
 
 # Global variables
-# Get architecure and use this as target architecture for docker image
+# Get architecture and use this as target architecture for docker image
 # See details in function.sh
 # TODO: Should be able to specify target architecture manually
 arch=$(get_arch)

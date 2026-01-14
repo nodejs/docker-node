@@ -39,9 +39,9 @@ jobs:
           script: |
             const script = require(`${process.env.GITHUB_WORKSPACE}/genMatrix.js`)
             return script(
-              ${{ steps.diff.outputs.added_files }},
-              ${{ steps.diff.outputs.modified_files }},
-              ${{ steps.diff.outputs.renamed_files }},
+              ${{ steps.diff.outputs.added_files || '[]' }},
+              ${{ steps.diff.outputs.modified_files || '[]' }},
+              ${{ steps.diff.outputs.renamed_files || '[]' }},
             );
 
     outputs:

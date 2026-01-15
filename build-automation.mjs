@@ -24,7 +24,7 @@ const checkIfThereAreNewVersions = async (github) => {
 
       const alpineVersion = baseVersions.find(v => v.startsWith("alpine"));
       const { stdout: alpineVersionOutput } = await exec(`. ./functions.sh && get_full_version ./${supportedVersion}/${alpineVersion}`, { shell: "bash" });
-      
+
       const fullVersion = { main : standardVersionOutput.trim(), alpine: alpineVersionOutput.trim() };
       console.log(`${supportedVersion}: main=${fullVersion.main}, alpine=${fullVersion.alpine}`);
 
@@ -64,9 +64,9 @@ const checkIfThereAreNewVersions = async (github) => {
       // Alpine will be always behind or equal to main
       // So if main is new version, then alpineOnly is always false. And vice versa
       if (newMainline || isCatchup) {
-        filteredNewerVersions[availableMajor] = { 
-          fullVersion: availableFullVersion, 
-          alpineOnly: !newMainline 
+        filteredNewerVersions[availableMajor] = {
+          fullVersion: availableFullVersion,
+          alpineOnly: !newMainline
         };
       }
     }
@@ -119,19 +119,19 @@ export default async function(github) {
         //  If MUSL is available: build everything (new versions) or alpine only (catch-up)
         if (muslBuildExists) {
             const updateScope = alpineOnly ? "alpine" : "";
-            
+
             console.log(`MUSL available. Updating ${fullVersion} ${updateScope}.`.trim());
             const { stdout } = await exec(`./update.sh ${version} ${updateScope}`.trim());
             console.log(stdout);
-            
+
             updatedVersions.push(`${fullVersion} ${updateScope}`.trim());
         //  Security release: no MUSL build
         } else if (isSecurityRelease && !alpineOnly) {
             console.log(`Updating ${fullVersion} for non-alpine.`);
-            
+
             const { stdout } = await exec(`./update.sh -s ${version}`);
             console.log(stdout);
-            
+
             updatedVersions.push(`${fullVersion} (non-alpine)`);
         } else {
             console.log(`No MUSL build for ${fullVersion} yet.`);

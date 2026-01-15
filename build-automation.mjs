@@ -113,33 +113,31 @@ export default async function(github) {
   } else {
     const newVersions = await checkForMuslVersionsAndSecurityReleases(github, versions);
     let updatedVersions = [];
+
     for (const [version, newVersion] of Object.entries(newVersions)) {
-      if (newVersion.alpineOnly) {
-        if (newVersion.muslBuildExists) {
-          console.log(`Catch-up Alpine build for version ${newVersion.fullVersion}`);
-          const { stdout } = await exec(`./update.sh ${version} alpine`);
-          console.log(stdout);
-          updatedVersions.push(`${newVersion.fullVersion} (alpine)`);
+        const { fullVersion, muslBuildExists, isSecurityRelease, alpineOnly } = newVersion;
+        //  If MUSL is available: build everything (new versions) or alpine only (catch-up)
+        if (muslBuildExists) {
+            const updateScope = alpineOnly ? "alpine" : "";
+            
+            console.log(`MUSL available. Updating ${fullVersion} ${updateScope}.`.trim());
+            const { stdout } = await exec(`./update.sh ${version} ${updateScope}`.trim());
+            console.log(stdout);
+            
+            updatedVersions.push(`${fullVersion} ${updateScope}`.trim());
+        //  Security release: no MUSL build
+        } else if (isSecurityRelease && !alpineOnly) {
+            console.log(`Updating ${fullVersion} for non-alpine.`);
+            
+            const { stdout } = await exec(`./update.sh -s ${version}`);
+            console.log(stdout);
+            
+            updatedVersions.push(`${fullVersion} (non-alpine)`);
         } else {
-          console.log(`There's no musl build for version ${newVersion.fullVersion} yet. Skipping Alpine catch-up.`);
+            console.log(`No MUSL build for ${fullVersion} yet.`);
         }
-      } else if (newVersion.isSecurityRelease) {
-        console.log(`Processing security release ${newVersion.fullVersion}`);
-        const { stdout } = await exec(`./update.sh -s ${version}`);
-        console.log(stdout);
-        updatedVersions.push(newVersion.fullVersion);
-      } else if (newVersion.muslBuildExists) {
-        const { stdout } = await exec(`./update.sh ${version}`);
-        console.log(stdout);
-        updatedVersions.push(newVersion.fullVersion);
-      } else {
-        // No musl build - update non-alpine only
-        console.log(`There's no musl build for version ${newVersion.fullVersion} yet. Updating non-alpine only.`);
-        const { stdout } = await exec(`./update.sh ${version} bookworm,bookworm-slim,bullseye,bullseye-slim,trixie,trixie-slim`);
-        console.log(stdout);
-        updatedVersions.push(`${newVersion.fullVersion} (non-alpine)`);
-      }
     }
+
     const { stdout } = (await exec(`git diff`));
     console.log(stdout);
 

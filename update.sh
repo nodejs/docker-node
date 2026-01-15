@@ -130,7 +130,7 @@ function update_node_version() {
     fi
 
     nodeVersion="${version}.${fullVersion:-0}"
-    
+
     # preserve the existing YARN_VERSION
     if [ "${SKIP}" = true ] && [ -f "${dockerfile}" ]; then
       existing_yarn_version=$(grep -m1 'ENV YARN_VERSION=' "${dockerfile}" | cut -d'=' -f2 || echo "")

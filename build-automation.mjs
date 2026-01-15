@@ -19,19 +19,19 @@ const checkIfThereAreNewVersions = async (github) => {
       const { stdout } = await exec(`ls ${supportedVersion}`);
       const baseVersions = stdout.trim().split("\n");
 
-      const debianVersion = baseVersions.find(v => !v.startsWith("alpine"));
-      const { stdout: debianVersionOutput } = await exec(`. ./functions.sh && get_full_version ./${supportedVersion}/${debianVersion}`, { shell: "bash" });
+      const standardVersion = baseVersions.find(v => !v.startsWith("alpine"));
+      const { stdout: standardVersionOutput } = await exec(`. ./functions.sh && get_full_version ./${supportedVersion}/${standardVersion}`, { shell: "bash" });
 
       const alpineVersion = baseVersions.find(v => v.startsWith("alpine"));
       const { stdout: alpineVersionOutput } = await exec(`. ./functions.sh && get_full_version ./${supportedVersion}/${alpineVersion}`, { shell: "bash" });
       
-      const fullVersion = { debian : debianVersionOutput.trim(), alpine: alpineVersionOutput.trim() };
-      console.log(`${supportedVersion}: debian=${fullVersion.debian}, alpine=${fullVersion.alpine}`);
+      const fullVersion = { main : standardVersionOutput.trim(), alpine: alpineVersionOutput.trim() };
+      console.log(`${supportedVersion}: main=${fullVersion.main}, alpine=${fullVersion.alpine}`);
 
       latestSupportedVersions[supportedVersion] = {
-        fullVersion: fullVersion.debian,
+        fullVersion: fullVersion.main,
         alpineVersion: fullVersion.alpine,
-        alpineIsBehind: fullVersion.debian !== fullVersion.alpine
+        alpineIsBehind: fullVersion.main !== fullVersion.alpine
       };
     }
 
@@ -56,17 +56,17 @@ const checkIfThereAreNewVersions = async (github) => {
 
       const availableFullVersion = `${availableMajor}.${availableMinor}.${availablePatch}`;
 
-      const newDebian = Number(availableMinor) > Number(latestMinor) || (availableMinor === latestMinor && Number(availablePatch) > Number(latestPatch));
+      const newMainline = Number(availableMinor) > Number(latestMinor) || (availableMinor === latestMinor && Number(availablePatch) > Number(latestPatch));
       const newAlpine = Number(availableMinor) > Number(alpineMinor) || (availableMinor === alpineMinor && Number(availablePatch) > Number(alpinePatch));
 
       const isCatchup = supported.alpineIsBehind && newAlpine && availableFullVersion === supported.fullVersion;
 
-      // Alpine will be always behind or equal to Debian
-      // So if Debian is new version, then alpineOnly is always false. And vice versa
-      if (newDebian || isCatchup) {
+      // Alpine will be always behind or equal to main
+      // So if main is new version, then alpineOnly is always false. And vice versa
+      if (newMainline || isCatchup) {
         filteredNewerVersions[availableMajor] = { 
           fullVersion: availableFullVersion, 
-          alpineOnly: !newDebian 
+          alpineOnly: !newMainline 
         };
       }
     }

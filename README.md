@@ -258,7 +258,7 @@ variants. Because Yarn v1 is [frozen](https://github.com/yarnpkg/yarn) and no lo
 bundling plans have been revised.
 
 As of Node.js 26.0.0 it is planned to no longer bundle Yarn v1 into `node` images.
-`node` images for lower versions of Node.js (<26) will continue to bundle Yarn v1.
+For lower versions of Node.js (<26) `node` images will continue to bundle Yarn v1.
 
 Users with legacy requirements for Yarn v1 under Node.js 26 and above may be able
 to follow [Yarn v1 installation instructions](https://classic.yarnpkg.com/en/docs/install)

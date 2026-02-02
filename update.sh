@@ -218,6 +218,7 @@ for version in "${versions[@]}"; do
 
     # Skip alpine variants when SKIP is true
     if [ "${SKIP}" = true ] && is_alpine "${variant}"; then
+      info "SKIP=true; skipping alpine variant '${variant}' for version '${versionnum}' (will need updating once MUSL builds are available)"
       continue
     fi
 

@@ -20,9 +20,13 @@ const checkIfThereAreNewVersions = async (github) => {
       const baseVersions = stdout.trim().split("\n");
 
       const standardVersion = baseVersions.find(v => !v.startsWith("alpine"));
-      const { stdout: standardVersionOutput } = await exec(`. ./functions.sh && get_full_version ./${supportedVersion}/${standardVersion}`, { shell: "bash" });
-
       const alpineVersion = baseVersions.find(v => v.startsWith("alpine"));
+      //skip if no base version found
+      if (!standardVersion || !alpineVersion) {
+        continue;
+      }
+
+      const { stdout: standardVersionOutput } = await exec(`. ./functions.sh && get_full_version ./${supportedVersion}/${standardVersion}`, { shell: "bash" });
       const { stdout: alpineVersionOutput } = await exec(`. ./functions.sh && get_full_version ./${supportedVersion}/${alpineVersion}`, { shell: "bash" });
 
       const fullVersion = { main : standardVersionOutput.trim(), alpine: alpineVersionOutput.trim() };

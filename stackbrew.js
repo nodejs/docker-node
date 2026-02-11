@@ -51,11 +51,10 @@ for (version of versions) {
     let isSlim = slimRE.test(variant)
     let isDefaultSlim = new RegExp(`${defaultDebian}-slim`).test(variant)
 
-    // Get full version from the first Dockerfile
-    if (!fullversion) {
-      let dockerfile = fs.readFileSync(dockerfilePath, 'utf-8')
-      fullversion = dockerfile.match(/ENV NODE_VERSION=(?<major>\d+)\.(?<minor>\d+)\.(?<patch>\d+)/)
-    }
+    // Get full version from the Dockerfile
+    let dockerfile = fs.readFileSync(dockerfilePath, 'utf-8')
+    fullversion = dockerfile.match(/ENV NODE_VERSION=(?<major>\d+)\.(?<minor>\d+)\.(?<patch>\d+)/)
+
     let tags = [
       `${fullversion.groups.major}.${fullversion.groups.minor}.${fullversion.groups.patch}-${variant}`,
       `${fullversion.groups.major}.${fullversion.groups.minor}-${variant}`,

@@ -236,13 +236,11 @@ Node.js Docker project.
 
 ## Supported Docker versions
 
-This image is officially supported on Docker version 1.9.1.
+If you are using [Docker Desktop](https://docs.docker.com/get-started/get-docker/),
+it is recommended to use a recent version, released in the last six months.
 
-Support for older versions (down to 1.6) is provided on a best-effort basis.
-
-Please see [the Docker installation
-documentation](https://docs.docker.com/installation/) for details on how to
-upgrade your Docker daemon.
+Refer to [Docker Engine release notes](https://docs.docker.com/engine/release-notes/)
+for current Engine versions.
 
 ## Supported Node.js versions
 

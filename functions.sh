@@ -69,7 +69,7 @@ function get_variants() {
   if [ ${#variantsfilter[@]} -gt 0 ]; then
     for variant1 in "${availablevariants[@]}"; do
       for variant2 in "${variantsfilter[@]}"; do
-        if [ "${variant1}" = "${variant2}" ]; then
+        if [[ "${variant1}" =~ ^"${variant2}" ]]; then
           variants+=("${variant1}")
         fi
       done

@@ -93,10 +93,15 @@ export default async function(github) {
         console.log(stdout);
         updatedVersions.push(newVersion.fullVersion);
       } else {
-        console.log(`There's no musl build for version ${newVersion.fullVersion} yet.`);
-        process.exit(0);
+        console.log(`Skipping version ${newVersion.fullVersion} - no musl build available yet.`);
       }
     }
+
+    if (updatedVersions.length === 0) {
+      console.log("No versions with musl builds were updated.");
+      process.exit(0);
+    }
+
     const { stdout } = (await exec(`git diff`));
     console.log(stdout);
 

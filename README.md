@@ -31,10 +31,10 @@ The official Node.js docker image, made with love by the node community.
 - [Supported Docker versions](#supported-docker-versions)
 - [Supported Node.js versions](#supported-nodejs-versions)
 - [Governance and Current Members](#governance-and-current-members)
-  - [Docker Working Group Members](#docker-working-group-members)
-  - [Docker Working Group Collaborators](#docker-working-group-collaborators)
+  - [Docker Maintainers](#docker-maintainers)
+  - [Collaborators](#collaborators)
   - [Emeritus](#emeritus)
-    - [Docker Working Group Members](#docker-working-group-members-1)
+    - [Former Maintainers](#former-maintainers)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -248,17 +248,18 @@ This project will support Node.js versions as still under active support as per 
 
 ## Governance and Current Members
 
-The Node.js Docker Image is governed by the Docker Working Group. See
+The Node.js Docker Image is governed by an open maintainer model. See
 [GOVERNANCE.md](GOVERNANCE.md)
-to learn more about the group's structure and [CONTRIBUTING.md](CONTRIBUTING.md) for guidance
-about the expectations for all contributors to this project.
+for project roles and decision-making, and [CONTRIBUTING.md](CONTRIBUTING.md) for contribution guidance. If a final decision cannot be reached using consensus seeking, the Node.js TSC is the final arbiter.
 
-### Docker Working Group Members
+### Docker Maintainers
 
 - Hans Kristian Flaatten ([starefossen](https://github.com/starefossen))
 - Hugues Malphettes ([hmalphettes](https://github.com/hmalphettes))
+- Rafael Gonzaga ([rafaelgss](https://github.com/rafaelgss))
+- Matteo Collina ([mcollina](https://github.com/mcollina))
 
-### Docker Working Group Collaborators
+### Collaborators
 
 - Laurent Goderre ([LaurentGoderre](https://github.com/LaurentGoderre))
 - Simen Bekkhus ([SimenB](https://github.com/SimenB))
@@ -266,7 +267,7 @@ about the expectations for all contributors to this project.
 
 ### Emeritus
 
-#### Docker Working Group Members
+#### Former Maintainers
 
 - Mikeal Rogers ([mikeal](https://github.com/mikeal))
 - Christopher Horrell ([chorrell](https://github.com/chorrell))

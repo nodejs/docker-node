@@ -61,7 +61,7 @@ For governance, membership, major policy, or contentious technical changes:
 1. Open an issue or PR describing the decision and proposed outcome.
 2. Allow time for async feedback (normally at least 5 days).
 3. If no unresolved objections remain, a maintainer may merge/close with a
-   summary.
+    summary.
 
 If a final decision cannot be made using Consensus Seeking, the issue should be
 escalated to the Node.js TSC (for example by requesting `tsc-agenda`).

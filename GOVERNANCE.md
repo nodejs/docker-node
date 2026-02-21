@@ -40,8 +40,9 @@ Maintainers are responsible for long-term stewardship of the project:
 
 Current maintainers:
 
-- Hans Kristian Flaatten ([starefossen](https://github.com/starefossen))
-- Hugues Malphettes ([hmalphettes](https://github.com/hmalphettes))
+- Laurent Goderre ([LaurentGoderre](https://github.com/LaurentGoderre))
+- Simen Bekkhus ([SimenB](https://github.com/SimenB))
+- Peter Dave Hello ([PeterDaveHello](https://github.com/PeterDaveHello))
 - Rafael Gonzaga ([rafaelgss](https://github.com/rafaelgss))
 - Matteo Collina ([mcollina](https://github.com/mcollina))
 
@@ -79,6 +80,10 @@ publicly in this repository.
 
 Collaborator and maintainer changes are proposed via pull request to `README.md`
 and/or this file, with rationale included in the PR description.
+
+Project access should be managed via the
+[@nodejs/docker team](https://github.com/orgs/nodejs/teams/docker) and kept in
+sync with Node.js collaborator tooling.
 
 Maintainers can also move inactive members to emeritus status through the same
 public process.

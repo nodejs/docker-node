@@ -254,16 +254,17 @@ for project roles and decision-making, and [CONTRIBUTING.md](CONTRIBUTING.md) fo
 
 ### Docker Maintainers
 
-- Hans Kristian Flaatten ([starefossen](https://github.com/starefossen))
-- Hugues Malphettes ([hmalphettes](https://github.com/hmalphettes))
+- Laurent Goderre ([LaurentGoderre](https://github.com/LaurentGoderre))
+- Simen Bekkhus ([SimenB](https://github.com/SimenB))
+- Peter Dave Hello ([PeterDaveHello](https://github.com/PeterDaveHello))
 - Rafael Gonzaga ([rafaelgss](https://github.com/rafaelgss))
 - Matteo Collina ([mcollina](https://github.com/mcollina))
 
 ### Collaborators
 
-- Laurent Goderre ([LaurentGoderre](https://github.com/LaurentGoderre))
-- Simen Bekkhus ([SimenB](https://github.com/SimenB))
-- Peter Dave Hello ([PeterDaveHello](https://github.com/PeterDaveHello))
+Additional collaborators are managed via the
+[@nodejs/docker team](https://github.com/orgs/nodejs/teams/docker).
+
 
 ### Emeritus
 

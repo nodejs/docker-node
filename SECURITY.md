@@ -13,6 +13,6 @@ CVEs for the base operating system image packages should be reported to those re
 
 When base images are patched, the images are rebuilt and rolled out to the Docker hub without intervention by this repo. This process is explained in <https://github.com/docker-library/faq/#why-does-my-security-scanner-show-that-an-image-has-cves>.
 
-When vulnerabilities are resolved in a Node.js release, they are routinely released in a corresponding new Node.js Docker image from time to time as needed.
+When vulnerabilities are resolved in a Node.js release, they are routinely released in a corresponding new Node.js Docker image. The schedule is determined by the Node.js releases not by the Node.js Docker repo.
 
 Please do not open issues in this repo for vulnerabilities in the above components. If they cannot be actioned here, the issue will be closed.

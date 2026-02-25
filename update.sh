@@ -170,6 +170,12 @@ function update_node_version() {
     else
       if [ "${SKIP}" != true ]; then
         sed -Ei -e 's/^(ENV YARN_VERSION)=.*/\1='"${yarnVersion}"'/' "${dockerfile}-tmp"
+      else
+        # Preserve existing YARN_VERSION from current Dockerfile when SKIP=true
+        existingYarnVersion=$(sed -n 's/^ENV YARN_VERSION=//p' "${dockerfile}")
+        if [ -n "${existingYarnVersion}" ]; then
+          sed -Ei -e 's/^(ENV YARN_VERSION)=.*/\1='"${existingYarnVersion}"'/' "${dockerfile}-tmp"
+        fi
       fi
       echo "${dockerfile} updated!"
     fi

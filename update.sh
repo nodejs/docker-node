@@ -165,21 +165,21 @@ function update_node_version() {
       sed -Ei -e "s/(debian:)name-slim/\\1${variant}/" "${dockerfile}-tmp"
     fi
 
-    if diff -q "${dockerfile}-tmp" "${dockerfile}" > /dev/null; then
-      echo "${dockerfile} is already up to date!"
-    else
-      if [ "${SKIP}" != true ]; then
-        sed -Ei -e 's/^(ENV YARN_VERSION)=.*/\1='"${yarnVersion}"'/' "${dockerfile}-tmp"
-      fi
-      echo "${dockerfile} updated!"
+    if [ "${SKIP}" != true ]; then
+      sed -Ei -e 's/^(ENV YARN_VERSION)=.*/\1='"${yarnVersion}"'/' "${dockerfile}-tmp"
     fi
 
     # Required for POSIX sed
     if [ -f "${dockerfile}-tmp-e" ]; then
       rm "${dockerfile}-tmp-e"
     fi
-
-    mv -f "${dockerfile}-tmp" "${dockerfile}"
+    if cmp -s "${dockerfile}-tmp" "${dockerfile}"; then
+      rm -f "${dockerfile}-tmp"
+      info "${dockerfile} already up to date."
+    else
+      mv -f "${dockerfile}-tmp" "${dockerfile}"
+      info "${dockerfile} updated."
+    fi
   )
 }
 

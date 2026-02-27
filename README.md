@@ -174,7 +174,7 @@ slimmer images in general.
 
 This variant is highly recommended when final image size being as small as
 possible is desired. The main caveat to note is that it does use
-[musl libc](https://www.musl-libc.org) instead of
+[musl libc](https://musl.libc.org/) instead of
 [glibc and friends](https://www.etalabs.net/compare_libcs.html), so certain
 software might run into issues depending on the depth of their libc
 requirements. However, most software doesn't have an issue with this, so this

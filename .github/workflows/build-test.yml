@@ -56,6 +56,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix: ${{ fromJson(needs.gen-matrix.outputs.matrix) }}
+    env:
+      NODE_VERSION: ${{ matrix.version }}
+      IMAGE_TAG: node:${{ matrix.version }}-${{ matrix.variant }}
 
     steps:
       - name: Get short node version
@@ -73,25 +76,8 @@ jobs:
         with:
           push: false
           load: true
-          context: .
-          file: ./${{ steps.short-version.outputs.result }}/${{ matrix.variant }}/Dockerfile
-          tags: node:${{ matrix.version }}-${{ matrix.variant }}
+          context: ./${{ steps.short-version.outputs.result }}/${{ matrix.variant }}
+          tags: ${{ env.IMAGE_TAG }}
 
-      - name: Test for node version
-        run: |
-          image_node_version=$(docker run --rm node:${{ matrix.version }}-${{ matrix.variant }} node --print "process.versions.node")
-          echo "Expected: \"${{ matrix.version }}\", Got: \"${image_node_version}\""
-          [ "${image_node_version}" == "${{ matrix.version }}" ]
-
-      - name: Verify entrypoint runs regular, non-executable files with node
-        run: |
-          tmp_file=$(mktemp)
-          echo 'console.log("success")' > "${tmp_file}"
-          output=$(docker run --rm -v "${tmp_file}:/app/index.js" node:${{ matrix.version }}-${{ matrix.variant }} app/index.js)
-          [ "${output}" = 'success' ]
-
-      - name: Test for npm
-        run: docker run --rm node:${{ matrix.version }}-${{ matrix.variant }} npm --version
-
-      - name: Test for yarn
-        run: docker run --rm node:${{ matrix.version }}-${{ matrix.variant }} yarn --version
+      - name: Run tests with BATS
+        run: npx bats@1.6.0 --verbose-run test/docker-image.bats

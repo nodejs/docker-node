@@ -13,9 +13,9 @@ New **NPM** releases are not tracked. We simply use the NPM version bundled in t
 ### Image Creation Automation
 
 - Every 15 minutes, the [workflow](https://github.com/nodejs/docker-node/blob/main/.github/workflows/automatic-updates.yml) within the [nodejs/docker-node](https://github.com/nodejs/docker-node) repo [checks](https://github.com/nodejs/docker-node/blob/main/build-automation.mjs) for new versions of Node.js [published to the website's `index.json` file](https://nodejs.org/download/release/index.json).
-  - If found, it also checks for an [unofficial musl/Alpline build](https://unofficial-builds.nodejs.org/download/release/index.json).
+  - If found, it also checks for an [unofficial musl/Alpine build](https://unofficial-builds.nodejs.org/download/release/index.json).
   - If found, the [update script](https://github.com/nodejs/docker-node/blob/main/update.sh) runs
-  - The workflow opens a pull request either automatically via [nodejs-github-bot](https://github.com/nodejs-github-bot) or in some cases manually, such as when there is a new major releases.
+  - The workflow opens a pull request either automatically via [nodejs-github-bot](https://github.com/nodejs-github-bot) or in some cases manually, such as when there is a new major release.
 - Another [workflow](https://github.com/nodejs/docker-node/blob/main/.github/workflows/official-pr.yml) detects the merger of these pull requests and opens a pull request to [docker-library/official-images](https://github.com/docker-library/official-images).
 - The official images are built and published according to [docker's process](https://github.com/docker-library/faq#an-images-source-changed-in-git-now-what), resulting in the new images being available on [Docker Hub](https://hub.docker.com/_/node).
 

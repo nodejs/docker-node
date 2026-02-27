@@ -230,7 +230,7 @@ repository.
 
 ## License
 
-[License information](https://github.com/nodejs/node/blob/master/LICENSE) for
+[License information](https://github.com/nodejs/node/blob/main/LICENSE) for
 the software contained in this image. [License information](LICENSE) for the
 Node.js Docker project.
 

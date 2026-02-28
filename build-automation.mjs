@@ -17,12 +17,26 @@ const checkIfThereAreNewVersions = async (github) => {
 
     for (let supportedVersion of supportedVersions) {
       const { stdout } = await exec(`ls ${supportedVersion}`);
+      const baseVersions = stdout.trim().split("\n");
 
-      const { stdout: fullVersionOutput } = await exec(`. ./functions.sh && get_full_version ./${supportedVersion}/${stdout.trim().split("\n")[0]}`, { shell: "bash" });
+      const standardVersion = baseVersions.find(v => !v.startsWith("alpine"));
+      const alpineVersion = baseVersions.find(v => v.startsWith("alpine"));
+      //skip if no base version found
+      if (!standardVersion || !alpineVersion) {
+        continue;
+      }
 
-      console.log(fullVersionOutput);
+      const { stdout: standardVersionOutput } = await exec(`. ./functions.sh && get_full_version ./${supportedVersion}/${standardVersion}`, { shell: "bash" });
+      const { stdout: alpineVersionOutput } = await exec(`. ./functions.sh && get_full_version ./${supportedVersion}/${alpineVersion}`, { shell: "bash" });
 
-      latestSupportedVersions[supportedVersion] = { fullVersion: fullVersionOutput.trim() };
+      const fullVersion = { main : standardVersionOutput.trim(), alpine: alpineVersionOutput.trim() };
+      console.log(`${supportedVersion}: main=${fullVersion.main}, alpine=${fullVersion.alpine}`);
+
+      latestSupportedVersions[supportedVersion] = {
+        fullVersion: fullVersion.main,
+        alpineVersion: fullVersion.alpine,
+        alpineIsBehind: fullVersion.main !== fullVersion.alpine
+      };
     }
 
     const { data: availableVersionsJson } = await github.request('https://nodejs.org/download/release/index.json');
@@ -39,9 +53,25 @@ const checkIfThereAreNewVersions = async (github) => {
       if (latestSupportedVersions[availableMajor] == null) {
         continue;
       }
-      const [_latestMajor, latestMinor, latestPatch] = latestSupportedVersions[availableMajor].fullVersion.split(".");
-      if (latestSupportedVersions[availableMajor] && (Number(availableMinor) > Number(latestMinor) || (availableMinor === latestMinor && Number(availablePatch) > Number(latestPatch)))) {
-        filteredNewerVersions[availableMajor] = { fullVersion: `${availableMajor}.${availableMinor}.${availablePatch}` };
+
+      const supported = latestSupportedVersions[availableMajor];
+      const [_latestMajor, latestMinor, latestPatch] = supported.fullVersion.split(".");
+      const [_alpineMajor, alpineMinor, alpinePatch] = supported.alpineVersion.split(".");
+
+      const availableFullVersion = `${availableMajor}.${availableMinor}.${availablePatch}`;
+
+      const newMainline = Number(availableMinor) > Number(latestMinor) || (availableMinor === latestMinor && Number(availablePatch) > Number(latestPatch));
+      const newAlpine = Number(availableMinor) > Number(alpineMinor) || (availableMinor === alpineMinor && Number(availablePatch) > Number(alpinePatch));
+
+      const isCatchup = supported.alpineIsBehind && newAlpine && availableFullVersion === supported.fullVersion;
+
+      // Alpine will be always behind or equal to main
+      // So if main is new version, then alpineOnly is always false. And vice versa
+      if (newMainline || isCatchup) {
+        filteredNewerVersions[availableMajor] = {
+          fullVersion: availableFullVersion,
+          alpineOnly: !newMainline
+        };
       }
     }
 
@@ -87,16 +117,31 @@ export default async function(github) {
   } else {
     const newVersions = await checkForMuslVersionsAndSecurityReleases(github, versions);
     let updatedVersions = [];
+
     for (const [version, newVersion] of Object.entries(newVersions)) {
-      if (newVersion.muslBuildExists) {
-        const { stdout } = await exec(`./update.sh ${newVersion.isSecurityRelease ? "-s " : ""}${version}`);
-        console.log(stdout);
-        updatedVersions.push(newVersion.fullVersion);
-      } else {
-        console.log(`There's no musl build for version ${newVersion.fullVersion} yet.`);
-        process.exit(0);
-      }
+        const { fullVersion, muslBuildExists, isSecurityRelease, alpineOnly } = newVersion;
+        //  If MUSL is available: build everything (new versions) or alpine only (catch-up)
+        if (muslBuildExists) {
+            const updateScope = alpineOnly ? "alpine" : "";
+
+            console.log(`MUSL available. Updating ${fullVersion} ${updateScope}.`.trim());
+            const { stdout } = await exec(`./update.sh ${version} ${updateScope}`.trim());
+            console.log(stdout);
+
+            updatedVersions.push(`${fullVersion} ${updateScope}`.trim());
+        //  Security release: no MUSL build
+        } else if (isSecurityRelease && !alpineOnly) {
+            console.log(`Updating ${fullVersion} for non-alpine.`);
+
+            const { stdout } = await exec(`./update.sh -s ${version}`);
+            console.log(stdout);
+
+            updatedVersions.push(`${fullVersion} (non-alpine)`);
+        } else {
+            console.log(`No MUSL build for ${fullVersion} yet.`);
+        }
     }
+
     const { stdout } = (await exec(`git diff`));
     console.log(stdout);
 

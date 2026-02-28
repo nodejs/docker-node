@@ -131,6 +131,14 @@ function update_node_version() {
 
     nodeVersion="${version}.${fullVersion:-0}"
 
+    # preserve the existing YARN_VERSION
+    if [ "${SKIP}" = true ] && [ -f "${dockerfile}" ]; then
+      existing_yarn_version=$(grep -m1 'ENV YARN_VERSION=' "${dockerfile}" | cut -d'=' -f2 || echo "")
+      if [ -n "${existing_yarn_version}" ]; then
+        sed -Ei -e 's/^(ENV YARN_VERSION)=.*/\1='"${existing_yarn_version}"'/' "${dockerfile}-tmp"
+      fi
+    fi
+
     sed -Ei -e 's/^FROM (.*)/FROM '"$fromprefix"'\1/' "${dockerfile}-tmp"
     sed -Ei -e 's/^(ENV NODE_VERSION)=.*/\1='"${nodeVersion}"'/' "${dockerfile}-tmp"
 
@@ -207,6 +215,12 @@ for version in "${versions[@]}"; do
   for variant in "${variants[@]}"; do
     # Skip non-docker directories
     [ -f "${version}/${variant}/Dockerfile" ] || continue
+
+    # Skip alpine variants when SKIP is true
+    if [ "${SKIP}" = true ] && is_alpine "${variant}"; then
+      info "SKIP=true; skipping alpine variant '${variant}' for version '${versionnum}' (will need updating once MUSL builds are available)"
+      continue
+    fi
 
     update_variant=$(in_variants_to_update "${variant}")
     template_file="${parentpath}/Dockerfile-${variant}.template"

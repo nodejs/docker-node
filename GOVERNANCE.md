@@ -1,139 +1,114 @@
-# Docker Working Group
+# Governance
 
-The Node.js Docker project is jointly governed by a Working Group (WG)
-that is responsible for high-level guidance of the project.
+The Node.js Docker image project is governed using an **open maintainer model**.
 
-The WG has final authority over this project including:
+This repository is no longer operated as a Node.js TSC-chartered working group.
+Instead, project decisions are made by maintainers in public, in this repository.
 
-* Technical direction
-* Project governance and process (including this policy)
-* Contribution policy
-* GitHub repository hosting
-* Conduct guidelines
-* Maintaining the list of additional Collaborators
+## Guiding principles
 
-For the current list of WG members, see the project
-[README.md](./README.md#people).
+- Default to public discussion in issues and pull requests.
+- Use [Consensus Seeking](https://en.wikipedia.org/wiki/Consensus_decision-making) for decision making.
+- Keep decision records in-repo so contributors can follow context.
+- Keep a clear path from contributor → collaborator → maintainer.
 
-## Collaborators
+## Roles
 
-The [nodejs/docker-node](https://github.com/nodejs/docker-node) GitHub
-repository is maintained by the WG and additional Collaborators who
-are added by the WG on an ongoing basis.
+### Contributors
 
-Individuals making significant and valuable contributions are made
-Collaborators and given commit-access to the project.  These
-individuals are identified by the WG and their addition as
-Collaborators is discussed as a pull request to this project's
-[README.md](./README.md#people).
+Anyone who proposes changes, reports issues, reviews code, or helps users.
 
-_Note:_ If you make a significant contribution and are not considered
-for commit-access log an issue or contact a WG member directly.
+### Collaborators
 
-Modifications of the contents of the
-[nodejs/docker-node](https://github.com/nodejs/docker-node) repository
-are made on a collaborative basis.  Anybody with a GitHub account may
-propose a modification via pull request and it will be considered by
-the project Collaborators.  All pull requests must be reviewed and
-accepted by a Collaborator with sufficient expertise who is able to
-take full responsibility for the change.  In the case of pull requests
-proposed by an existing Collaborator, an additional Collaborator is
-required for sign-off.  Consensus should be sought if additional
-Collaborators participate and there is disagreement around a
-particular modification.  See _Consensus Seeking Process_ below for
-further detail on the consensus model used for governance.
+Collaborators have write access and help with day-to-day maintenance:
 
-Collaborators may opt to elevate significant or controversial
-modifications, or modifications that have not found consensus to the
-WG for discussion by assigning the ***WG-agenda*** label to a pull
-request or issue.  The WG should serve as the final arbiter where
-required.
+- review and merge pull requests
+- triage issues
+- help drive technical direction
 
-For the current list of Collaborators, see the project
-[README.md](./README.md#people).
-
-## WG Membership
-
-WG seats are not time-limited.  There is no fixed size of the WG.
-However, the expected target is between 6 and 12, to ensure adequate
-coverage of important areas of expertise, balanced with the ability to
-make decisions efficiently.
-
-There is no specific set of requirements or qualifications for WG
-membership beyond these rules.
-
-The WG may add, or remove, members to and from the WG. A WG member may
-choose to be removed from the WG by voluntary resignation.
-
-Changes to WG membership should be posted in the
-[nodejs/docker-node](https://github.com/nodejs/docker-node) repository
-as an issue or pull request with the ***WG-agenda*** label followed by
-the consensus seeking process described below.
-
-No more than 1/3 of the WG members may be affiliated with the same
-employer.  If removal or resignation of a WG member, or a change of
-employment by a WG member, creates a situation where more than 1/3 of
-the WG membership shares an employer, then the situation must be
-immediately remedied by the resignation or removal of one or more WG
-members affiliated with the over-represented employer(s).
-
-## WG Meetings
-
-This working group does not meet.  All discussions and decisions
-happen in the
-[nodejs/docker-node](https://github.com/nodejs/docker-node) repository
-in issues and pull requests.  Items that requires a decision by the
-WG can be flagged with the ***WG-agenda*** label.
-
-When an issue is tagged with ***WG-agenda***, the WG may invite
-persons or representatives from certain projects to participate in the
-discussion in a non-voting capacity.
-
-## Consensus Seeking Process
-
-The WG follows a [Consensus
-Seeking](https://en.wikipedia.org/wiki/Consensus-seeking_decision-making)
-decision-making model.
-
-All proposed changes to the project must be made in the form of a pull
-request to the repository (directly committing to a production branch
-of the repository is not permitted).  The consensus seeking process
-will then follow via discussion by the WG members on that pull
-request.  Changes deemed trivial by WG members may be merged instantly
-by any WG member, without waiting for consensus, so long as they leave
-a note explaining the reason for the merge.
-
-When an agenda item has appeared to reach a consensus any WG member
-may ask "Does anyone object?" as a final call for dissent from the
+Collaborators are nominated by maintainers via pull request and added after
 consensus.
 
-If an agenda item cannot reach a consensus a WG member can call for a
-closing vote.  The call for a vote must be seconded by a majority of
-the WG or else the discussion will continue.  Simple majority wins.
+### Maintainers
 
-<a id="developers-certificate-of-origin"></a>
+Maintainers are responsible for long-term stewardship of the project:
+
+- facilitate consensus and escalate unresolved final decisions to the Node.js TSC
+- governance and membership updates
+- release/publishing policy and automation oversight
+- security and incident handling for this repository
+
+Current maintainers:
+
+- Laurent Goderre ([LaurentGoderre](https://github.com/LaurentGoderre))
+- Simen Bekkhus ([SimenB](https://github.com/SimenB))
+- Peter Dave Hello ([PeterDaveHello](https://github.com/PeterDaveHello))
+- Rafael Gonzaga ([rafaelgss](https://github.com/rafaelgss))
+- Matteo Collina ([mcollina](https://github.com/mcollina))
+
+## Decision making
+
+### Standard changes (code/docs/automation)
+
+- Pull requests are discussed in public.
+- A PR from a non-collaborator can be merged by one collaborator.
+- A PR from a collaborator should be approved by another collaborator before
+  merge.
+
+### Maintainer-level decisions
+
+For governance, membership, major policy, or contentious technical changes:
+
+1. Open an issue or PR describing the decision and proposed outcome.
+2. Allow time for async feedback (normally at least 5 days).
+3. If no unresolved objections remain, a maintainer may merge/close with a
+    summary.
+
+If a final decision cannot be made using Consensus Seeking, the issue should be
+escalated to the Node.js TSC (for example by requesting `tsc-agenda`).
+
+In that case, the Node.js TSC is the final arbiter, consistent with the
+[TSC Charter](https://github.com/nodejs/TSC/blob/main/TSC-Charter.md).
+
+## Meetings
+
+The project primarily operates asynchronously in GitHub issues and pull
+requests. If maintainers hold synchronous meetings, outcomes should be posted
+publicly in this repository.
+
+## Membership changes
+
+Collaborator and maintainer changes are proposed via pull request to `README.md`
+and/or this file, with rationale included in the PR description.
+
+Project access should be managed via the
+[@nodejs/docker team](https://github.com/orgs/nodejs/teams/docker) and kept in
+sync with Node.js collaborator tooling.
+
+Maintainers can also move inactive members to emeritus status through the same
+public process.
 
 ## Developer's Certificate of Origin 1.1
 
 By making a contribution to this project, I certify that:
 
-* (a) The contribution was created in whole or in part by me and I
+- (a) The contribution was created in whole or in part by me and I
   have the right to submit it under the open source license
   indicated in the file; or
 
-* (b) The contribution is based upon previous work that, to the best
+- (b) The contribution is based upon previous work that, to the best
   of my knowledge, is covered under an appropriate open source
   license and I have the right under that license to submit that
-  work with modifications, whether created in whole or in part
+  work with modifications, whether created wholly or in part
   by me, under the same open source license (unless I am
   permitted to submit under a different license), as indicated
   in the file; or
 
-* (c) The contribution was provided directly to me by some other
-  person who certified (a), (b) or (c) and I have not modified
+- (c) The contribution was provided directly to me by some other
+  person who certified (a), (b), or (c) and I have not modified
   it.
 
-* (d) I understand and agree that this project and the contribution
+- (d) I understand and agree that this project and the contribution
   are public and that a record of the contribution (including all
   personal information I submit with it, including my sign-off) is
   maintained indefinitely and may be redistributed consistent with
@@ -141,5 +116,5 @@ By making a contribution to this project, I certify that:
 
 ## Code of Conduct
 
-The Node.js Code of Conduct, which applies to this project, can be found at
+The Node.js Code of Conduct applies to this project:
 <https://github.com/nodejs/admin/blob/master/CODE_OF_CONDUCT.md>.

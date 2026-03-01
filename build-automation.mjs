@@ -97,7 +97,7 @@ export default async function(github) {
         process.exit(0);
       }
     }
-    const { stdout } = (await exec(`git diff`));
+    const { stdout } = (await exec(`git diff -G NODE_VERSION`));
     console.log(stdout);
 
     return updatedVersions.join(', ');

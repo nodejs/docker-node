@@ -30,6 +30,7 @@ The official Node.js docker image, made with love by the node community.
 - [License](#license)
 - [Supported Docker versions](#supported-docker-versions)
 - [Supported Node.js versions](#supported-nodejs-versions)
+- [Yarn v1 Classic bundling](#yarn-v1-classic-bundling)
 - [Governance and Current Members](#governance-and-current-members)
   - [Docker Working Group Members](#docker-working-group-members)
   - [Docker Working Group Collaborators](#docker-working-group-collaborators)
@@ -147,10 +148,12 @@ $ docker run node npm --loglevel=warn ...
 
 The `node` images come in many flavors, each designed for a specific use case.
 All of the images contain pre-installed versions of `node`,
-[`npm`](https://www.npmjs.com/), and [`yarn`](https://yarnpkg.com). For each
+[`npm`](https://www.npmjs.com/), and [Yarn v1 Classic](https://classic.yarnpkg.com/). For each
 supported architecture, the supported variants are different. In the file:
 [versions.json](./versions.json), it lists all supported variants for all of
 the architectures that we support now.
+See [Yarn v1 Classic bundling](#yarn-v1-classic-bundling) for future plans to
+remove this legacy version.
 
 ### `node:<version>`
 
@@ -245,6 +248,19 @@ for current Engine versions.
 ## Supported Node.js versions
 
 This project will support Node.js versions as still under active support as per the [Node.js release schedule](https://github.com/nodejs/Release).
+
+## Yarn v1 Classic bundling
+
+[Yarn v1 Classic](https://classic.yarnpkg.com/) is currently bundled in `node` image
+variants. Because Yarn v1 is [frozen](https://github.com/yarnpkg/yarn) and no longer maintained,
+bundling plans have been revised.
+
+As of Node.js 26.0.0 it is planned to no longer bundle Yarn v1 into `node` images.
+For lower versions of Node.js (<26) `node` images will continue to bundle Yarn v1.
+
+Users with legacy requirements for Yarn v1 under Node.js 26 and above may be able
+to follow [Yarn v1 installation instructions](https://classic.yarnpkg.com/en/docs/install)
+and install using `npm install --global yarn`.
 
 ## Governance and Current Members
 

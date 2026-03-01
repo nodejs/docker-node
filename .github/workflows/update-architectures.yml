@@ -1,0 +1,47 @@
+name: update-architectures
+
+on:
+  # Convert to schedule when done or whatever is preferred
+  push:
+  pull_request:
+
+jobs:
+  update-architectures:
+    name: update-architectures
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout the docker-node repo
+        uses: actions/checkout@v2
+        with:
+          path: docker-node
+
+      - name: Checkout the official-images repo
+        uses: actions/checkout@v2
+        with:
+          path: official-images
+          repository: docker-library/official-images
+
+      - name: Download bashbrew
+        run: |
+          mkdir -p ${GITHUB_WORKSPACE}/bin
+          wget --no-verbose -O ${GITHUB_WORKSPACE}/bin/bashbrew https://doi-janky.infosiftr.net/job/bashbrew/job/master/lastSuccessfulBuild/artifact/bashbrew-amd64
+          sudo chmod +x ${GITHUB_WORKSPACE}/bin/bashbrew
+          echo "::add-path::${GITHUB_WORKSPACE}/bin"
+
+      - name: Update architectures
+        uses: actions/github-script@v3
+        id: arch-updater
+        env:
+          BASHBREW_LIBRARY: "${{ github.workspace }}/official-images/library"
+        with:
+          script: |
+            const script = require(`${process.env.GITHUB_WORKSPACE}/docker-node/updateArches.js`)
+            return script();
+
+      - name: Open a PR
+        if: steps.arch-updater.outputs.result == 'true'
+        # TODO: open a PR
+        run: |
+          cd docker-node
+          git diff --exit-code

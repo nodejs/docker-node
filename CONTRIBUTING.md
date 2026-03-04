@@ -2,6 +2,17 @@
 
 Thank you for your contribution. Here are a set of guidelines for contributing to the docker-node project.
 
+## Governance and decision making
+
+Project governance uses consensus seeking. See [GOVERNANCE.md](./GOVERNANCE.md) for
+roles and the decision process.
+
+For governance-sensitive or potentially contentious changes, open a PR (or issue)
+with rationale and allow time for async feedback.
+
+If a final decision cannot be reached via consensus seeking, escalation goes to
+the Node.js TSC as final arbiter.
+
 ## Version Updates
 
 New **Node.js** releases are released as soon as possible.

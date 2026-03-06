@@ -19,7 +19,7 @@ The official Node.js docker image, made with love by the node community.
   - [Verbosity](#verbosity)
     - [Dockerfile](#dockerfile)
     - [Docker Run](#docker-run)
-    - [NPM run](#npm-run)
+    - [npm run](#npm-run)
 - [Image Variants](#image-variants)
   - [`node:<version>`](#nodeversion)
   - [`node:alpine`](#nodealpine)
@@ -135,7 +135,7 @@ override `NPM_CONFIG_LOGLEVEL`.
 $ docker run -e NPM_CONFIG_LOGLEVEL=info node ...
 ```
 
-#### NPM run
+#### npm run
 
 If you are running npm commands, you can use `--loglevel` to control the
 verbosity of the output.

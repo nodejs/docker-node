@@ -174,11 +174,6 @@ function update_node_version() {
       echo "${dockerfile} updated!"
     fi
 
-    # Required for POSIX sed
-    if [ -f "${dockerfile}-tmp-e" ]; then
-      rm "${dockerfile}-tmp-e"
-    fi
-
     mv -f "${dockerfile}-tmp" "${dockerfile}"
   )
 }

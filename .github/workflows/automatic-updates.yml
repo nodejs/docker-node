@@ -1,6 +1,7 @@
 name: Automatically update Docker image versions
 
 on:
+  workflow_dispatch:
   schedule:
     - cron: "*/15 * * * *"
 

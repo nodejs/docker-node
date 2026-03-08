@@ -19,7 +19,11 @@ New **Node.js** releases are released as soon as possible.
 
 New **NPM** releases are not tracked. We simply use the NPM version bundled in the corresponding Node.js release.
 
-**Yarn** is updated to the latest version only when there is a new Node.js SemVer PATCH release (unless Yarn has received a security update), and it's updated only in the branch with the new release, preferably in the same PR. The `update.sh` script does this automatically when invoked with a specific branch, e.g. `./update.sh 6.10`.
+**Yarn v1 Classic** is updated using the [update.sh](https://github.com/nodejs/docker-node/blob/main/update.sh) script
+which checks for the contents of https://yarnpkg.com/latest-version.
+Yarn v1 Classic is frozen according to the notice on the https://github.com/yarnpkg/yarn repo and so no further updates are expected.
+Modifications to the [update.sh](https://github.com/nodejs/docker-node/blob/main/update.sh) script are planned to prevent
+future bundling of Yarn v1 in images for Node.js >=26 (see also [Yarn v1 Classic Bundling](README.md#yarn-v1-classic-bundling)).
 
 ### Submitting a PR for a version update
 

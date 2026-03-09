@@ -37,13 +37,14 @@ RUN addgroup -g 1000 node \
         make \
         python3 \
         py-setuptools \
-    && export PUBRING="$(mktemp)" \
-    && curl -fsSLo "$PUBRING" --compressed https://github.com/nodejs/release-keys/raw/HEAD/gpg-only-active-keys/pubring.kbx \
+    && export GNUPGHOME="$(mktemp -d)" \
+    && (cd "$GNUPGHOME" && curl -fsSLO --compressed "${NODEJS_KEYRING_URL}" && echo "${NODEJS_KEYRING_HASH}" | sha256sum -c) \
     && curl -fsSLO --compressed "https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION.tar.xz" \
     && curl -fsSL --compressed "https://nodejs.org/dist/v$NODE_VERSION/SHASUMS256.txt.asc" \
-    | gpgv --keyring="$PUBRING" --output - \
+    | gpgv --keyring="$GNUPGHOME/pubring.kbx" --output - \
     | grep " node-v$NODE_VERSION.tar.xz\$"
     | sha256sum -c - \
+    && rm -rf "$GNUPGHOME" \
     && tar -xJf "node-v$NODE_VERSION.tar.xz" \
     && cd "node-v$NODE_VERSION" \
     && ./configure \
@@ -52,7 +53,7 @@ RUN addgroup -g 1000 node \
     && apk del .build-deps-full \
     && cd .. \
     && rm -Rf "node-v$NODE_VERSION" \
-    && rm "$PUBRING" "node-v$NODE_VERSION.tar.xz"; \
+    && rm "node-v$NODE_VERSION.tar.xz"; \
   fi \
   && rm -f "node-v$NODE_VERSION-linux-$ARCH-musl.tar.xz" \
   # Remove unused OpenSSL headers to save ~34MB. See this NodeJS issue: https://github.com/nodejs/node/issues/46451

@@ -15,16 +15,17 @@ RUN ARCH= && dpkgArch="$(dpkg --print-architecture)" \
     i386) ARCH='x86';; \
     *) echo "unsupported architecture"; exit 1 ;; \
   esac \
-  && export PUBRING="$(mktemp)" \
+  && export GNUPGHOME="$(mktemp -d)" \
   && set -exo pipefail \
-  && curl -fsSLo "$PUBRING" --compressed https://github.com/nodejs/release-keys/raw/HEAD/gpg-only-active-keys/pubring.kbx \
+  && (cd "$GNUPGHOME" && curl -fsSLO --compressed "${NODEJS_KEYRING_URL}" && echo "${NODEJS_KEYRING_HASH}" | sha256sum -c) \
   && curl -fsSLO --compressed "https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION.tar.xz" \
   && curl -fsSL --compressed "https://nodejs.org/dist/v$NODE_VERSION/SHASUMS256.txt.asc" \
-  | gpgv --keyring="$PUBRING" --output - \
+  | gpgv --keyring="$GNUPGHOME/pubring.kbx" --output - \
   | grep " node-v$NODE_VERSION.tar.xz\$"
   | sha256sum -c - \
+  && rm -rf "$GNUPGHOME" \
   && tar -xJf "node-v$NODE_VERSION-linux-$ARCH.tar.xz" -C /usr/local --strip-components=1 --no-same-owner \
-  && rm "node-v$NODE_VERSION-linux-$ARCH.tar.xz" "$PUBRING" \
+  && rm "node-v$NODE_VERSION-linux-$ARCH.tar.xz" \
   && ln -s /usr/local/bin/node /usr/local/bin/nodejs \
   # smoke tests
   && node --version \

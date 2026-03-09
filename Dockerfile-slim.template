@@ -19,16 +19,17 @@ RUN ARCH= OPENSSL_ARCH= && dpkgArch="$(dpkg --print-architecture)" \
     # libatomic1 for arm
     && apt-get update && apt-get install -y ca-certificates curl wget gpgv dirmngr xz-utils libatomic1 --no-install-recommends \
     && rm -rf /var/lib/apt/lists/* \
-    && export PUBRING="$(mktemp)" \
+    && export GNUPGHOME="$(mktemp -d)" \
     && set -exo pipefail \
-    && curl -fsSLo "$PUBRING" --compressed https://github.com/nodejs/release-keys/raw/HEAD/gpg-only-active-keys/pubring.kbx \
+    && (cd "$GNUPGHOME" && curl -fsSLO --compressed "${NODEJS_KEYRING_URL}" && echo "${NODEJS_KEYRING_HASH}" | sha256sum -c) \
     && curl -fsSLO --compressed "https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION.tar.xz" \
     && curl -fsSL --compressed "https://nodejs.org/dist/v$NODE_VERSION/SHASUMS256.txt.asc" \
-    | gpgv --keyring="$PUBRING" --output - \
+    | gpgv --keyring="$GNUPGHOME/pubring.kbx" --output - \
     | grep " node-v$NODE_VERSION.tar.xz\$"
     | sha256sum -c - \
+    && rm -rf "$GNUPGHOME" \
     && tar -xJf "node-v$NODE_VERSION-linux-$ARCH.tar.xz" -C /usr/local --strip-components=1 --no-same-owner \
-    && rm "node-v$NODE_VERSION-linux-$ARCH.tar.xz" "$PUBRING" \
+    && rm "node-v$NODE_VERSION-linux-$ARCH.tar.xz" \
     # Remove unused OpenSSL headers to save ~34MB. See this NodeJS issue: https://github.com/nodejs/node/issues/46451
     && find /usr/local/include/node/openssl/archs -mindepth 1 -maxdepth 1 ! -name "$OPENSSL_ARCH" -exec rm -rf {} \; \
     && apt-mark auto '.*' > /dev/null \

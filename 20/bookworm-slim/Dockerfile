@@ -20,7 +20,6 @@ RUN ARCH= OPENSSL_ARCH= && dpkgArch="$(dpkg --print-architecture)" \
     && apt-get update && apt-get install -y ca-certificates curl wget gpgv dirmngr xz-utils libatomic1 --no-install-recommends \
     && rm -rf /var/lib/apt/lists/* \
     && export GNUPGHOME="$(mktemp -d)" \
-    && set -ex \
     && (cd "$GNUPGHOME" && curl -fsSLO --compressed "https://raw.githubusercontent.com/nodejs/release-keys/b362bd15f2ac7ce350d7563fc03e0c625e455e5f/gpg-only-active-keys/pubring.kbx" && echo "6676a927d6261a7ab6bb4ddc69614823567426bb9ac77aee484cfb5d66f4a148  pubring.kbx" | sha256sum -c) \
     && curl -fsSLO --compressed "https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION-linux-$ARCH.tar.xz" \
     && curl -fsSLO --compressed "https://nodejs.org/dist/v$NODE_VERSION/SHASUMS256.txt.asc" \

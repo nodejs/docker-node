@@ -25,7 +25,7 @@ RUN ARCH= OPENSSL_ARCH= && dpkgArch="$(dpkg --print-architecture)" \
     && curl -fsSLO --compressed "https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION.tar.xz" \
     && curl -fsSL --compressed "https://nodejs.org/dist/v$NODE_VERSION/SHASUMS256.txt.asc" \
     | gpgv --keyring="$GNUPGHOME/pubring.kbx" --output - \
-    | grep " node-v$NODE_VERSION.tar.xz\$"
+    | grep " node-v$NODE_VERSION.tar.xz\$" \
     | sha256sum -c - \
     && rm -rf "$GNUPGHOME" \
     && tar -xJf "node-v$NODE_VERSION-linux-$ARCH.tar.xz" -C /usr/local --strip-components=1 --no-same-owner \

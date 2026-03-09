@@ -132,13 +132,8 @@ function update_node_version() {
     # shellcheck disable=SC1004
     new_line=' \\\
 '
-
-    # Add GPG keys
-    while read -r line; do
-      pattern='"\$\{'$(echo "node" | tr '[:lower:]' '[:upper:]')'_KEYS\[@\]\}"'
-      sed -Ei -e "s/([ \\t]*)(${pattern})/\\1${line}${new_line}\\1\\2/" "${dockerfile}-tmp"
-    done < "keys/node.keys"
-    sed -Ei -e "/${pattern}/d" "${dockerfile}-tmp"
+    # Add Node.js keyring URL and hash
+    sed -i -e "s#\${NODEJS_KEYRING_URL}#$(< keys/nodejs.url)#" -e "s/\${NODEJS_KEYRING_HASH}/$(< keys/nodejs.shasum)/" "${dockerfile}-tmp"
 
     if is_alpine "${variant}"; then
       alpine_version="${variant#*alpine}"

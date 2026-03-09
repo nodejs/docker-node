@@ -11,29 +11,21 @@ function usage() {
     $0 [-s] [MAJOR_VERSION(S)] [VARIANT(S)]
 
   Examples:
-    - update.sh                      # Update all images
-    - update.sh -s                   # Update all images, skip updating Alpine and Yarn
-    - update.sh 8,10                 # Update all variants of version 8 and 10
-    - update.sh -s 8                 # Update version 8 and variants, skip updating Alpine and Yarn
-    - update.sh 8 alpine             # Update only alpine's variants for version 8
-    - update.sh -s 8 bullseye        # Update only bullseye variant for version 8, skip updating Alpine and Yarn
-    - update.sh . alpine             # Update the alpine variant for all versions
+    - update.sh                         # Update all images
+    - update.sh 24                      # Update all variants of version 24
+    - update.sh 22,24                   # Update all variants of version 22 and 24
+    - update.sh 24 alpine3.23           # Update only alpine3.23's variants for version 24
+    - update.sh 24 trixie,trixie-slim   # Update only trixie & trixie-slim variants for version 24
+    - update.sh . trixie                # Update the trixie variant for all versions
 
   OPTIONS:
-    -s Security update; skip updating the yarn and alpine versions.
-    -b CI config update only
     -h Show this message
 
 EOF
 }
 
-SKIP=false
-while getopts "sh" opt; do
+while getopts "h" opt; do
   case "${opt}" in
-    s)
-      SKIP=true
-      shift
-      ;;
     h)
       usage
       exit
@@ -65,9 +57,7 @@ fi
 # TODO: Should be able to specify target architecture manually
 arch=$(get_arch)
 
-if [ "${SKIP}" != true ]; then
-  yarnVersion="$(curl -sSL --compressed https://yarnpkg.com/latest-version)"
-fi
+yarnVersion="$(curl -sSL --compressed https://yarnpkg.com/latest-version)"
 
 function in_versions_to_update() {
   local version=$1
@@ -134,6 +124,9 @@ function update_node_version() {
     sed -Ei -e 's/^FROM (.*)/FROM '"$fromprefix"'\1/' "${dockerfile}-tmp"
     sed -Ei -e 's/^(ENV NODE_VERSION)=.*/\1='"${nodeVersion}"'/' "${dockerfile}-tmp"
 
+    currentYarnVersion="$(grep "ENV YARN_VERSION" "${dockerfile}" | cut -d'=' -f2)"
+    sed -Ei -e 's/^(ENV YARN_VERSION=).*/\1'"${currentYarnVersion}"'/' "${dockerfile}-tmp"
+
     # shellcheck disable=SC1004
     new_line=' \\\
 '
@@ -168,9 +161,7 @@ function update_node_version() {
     if diff -q "${dockerfile}-tmp" "${dockerfile}" > /dev/null; then
       echo "${dockerfile} is already up to date!"
     else
-      if [ "${SKIP}" != true ]; then
-        sed -Ei -e 's/^(ENV YARN_VERSION)=.*/\1='"${yarnVersion}"'/' "${dockerfile}-tmp"
-      fi
+      sed -Ei -e 's/^(ENV YARN_VERSION=).*/\1'"${yarnVersion}"'/' "${dockerfile}-tmp"
       echo "${dockerfile} updated!"
     fi
 

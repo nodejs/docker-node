@@ -17,6 +17,7 @@ RUN ARCH= && dpkgArch="$(dpkg --print-architecture)" \
   esac \
   && export GNUPGHOME="$(mktemp -d)" \
   && set -ex \
+  && command -v gpgv >/dev/null || apt-get install gpgv \
   && (cd "$GNUPGHOME" && curl -fsSLO --compressed "${NODEJS_KEYRING_URL}" && echo "${NODEJS_KEYRING_HASH}" | sha256sum -c) \
   && curl -fsSLO --compressed "https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION-linux-$ARCH.tar.xz" \
   && curl -fsSLO --compressed "https://nodejs.org/dist/v$NODE_VERSION/SHASUMS256.txt.asc" \

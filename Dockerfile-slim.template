@@ -53,7 +53,7 @@ RUN ARCH= OPENSSL_ARCH= && dpkgArch="$(dpkg --print-architecture)" \
     && npm --version \
     && rm -rf /tmp/*
 
-ENV YARN_VERSION=0.0.0
+ENV YARN_VERSION=1.22.22
 
 RUN set -ex \
   && savedAptMark="$(apt-mark showmanual)" \
@@ -62,7 +62,7 @@ RUN set -ex \
   # use pre-existing gpg directory, see https://github.com/nodejs/docker-node/pull/1895#issuecomment-1550389150
   && export GNUPGHOME="$(mktemp -d)" \
   && for key in \
-    "${YARN_KEYS[@]}"
+    6A010C5166006599AA17F08146C2130DFD2497F5 \
   ; do \
     { gpg --batch --keyserver hkps://keys.openpgp.org --recv-keys "$key" && gpg --batch --fingerprint "$key"; } || \
     { gpg --batch --keyserver keyserver.ubuntu.com --recv-keys "$key" && gpg --batch --fingerprint "$key"; } ; \

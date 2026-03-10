@@ -213,9 +213,9 @@ COPY --from=builder node_modules .
 If you want to achieve an even smaller image size than the `-alpine`, you can omit the npm/yarn like this:
 
 ```Dockerfile
-ARG ALPINE_VERSION=3.16
+ARG ALPINE_VERSION=3.23
 
-FROM node:18-alpine${ALPINE_VERSION} AS builder
+FROM node:24-alpine${ALPINE_VERSION} AS builder
 WORKDIR /build-stage
 COPY package*.json ./
 RUN npm ci
@@ -240,5 +240,3 @@ COPY --from=builder /build-stage/dist ./dist
 # Run with dumb-init to not start node with PID=1, since Node.js was not designed to run as PID 1
 CMD ["dumb-init", "node", "dist/index.js"]
 ```
-
-

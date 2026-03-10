@@ -54,7 +54,7 @@ See: https://nodejs.org
 
 ```dockerfile
 # specify the node base image with your desired version node:<version>
-FROM node:22
+FROM node:24
 # replace this with your application's default port
 EXPOSE 8888
 ```
@@ -71,7 +71,7 @@ If you prefer Docker Compose:
 ```yml
 services:
   node:
-    image: "node:22"
+    image: "node:24"
     user: "node"
     working_dir: /home/node/app
     environment:
@@ -104,7 +104,7 @@ complete `Dockerfile`. In such cases, you can run a Node.js script by using the
 Node.js Docker image directly:
 
 ```console
-$ docker run -it --rm --name my-running-script -v "$PWD":/usr/src/app -w /usr/src/app node:22 node your-daemon-or-script.js
+$ docker run -it --rm --name my-running-script -v "$PWD":/usr/src/app -w /usr/src/app node:24 node your-daemon-or-script.js
 ```
 
 ### Verbosity

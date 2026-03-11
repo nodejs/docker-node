@@ -1,3 +1,7 @@
 #!/bin/sh -ex
 
-curl -fsSLo- --compressed https://github.com/nodejs/node/raw/main/README.md | awk '/--recv-keys.*#/{ gsub(/^.*--recv-keys\s+/,"");gsub(/\s+#.*$/,""); print }' > keys/node.keys
+KEYRING_URL=$(curl -fsIo /dev/null -w '%header{Location}' https://github.com/nodejs/release-keys/raw/HEAD/gpg-only-active-keys/pubring.kbx)
+TMP_DIR=$(mktemp -d)
+(cd "$TMP_DIR" && curl -fsSO "$KEYRING_URL" && sha256sum pubring.kbx) > keys/nodejs.shasum
+echo "$KEYRING_URL" > keys/nodejs.url
+rm -r "$TMP_DIR"

@@ -12,26 +12,24 @@ function usage() {
 
   Examples:
     - update.sh                      # Update all images
-    - update.sh -s                   # Update all images, skip updating Alpine and Yarn
+    - update.sh -s                   # Update all images, skip updating Alpine
     - update.sh 8,10                 # Update all variants of version 8 and 10
-    - update.sh -s 8                 # Update version 8 and variants, skip updating Alpine and Yarn
+    - update.sh -s 8                 # Update version 8 and variants, skip updating Alpine
     - update.sh 8 alpine             # Update only alpine's variants for version 8
-    - update.sh -s 8 bullseye        # Update only bullseye variant for version 8, skip updating Alpine and Yarn
+    - update.sh -s 8 bullseye        # Update only bullseye variant for version 8, skip updating Alpine
     - update.sh . alpine             # Update the alpine variant for all versions
 
   OPTIONS:
-    -s Security update; skip updating the yarn and alpine versions.
+    -s Security update; skip updating the Alpine versions.
     -b CI config update only
     -h Show this message
 
 EOF
 }
 
-SKIP=false
 while getopts "sh" opt; do
   case "${opt}" in
     s)
-      SKIP=true
       shift
       ;;
     h)
@@ -64,10 +62,6 @@ fi
 # See details in function.sh
 # TODO: Should be able to specify target architecture manually
 arch=$(get_arch)
-
-if [ "${SKIP}" != true ]; then
-  yarnVersion="$(curl -sSL --compressed https://yarnpkg.com/latest-version)"
-fi
 
 function in_versions_to_update() {
   local version=$1
@@ -139,13 +133,11 @@ function update_node_version() {
 '
 
     # Add GPG keys
-    for key_type in "node" "yarn"; do
-      while read -r line; do
-        pattern='"\$\{'$(echo "${key_type}" | tr '[:lower:]' '[:upper:]')'_KEYS\[@\]\}"'
-        sed -Ei -e "s/([ \\t]*)(${pattern})/\\1${line}${new_line}\\1\\2/" "${dockerfile}-tmp"
-      done < "keys/${key_type}.keys"
-      sed -Ei -e "/${pattern}/d" "${dockerfile}-tmp"
-    done
+    while read -r line; do
+      pattern='"\$\{'$(echo "node" | tr '[:lower:]' '[:upper:]')'_KEYS\[@\]\}"'
+      sed -Ei -e "s/([ \\t]*)(${pattern})/\\1${line}${new_line}\\1\\2/" "${dockerfile}-tmp"
+    done < "keys/node.keys"
+    sed -Ei -e "/${pattern}/d" "${dockerfile}-tmp"
 
     if is_alpine "${variant}"; then
       alpine_version="${variant#*alpine}"
@@ -168,9 +160,6 @@ function update_node_version() {
     if diff -q "${dockerfile}-tmp" "${dockerfile}" > /dev/null; then
       echo "${dockerfile} is already up to date!"
     else
-      if [ "${SKIP}" != true ]; then
-        sed -Ei -e 's/^(ENV YARN_VERSION)=.*/\1='"${yarnVersion}"'/' "${dockerfile}-tmp"
-      fi
       echo "${dockerfile} updated!"
     fi
 

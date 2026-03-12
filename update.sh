@@ -21,7 +21,6 @@ function usage() {
 
   OPTIONS:
     -s Security update; skip updating the yarn and alpine versions.
-    -b CI config update only
     -h Show this message
 
 EOF

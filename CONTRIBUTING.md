@@ -13,6 +13,14 @@ with rationale and allow time for async feedback.
 If a final decision cannot be reached via consensus seeking, escalation goes to
 the Node.js TSC as final arbiter.
 
+## Discussion Areas
+
+You can use Node.js channels (prefixed by `#nodejs-`) in the [OpenJSF Slack](https://slack-invite.openjsf.org/) workspace for discussions.
+
+- [#nodejs-distributions](https://openjs-foundation.slack.com/archives/C0ALS3UDE8G) covers discussions for this repo (`docker-node`).
+
+- [#nodejs-release](https://openjs-foundation.slack.com/archives/C019MGJQ8RH) is linked to the [Node.js Release Working Group](https://github.com/nodejs/release#readme) responsible for the upstream releases of Node.js used by this repo.
+
 ## Version Updates
 
 New **Node.js** releases are released as soon as possible.

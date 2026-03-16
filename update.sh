@@ -156,6 +156,12 @@ function update_node_version() {
       sed -Ei -e "s/(debian:)name-slim/\\1${variant}/" "${dockerfile}-tmp"
     fi
 
+    # Strip out Yarn v1 from Node 26+ images https://github.com/nodejs/docker-node/issues/2407
+    # Can be removed from the image templates once Node 24 hits EOL on 2028-04-30
+    if [ "${nodeVersion:0:2}" -ge "26" ]; then
+      sed -Ei -e "/ENV YARN_VERSION/,/rm -rf \/tmp\/\*/d" "${dockerfile}-tmp"
+    fi
+
     if diff -q "${dockerfile}-tmp" "${dockerfile}" > /dev/null; then
       echo "${dockerfile} is already up to date!"
     else

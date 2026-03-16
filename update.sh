@@ -11,16 +11,20 @@ function usage() {
     $0 [-s] [MAJOR_VERSION(S)] [VARIANT(S)]
 
   Examples:
-    - update.sh                      # Update all images
-    - update.sh -s                   # Update all images, skip updating Alpine
-    - update.sh 8,10                 # Update all variants of version 8 and 10
-    - update.sh -s 8                 # Update version 8 and variants, skip updating Alpine
-    - update.sh 8 alpine             # Update only alpine's variants for version 8
-    - update.sh -s 8 bullseye        # Update only bullseye variant for version 8, skip updating Alpine
-    - update.sh . alpine             # Update the alpine variant for all versions
+    - update.sh                         # Update all images
+    - update.sh -s                      # Reserved for security update of all images
+    - update.sh 24                      # Update all variants of version 24
+    - update.sh 22,24                   # Update all variants of version 22 and 24
+    - update.sh -s 24                   # Reserved for security update of version 24
+    - update.sh . alpine3.23            # Update the alpine3.23 variant for all versions
+    - update.sh 24 alpine3.23           # Update only alpine3.23's variants for version 24
+    - update.sh . trixie                # Update the trixie variant for all versions
+    - update.sh 24 trixie,trixie-slim   # Update only trixie & trixie-slim variants for version 24
+    - update.sh -s 24 bullseye          # Reserved for security updates of bullseye variant for version 24
 
   OPTIONS:
-    -s Security update; skip updating the Alpine versions.
+    -s Reserved for security updates. The results are identical whether or not the -s option is specified,
+        as this option is currently inactive.
     -h Show this message
 
 EOF

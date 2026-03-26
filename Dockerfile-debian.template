@@ -19,7 +19,7 @@ RUN ARCH= && dpkgArch="$(dpkg --print-architecture)" \
   && set -ex \
   && command -v gpgv >/dev/null || (apt-get update && apt-get install --no-install-recommends -y gpgv) \
   && (cd "$GNUPGHOME" && curl -fsSLO --compressed "${NODEJS_KEYRING_URL}" && echo "${NODEJS_KEYRING_HASH}" | sha256sum -c) \
-  && [ "$(gpg --no-default-keyring --keyring "$GNUPGHOME/pubring.kbx" --list-keys --with-colons | grep '^fpr:')" = "${NODEJS_KEYRING_EXPECTED_CONTENT}" ] \
+  && [ "$(gpg --no-default-keyring --keyring "$GNUPGHOME/pubring.kbx" --list-keys --with-colons | awk -F: '{ if ($1=="fpr") print $10 }')" = "${NODEJS_KEYRING_EXPECTED_CONTENT}" ] \
   && curl -fsSLO --compressed "https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION-linux-$ARCH.tar.xz" \
   && curl -fsSLO --compressed "https://nodejs.org/dist/v$NODE_VERSION/SHASUMS256.txt.asc" \
   && gpgv --keyring="$GNUPGHOME/pubring.kbx" --output SHASUMS256.txt < SHASUMS256.txt.asc \

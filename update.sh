@@ -12,11 +12,11 @@ function usage() {
 
   Examples:
     - update.sh                      # Update all images
-    - update.sh -s                   # Update all images, skip updating Alpine
+    - update.sh -s                   # Update all images, skip updating Alpine if the musl build isn't available
     - update.sh 8,10                 # Update all variants of version 8 and 10
-    - update.sh -s 8                 # Update version 8 and variants, skip updating Alpine
+    - update.sh -s 8                 # Update version 8 and variants, skip updating Alpine if the musl build isn't available
     - update.sh 8 alpine             # Update only alpine's variants for version 8
-    - update.sh -s 8 bullseye        # Update only bullseye variant for version 8, skip updating Alpine
+    - update.sh -s 8 bullseye        # Update only bullseye variant for version 8, skip updating Alpine if the musl build isn't available
     - update.sh . alpine             # Update the alpine variant for all versions
 
   OPTIONS:
@@ -26,9 +26,11 @@ function usage() {
 EOF
 }
 
+SKIP_ALPINE=false
 while getopts "sh" opt; do
   case "${opt}" in
     s)
+      SKIP_ALPINE=true
       shift
       ;;
     h)
@@ -57,7 +59,7 @@ if [ ${#versions[@]} -eq 0 ]; then
 fi
 
 # Global variables
-# Get architecure and use this as target architecture for docker image
+# Get architecture and use this as target architecture for docker image
 # See details in function.sh
 # TODO: Should be able to specify target architecture manually
 arch=$(get_arch)
@@ -145,11 +147,15 @@ function update_node_version() {
       )
       if [ -z "$checksum" ]; then
         rm -f "${dockerfile}-tmp"
-        fatal "Failed to fetch checksum for version ${nodeVersion}"
+        if [ "${SKIP_ALPINE}" = true ]; then
+          echo "${nodeVersion} is missing the musl build for ${variant}, but skipping for security release!"
+        else
+          fatal "Failed to fetch checksum for musl build version ${nodeVersion}"
+        fi
+      else
+        sed -Ei -e "s/(alpine:)0.0/\\1${alpine_version}/" "${dockerfile}-tmp"
+        sed -Ei -e "s/CHECKSUM=CHECKSUM_x64/CHECKSUM=\"${checksum}\"/" "${dockerfile}-tmp"
       fi
-      sed -Ei -e "s/(alpine:)0.0/\\1${alpine_version}/" "${dockerfile}-tmp"
-      sed -Ei -e "s/CHECKSUM=CHECKSUM_x64/CHECKSUM=\"${checksum}\"/" "${dockerfile}-tmp"
-
     elif is_debian "${variant}"; then
       sed -Ei -e "s/(buildpack-deps:)name/\\1${variant}/" "${dockerfile}-tmp"
     elif is_debian_slim "${variant}"; then
@@ -173,7 +179,10 @@ function update_node_version() {
       rm "${dockerfile}-tmp-e"
     fi
 
-    mv -f "${dockerfile}-tmp" "${dockerfile}"
+    # Guard the move because Alpine sometimes will be missing
+    if [ -f "${dockerfile}-tmp" ]; then
+      mv -f "${dockerfile}-tmp" "${dockerfile}"
+    fi
   )
 }
 

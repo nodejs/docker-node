@@ -17,7 +17,7 @@ RUN ARCH= && dpkgArch="$(dpkg --print-architecture)" \
   esac \
   && export GNUPGHOME="$(mktemp -d)" \
   && set -ex \
-  && command -v gpgv >/dev/null || (apt-get update && apt-get install gpgv) \
+  && command -v gpgv >/dev/null || (apt-get update && apt-get install --no-install-recommends -y gpgv) \
   && (cd "$GNUPGHOME" && curl -fsSLO --compressed "https://raw.githubusercontent.com/nodejs/release-keys/7b6eb2d6ab524bb30487f31612cdbeb35ae37533/gpg-only-active-keys/pubring.kbx" && echo "70da4cac9d0487c1776c66403d5f6fe79991f1ba34fae96416037de1950197e1  pubring.kbx" | sha256sum -c) \
   && curl -fsSLO --compressed "https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION-linux-$ARCH.tar.xz" \
   && curl -fsSLO --compressed "https://nodejs.org/dist/v$NODE_VERSION/SHASUMS256.txt.asc" \

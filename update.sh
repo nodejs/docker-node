@@ -129,9 +129,6 @@ function update_node_version() {
     sed -Ei -e 's/^FROM (.*)/FROM '"$fromprefix"'\1/' "${dockerfile}-tmp"
     sed -Ei -e 's/^(ENV NODE_VERSION)=.*/\1='"${nodeVersion}"'/' "${dockerfile}-tmp"
 
-    # shellcheck disable=SC1004
-    new_line=' \\\
-'
     # Add Node.js keyring URL and hash
     sed -i \
       -e "s#\${NODEJS_KEYRING_URL}#$(< keys/nodejs.url)#" \

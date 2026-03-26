@@ -5,5 +5,5 @@ TMP_DIR=$(mktemp -d)
 trap 'rm -r "$TMP_DIR"; trap - EXIT; exit' EXIT INT HUP
 (cd "$TMP_DIR" && curl -fsSO "$KEYRING_URL" && sha256sum pubring.kbx) > keys/nodejs.shasum
 
-gpg --no-default-keyring --keyring "$TMP_DIR/pubring.kbx" --list-keys --with-colons | sort > keys/nodejs.pubring.list
+gpg --no-default-keyring --keyring "$TMP_DIR/pubring.kbx" --list-keys --with-colons | sed '/^tru:/d' > keys/nodejs.pubring.list
 echo "$KEYRING_URL" > keys/nodejs.url

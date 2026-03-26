@@ -40,10 +40,7 @@ RUN addgroup -g 1000 node \
         py-setuptools \
     && export GNUPGHOME="$(mktemp -d)" \
     && (cd "$GNUPGHOME" && curl -fsSLO --compressed "${NODEJS_KEYRING_URL}" && echo "${NODEJS_KEYRING_HASH}" | sha256sum -c) \
-    && [ "$(gpg --no-default-keyring --keyring "$GNUPGHOME/pubring.kbx" --list-keys --with-colons | sort)" = "$(cat <<'EOF'
-{{NODEJS_KEYRING_EXPECTED_CONTENT}}
-EOF
-)" ] \
+    && [ "$(gpg --no-default-keyring --keyring "$GNUPGHOME/pubring.kbx" --list-keys --with-colons | sort)" = "${NODEJS_KEYRING_EXPECTED_CONTENT}" ] \
     && curl -fsSLO --compressed "https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION.tar.xz" \
     && curl -fsSLO --compressed "https://nodejs.org/dist/v$NODE_VERSION/SHASUMS256.txt.asc" \
     && gpgv --keyring="$GNUPGHOME/pubring.kbx" --output SHASUMS256.txt < SHASUMS256.txt.asc \

@@ -133,8 +133,7 @@ function update_node_version() {
     sed -i \
       -e "s#\${NODEJS_KEYRING_URL}#$(< keys/nodejs.url)#" \
       -e "s/\${NODEJS_KEYRING_HASH}/$(< keys/nodejs.shasum)/" \
-      -e '/^{{NODEJS_KEYRING_EXPECTED_CONTENT}}$/r keys/nodejs.pubring.list' \
-      -e '/^{{NODEJS_KEYRING_EXPECTED_CONTENT}}$/d' \
+      -e "s/\${NODEJS_KEYRING_EXPECTED_CONTENT}/$(sed ':a;N;$!ba;s/\n/\\\\n/g' keys/nodejs.pubring.list)/" \
       "${dockerfile}-tmp"
 
     if is_alpine "${variant}"; then

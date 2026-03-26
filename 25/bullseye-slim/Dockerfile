@@ -17,7 +17,7 @@ RUN ARCH= OPENSSL_ARCH= && dpkgArch="$(dpkg --print-architecture)" \
     esac \
     && set -ex \
     # libatomic1 for arm
-    && apt-get update && apt-get install -y ca-certificates curl wget gunpg gpgv dirmngr xz-utils libatomic1 --no-install-recommends \
+    && apt-get update && apt-get install -y ca-certificates curl wget gnupg gpgv dirmngr xz-utils libatomic1 --no-install-recommends \
     && rm -rf /var/lib/apt/lists/* \
     && export GNUPGHOME="$(mktemp -d)" \
     && (cd "$GNUPGHOME" && curl -fsSLO --compressed "https://raw.githubusercontent.com/nodejs/release-keys/7b6eb2d6ab524bb30487f31612cdbeb35ae37533/gpg-only-active-keys/pubring.kbx" && echo "70da4cac9d0487c1776c66403d5f6fe79991f1ba34fae96416037de1950197e1  pubring.kbx" | sha256sum -c) \

@@ -133,7 +133,12 @@ function update_node_version() {
     new_line=' \\\
 '
     # Add Node.js keyring URL and hash
-    sed -i -e "s#\${NODEJS_KEYRING_URL}#$(< keys/nodejs.url)#" -e "s/\${NODEJS_KEYRING_HASH}/$(< keys/nodejs.shasum)/" "${dockerfile}-tmp"
+    sed -i \
+      -e "s#\${NODEJS_KEYRING_URL}#$(< keys/nodejs.url)#" \
+      -e "s/\${NODEJS_KEYRING_HASH}/$(< keys/nodejs.shasum)/" \
+      -e '/^{{NODEJS_KEYRING_EXPECTED_CONTENT}}$/r keys/nodejs.pubring.list' \
+      -e '/^{{NODEJS_KEYRING_EXPECTED_CONTENT}}$/d' \
+      "${dockerfile}-tmp"
 
     if is_alpine "${variant}"; then
       alpine_version="${variant#*alpine}"

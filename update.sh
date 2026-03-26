@@ -133,7 +133,7 @@ function update_node_version() {
     sed -i \
       -e "s#\${NODEJS_KEYRING_URL}#$(< keys/nodejs.url)#" \
       -e "s/\${NODEJS_KEYRING_HASH}/$(< keys/nodejs.shasum)/" \
-      -e "s/\${NODEJS_KEYRING_EXPECTED_CONTENT}/\$(printf '$(sed ':a;N;$!ba;s/\n/\\\\n/g' keys/node.keys)\\\\n')/" \
+      -e "s/\${NODEJS_KEYRING_EXPECTED_CONTENT}/\$(printf '$(sed ':a;N;$!ba;s/\n/\\\\n/g' keys/nodejs.keys)\\\\n')/" \
       "${dockerfile}-tmp"
 
     if is_alpine "${variant}"; then

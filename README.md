@@ -189,10 +189,6 @@ of using Alpine-based images.
 One common issue that may arise is a missing shared library required for use of
 `process.dlopen`. To add the missing shared libraries to your image:
 
-- For Alpine v3.18 and earlier, adding the
-[`libc6-compat`](https://pkgs.alpinelinux.org/package/v3.18/main/x86/libc6-compat)
-package in your Dockerfile is recommended: `apk add --no-cache libc6-compat`
-
 - Starting from Alpine v3.19, you can use the
 [`gcompat`](https://pkgs.alpinelinux.org/package/v3.19/main/x86/gcompat) package
 to add the missing shared libraries: `apk add --no-cache gcompat`

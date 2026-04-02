@@ -27,6 +27,7 @@ The official Node.js docker image, made with love by the node community.
   - [`node:bookworm`](#nodebookworm)
   - [`node:trixie`](#nodetrixie)
   - [`node:slim`](#nodeslim)
+- [Release Availability](#release-availability)
 - [License](#license)
 - [Supported Docker versions](#supported-docker-versions)
 - [Supported Node.js versions](#supported-nodejs-versions)
@@ -226,6 +227,25 @@ only contains the minimal packages needed to run `node`. Unless you are working
 in an environment where *only* the Node.js image will be deployed and you have
 space constraints, we highly recommend using the default image of this
 repository.
+
+## Release Availability
+
+This repo automatically triggers a process to build new `node` images when Node.js releases
+become available. The build processes can take several hours to complete.
+
+Images may initially appear on [Docker Hub](https://hub.docker.com/_/node)
+with incomplete or missing OS/ARCH listings as the build process first publishes a tag
+and then backfills each architecture when ready.
+During this time, if you try to pull the image, you may see an error
+message "no matching manifest". In this case, check back later.
+(See [Docker Library FAQs](https://github.com/docker-library/faq#an-images-source-changed-in-git-now-what)
+for a detailed description of the complex build process.)
+
+For Node.js security releases, Debian-based `node` images may be published in advance
+of Alpine-based images. To build an Alpine-based `node` image requires
+a `musl` build. This may not initially be ready at Node.js release time.
+When processing non-security Node.js releases, the build process will wait for
+the `musl` build before proceeding with Debian- and Alpine-based images.
 
 ## License
 

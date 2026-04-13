@@ -8,6 +8,12 @@
     },
     {
       "pattern": "^https://news\\.ycombinator\\.com/"
+    },
+    {
+      "pattern": "^https://musl\\.libc\\.org/"
+    },
+    {
+      "pattern": "^https://www\\.etalabs\\.net/"
     }
   ]
 }

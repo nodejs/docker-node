@@ -216,7 +216,6 @@ without copying the npm & Yarn package managers.
 In Docker images based on Node.js&nbsp;>=26, Yarn is already removed.
 
 The result is a smaller and hardened final image with no package managers.
-The size savings are typically about 2% or 3%.
 
 The examples below build with npm.
 

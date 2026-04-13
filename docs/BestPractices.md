@@ -207,10 +207,20 @@ FROM node:alpine as app
 COPY --from=builder node_modules .
 ```
 
-
 ## Smaller images without npm/yarn
 
-If you want to achieve an even smaller image size than the `-alpine`, you can omit the npm/yarn like this:
+To remove npm and Yarn package managers, use a multi-stage build.
+In the first stage, the package manager builds the app.
+In the second stage, the `app` and the `node` directories are copied,
+without copying the npm & Yarn package managers.
+In Docker images based on Node.js&nbsp;>=26, Yarn is already removed.
+
+The result is a smaller and hardened final image with no package managers.
+The size savings are typically about 2% or 3%.
+
+The examples below build with npm.
+
+**Alpine example**
 
 ```Dockerfile
 ARG ALPINE_VERSION=3.23
@@ -219,7 +229,7 @@ FROM node:24-alpine${ALPINE_VERSION} AS builder
 WORKDIR /build-stage
 COPY package*.json ./
 RUN npm ci
-# Copy the the files you need
+# Copy the files you need
 COPY . ./
 RUN npm run build
 
@@ -230,6 +240,37 @@ WORKDIR /usr/src/app
 RUN apk add --no-cache libstdc++ dumb-init \
   && addgroup -g 1000 node && adduser -u 1000 -G node -s /bin/sh -D node \
   && chown node:node ./
+COPY --from=builder /usr/local/bin/node /usr/local/bin/
+COPY --from=builder /usr/local/bin/docker-entrypoint.sh /usr/local/bin/
+ENTRYPOINT ["docker-entrypoint.sh"]
+USER node
+# Update the following COPY lines based on your codebase
+COPY --from=builder /build-stage/node_modules ./node_modules
+COPY --from=builder /build-stage/dist ./dist
+# Run with dumb-init to not start node with PID=1, since Node.js was not designed to run as PID 1
+CMD ["dumb-init", "node", "dist/index.js"]
+```
+
+**Debian example**
+
+```Dockerfile
+FROM node:24-trixie-slim AS builder
+WORKDIR /build-stage
+COPY package*.json ./
+RUN npm ci
+# Copy the files you need
+COPY . ./
+RUN npm run build
+
+FROM debian:trixie-slim
+# Create app directory
+WORKDIR /usr/src/app
+# Add required binaries
+RUN apt-get update && apt-get install -y --no-install-recommends dumb-init \
+    && rm -rf /var/lib/apt/lists/* \
+    && groupadd --gid 1000 node \
+    && useradd --uid 1000 --gid node --shell /bin/bash --create-home node \
+    && chown node:node ./
 COPY --from=builder /usr/local/bin/node /usr/local/bin/
 COPY --from=builder /usr/local/bin/docker-entrypoint.sh /usr/local/bin/
 ENTRYPOINT ["docker-entrypoint.sh"]

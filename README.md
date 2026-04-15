@@ -294,9 +294,15 @@ for project roles and decision-making, and [CONTRIBUTING.md](CONTRIBUTING.md) fo
 
 ### Collaborators
 
-Additional collaborators are managed via the
-[@nodejs/docker team](https://github.com/orgs/nodejs/teams/docker).
+- Hugues Malphettes ([hmalphettes](https://github.com/hmalphettes))
+- Tianon Gravi ([tianon](https://github.com/tianon))
+- ttshivers ([ttshivers](https://github.com/ttshivers))
+- [yosifkit](https://github.com/yosifkit)
+- Nick Schonning ([nschonni](https://github.com/nschonni))
+- Stewart X Addison ([sxa](https://github.com/sxa))
 
+Collaborators are managed via the
+[@nodejs/docker team](https://github.com/orgs/nodejs/teams/docker).
 
 ### Emeritus
 

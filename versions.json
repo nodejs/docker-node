@@ -10,13 +10,11 @@
     "variants": {
       "alpine3.22": [
         "amd64",
-        "arm64v8",
-        "s390x"
+        "arm64v8"
       ],
       "alpine3.23": [
         "amd64",
-        "arm64v8",
-        "s390x"
+        "arm64v8"
       ],
       "bookworm": [
         "amd64",

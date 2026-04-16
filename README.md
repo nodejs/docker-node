@@ -308,6 +308,7 @@ Collaborators are managed via the
 
 #### Former Maintainers
 
+- Hans Kristian Flaatten ([Starefossen](https://github.com/Starefossen))
 - Mikeal Rogers ([mikeal](https://github.com/mikeal))
 - Christopher Horrell ([chorrell](https://github.com/chorrell))
 - Peter Petrov ([pesho](https://github.com/pesho))

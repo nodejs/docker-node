@@ -300,6 +300,7 @@ for project roles and decision-making, and [CONTRIBUTING.md](CONTRIBUTING.md) fo
 - [yosifkit](https://github.com/yosifkit)
 - Nick Schonning ([nschonni](https://github.com/nschonni))
 - Stewart X Addison ([sxa](https://github.com/sxa))
+- Mike McCready ([MikeMcC399](https://github.com/MikeMcC399))
 
 Collaborators are managed via the
 [@nodejs/docker team](https://github.com/orgs/nodejs/teams/docker).

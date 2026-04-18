@@ -291,6 +291,7 @@ for project roles and decision-making, and [CONTRIBUTING.md](CONTRIBUTING.md) fo
 - Peter Dave Hello ([PeterDaveHello](https://github.com/PeterDaveHello))
 - Rafael Gonzaga ([rafaelgss](https://github.com/rafaelgss))
 - Matteo Collina ([mcollina](https://github.com/mcollina))
+- Nick Schonning ([nschonni](https://github.com/nschonni))
 
 ### Collaborators
 
@@ -298,7 +299,6 @@ for project roles and decision-making, and [CONTRIBUTING.md](CONTRIBUTING.md) fo
 - Tianon Gravi ([tianon](https://github.com/tianon))
 - ttshivers ([ttshivers](https://github.com/ttshivers))
 - [yosifkit](https://github.com/yosifkit)
-- Nick Schonning ([nschonni](https://github.com/nschonni))
 - Stewart X Addison ([sxa](https://github.com/sxa))
 
 Collaborators are managed via the

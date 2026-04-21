@@ -12,7 +12,7 @@ RUN addgroup -g 1000 node \
       && case "${alpineArch##*-}" in \
         x86_64) ARCH='x64' CHECKSUM="46dfaea08624f9cb9d439d603784b2751ab4d7700c81c26604c032a4dc4e74a1" OPENSSL_ARCH=linux-x86_64;; \
         x86) OPENSSL_ARCH=linux-elf;; \
-        aarch64) OPENSSL_ARCH=linux-aarch64;; \
+        aarch64) ARCH='arm64' CHECKSUM="12e66efe36cf4e37564eca51a93949c0dab629c349af89d56beb53e2060151d8" OPENSSL_ARCH=linux-aarch64;; \
         arm*) OPENSSL_ARCH=linux-armv4;; \
         ppc64le) OPENSSL_ARCH=linux-ppc64le;; \
         s390x) OPENSSL_ARCH=linux-s390x;; \

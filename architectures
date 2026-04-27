@@ -4,5 +4,5 @@ arm32v6        alpine3.22,alpine3.23
 arm32v7        alpine3.22,alpine3.23,bookworm,bookworm-slim,bullseye,bullseye-slim,trixie,trixie-slim
 arm64v8        alpine3.22,alpine3.23,bookworm,bookworm-slim,bullseye,bullseye-slim,trixie,trixie-slim
 i386           alpine3.22,alpine3.23
-ppc64le        alpine3.22,alpine3.23,bookworm,bookworm-slim,trixie,trixie-slim
+ppc64le        bookworm,bookworm-slim,trixie,trixie-slim
 s390x          alpine3.22,alpine3.23,bookworm,bookworm-slim,trixie,trixie-slim

@@ -1,4 +1,55 @@
 {
+  "26": {
+    "start": "2026-04-28",
+    "lts": "2026-10-28",
+    "maintenance": "2027-10-20",
+    "end": "2029-04-30",
+    "codename": "",
+    "alpine-default": "alpine3.23",
+    "debian-default": "trixie",
+    "variants": {
+      "alpine3.22": [
+        "amd64",
+        "arm64v8"
+      ],
+      "alpine3.23": [
+        "amd64",
+        "arm64v8"
+      ],
+      "bookworm": [
+        "amd64",
+        "arm64v8",
+        "ppc64le",
+        "s390x"
+      ],
+      "bookworm-slim": [
+        "amd64",
+        "arm64v8",
+        "ppc64le",
+        "s390x"
+      ],
+      "bullseye": [
+        "amd64",
+        "arm64v8"
+      ],
+      "bullseye-slim": [
+        "amd64",
+        "arm64v8"
+      ],
+      "trixie": [
+        "amd64",
+        "arm64v8",
+        "ppc64le",
+        "s390x"
+      ],
+      "trixie-slim": [
+        "amd64",
+        "arm64v8",
+        "ppc64le",
+        "s390x"
+      ]
+    }
+  },
   "25": {
     "start": "2025-10-15",
     "lts": "",

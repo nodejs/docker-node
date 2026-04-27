@@ -23,7 +23,7 @@ You can use Node.js channels (prefixed by `#nodejs-`) in the [OpenJSF Slack](htt
 
 ## Version Updates
 
-New **Node.js** releases are released as soon as possible.
+New **Node.js** releases are released as soon as possible. Security and patch updates are automatically opened on this repository by the [nodejs-github-bot](https://github.com/nodejs-github-bot) once the `musl` builds are completed for all new versions on <https://unofficial-builds.nodejs.org/>.
 
 New **npm** releases are not tracked. We simply use the npm version bundled in the corresponding Node.js release.
 
@@ -40,7 +40,7 @@ New **npm** releases are not tracked. We simply use the npm version bundled in t
 
 ### Submitting a PR for a version update
 
-If you'd like to help us by submitting a PR for a version update, please do the following:
+If you'd like to help us by submitting a PR for a new **major** version update, please do the following:
 
 1. [Fork this project.](https://docs.github.com/en/get-started/quickstart/fork-a-repo)
 1. [Clone the forked repository.](https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/cloning-a-repository)

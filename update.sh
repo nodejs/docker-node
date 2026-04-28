@@ -63,6 +63,11 @@ fi
 # TODO: Should be able to specify target architecture manually
 arch=$(get_arch)
 
+# Grab and parse fingerprints for the Node.js Releasers
+curl -fsSLO --compressed "https://github.com/nodejs/release-keys/raw/refs/heads/main/gpg-only-active-keys/pubring.kbx"
+NODEJS_KEYS=$(gpg --no-default-keyring --keyring "./pubring.kbx" --keyid-format long --with-colons --fingerprint | awk -F: '/^pub:.*/ { getline; print $10}')
+rm ./pubring.kbx
+
 function in_versions_to_update() {
   local version=$1
 
@@ -136,7 +141,7 @@ function update_node_version() {
     while read -r line; do
       pattern='"\$\{'$(echo "node" | tr '[:lower:]' '[:upper:]')'_KEYS\[@\]\}"'
       sed -Ei -e "s/([ \\t]*)(${pattern})/\\1${line}${new_line}\\1\\2/" "${dockerfile}-tmp"
-    done < "keys/node.keys"
+    done <<< "$NODEJS_KEYS"
     sed -Ei -e "/${pattern}/d" "${dockerfile}-tmp"
 
     if is_alpine "${variant}"; then

@@ -94,4 +94,5 @@ jobs:
         run: docker run --rm node:${{ matrix.version }}-${{ matrix.variant }} npm --version
 
       - name: Test for yarn
+        if: startsWith(matrix.version, '22') || startsWith(matrix.version, '24') || startsWith(matrix.version, '25')
         run: docker run --rm node:${{ matrix.version }}-${{ matrix.variant }} yarn --version

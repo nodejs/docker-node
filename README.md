@@ -33,6 +33,8 @@ The official Node.js docker image, made with love by the node community.
 - [License](#license)
 - [Supported Docker versions](#supported-docker-versions)
 - [Supported Node.js versions](#supported-nodejs-versions)
+- [Supported architectures](#supported-architectures)
+  - [musl builds for Alpine](#musl-builds-for-alpine)
 - [Yarn v1 Classic bundling](#yarn-v1-classic-bundling)
 - [Governance and Current Members](#governance-and-current-members)
   - [Docker Maintainers](#docker-maintainers)
@@ -285,6 +287,23 @@ for current Engine versions.
 ## Supported Node.js versions
 
 This project will support Node.js versions as still under active support as per the [Node.js release schedule](https://github.com/nodejs/Release).
+
+## Supported architectures
+
+`node` images are built for the Linux operating system and architecture combinations defined in [versions.json](https://github.com/nodejs/docker-node/blob/main/versions.json).
+
+- The [Node.js Platform list](https://github.com/nodejs/node/blob/main/BUILDING.md#official-binary-platforms-and-toolchains) defines [Support Tiers](https://github.com/nodejs/node/blob/main/BUILDING.md#strategy) 1, 2 and Experimental for platform and architecture combinations of Node.js builds and for each separate Node.js release line
+- The [Docker official images library](https://github.com/docker-library/official-images#architectures-other-than-amd64) lists the supported architectures in the Docker build environment
+
+Each of the architectures for Debian images belong to the Node.js support tier 1 or 2, recommended for production applications.
+
+### musl builds for Alpine
+
+`musl` builds for `amd64` are listed under support tier "Experimental" and are tested by the Node.js build process before being used in Docker images. "Experimental" status for Node.js is defined as:
+
+> Experimental: May not compile or test suite may not pass. The core team does not create releases for these platforms. Test failures on experimental platforms do not block releases. Contributions to improve support for these platforms are welcome.
+
+`musl` builds for other architectures, including `arm64`, are not tested before release.
 
 ## Yarn v1 Classic bundling
 

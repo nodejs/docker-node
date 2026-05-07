@@ -17,14 +17,14 @@ const getChildDirectories = (parent) => fs.readdirSync(parent, { withFileTypes: 
   .filter((dirent) => dirent.isDirectory())
   .map(({ name }) => path.resolve(parent, name));
 
-const getNodeVerionDirs = (base) => getChildDirectories(base)
+const getNodeVersionDirs = (base) => getChildDirectories(base)
   .filter((childPath) => nodeDirRegex.test(path.basename(childPath)));
 
 // Returns the paths of Dockerfiles that are at: base/*/Dockerfile
 const getDockerfilesInChildDirs = (base) => getChildDirectories(base)
   .map((childDir) => path.resolve(childDir, 'Dockerfile'));
 
-const getAllDockerfiles = (base) => getNodeVerionDirs(base).flatMap(getDockerfilesInChildDirs);
+const getAllDockerfiles = (base) => getNodeVersionDirs(base).flatMap(getDockerfilesInChildDirs);
 
 const getAffectedDockerfiles = (filesAdded, filesModified, filesRenamed) => {
   const files = [

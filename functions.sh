@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# Utlity functions
+# Utility functions
 # Don't change this file unless needed
 # The GitHub Action for automating new builds rely on this file
 
@@ -19,7 +19,7 @@ fatal() {
 #
 # This is used to get the target architecture for docker image.
 # For crossing building, we need a way to specify the target
-# architecutre manually.
+# architecture manually.
 function get_arch() {
   local arch
   case $(uname -m) in

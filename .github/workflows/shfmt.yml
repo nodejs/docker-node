@@ -4,6 +4,7 @@ on:
   pull_request:
     paths:
       - "**/*.sh"
+      - ".github/workflows/shfmt.yml"
 
 permissions:
   contents: read
@@ -20,4 +21,5 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
-      - run: shellcheck *.sh
+      - name: Run ShellCheck
+        uses: bewuethr/shellcheck-action@80bac2daa9fcf95d648200a793d00060857e6dc4 # v2.3.0

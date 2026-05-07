@@ -105,7 +105,7 @@ function get_supported_arches() {
   lines=$(grep "${variant}" "$(dirname "${version}")"/architectures 2> /dev/null | cut -d' ' -f1)
 
   # Get version specific supported architectures if there is specialized information
-  if [ -a "${version}"/architectures ]; then
+  if [ -e "${version}"/architectures ]; then
     lines=$(grep "${variant}" "${version}"/architectures 2> /dev/null | cut -d' ' -f1)
   fi
 
@@ -150,7 +150,7 @@ function get_versions() {
   fi
 
   for dir in "${dirs[@]}"; do
-    if [ -a "${dir}/Dockerfile" ] || [ -a "${dir}/${default_variant}/Dockerfile" ]; then
+    if [ -e "${dir}/Dockerfile" ] || [ -e "${dir}/${default_variant}/Dockerfile" ]; then
       versions+=("${dir#./}")
     fi
   done

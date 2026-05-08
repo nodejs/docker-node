@@ -12,7 +12,6 @@ RUN ARCH= OPENSSL_ARCH= && dpkgArch="$(dpkg --print-architecture)" \
       s390x) ARCH='s390x' OPENSSL_ARCH='linux*-s390x';; \
       arm64) ARCH='arm64' OPENSSL_ARCH='linux-aarch64';; \
       armhf) ARCH='armv7l' OPENSSL_ARCH='linux-armv4';; \
-      i386) ARCH='x86' OPENSSL_ARCH='linux-elf';; \
       *) echo "unsupported architecture"; exit 1 ;; \
     esac \
     && set -ex \

@@ -12,7 +12,6 @@ RUN ARCH= && dpkgArch="$(dpkg --print-architecture)" \
     s390x) ARCH='s390x';; \
     arm64) ARCH='arm64';; \
     armhf) ARCH='armv7l';; \
-    i386) ARCH='x86';; \
     *) echo "unsupported architecture"; exit 1 ;; \
   esac \
   # use pre-existing gpg directory, see https://github.com/nodejs/docker-node/pull/1895#issuecomment-1550389150

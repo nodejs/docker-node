@@ -153,13 +153,14 @@ function update_node_version() {
         fi
       else
         sed -Ei -e "s/(alpine:)0.0/\\1${alpine_version}/" "${dockerfile}-tmp"
-        alpine_arch='x86_64) ARCH='"'"'x64'"'"' CHECKSUM=CHECKSUM_x64 OPENSSL_ARCH=linux-x86_64;; \\\
-        x86) OPENSSL_ARCH=linux-elf;; \\\
-        aarch64) OPENSSL_ARCH=linux-aarch64;; \\\
-        arm*) OPENSSL_ARCH=linux-armv4;; \\\
-        ppc64le) OPENSSL_ARCH=linux-ppc64le;; \\\
-        s390x) OPENSSL_ARCH=linux-s390x;; \\\
-        *) ;; \\'
+        alpine_x64='x86_64) ARCH='"'"'x64'"'"' CHECKSUM=CHECKSUM_x64 OPENSSL_ARCH=linux-x86_64;; \\\n        '
+        alpine_x86='x86) OPENSSL_ARCH=linux-elf;; \\\n        '
+        alpine_aarch64='aarch64) OPENSSL_ARCH=linux-aarch64;; \\\n        '
+        alpine_armv4='arm*) OPENSSL_ARCH=linux-armv4;; \\\n        '
+        alpine_ppc64le='ppc64le) OPENSSL_ARCH=linux-ppc64le;; \\\n        '
+        alpine_x390='s390x) OPENSSL_ARCH=linux-s390x;; \\\n        '
+        alpine_other='*) ;; \\'
+        alpine_arch="${alpine_x64}${alpine_x86}${alpine_aarch64}${alpine_armv4}${alpine_ppc64le}${alpine_x390}${alpine_other}"
         sed -Ei -e "s/\"\\$\{ALPINE_ARCH\[@\]\}\"/${alpine_arch}/" "${dockerfile}-tmp"
         sed -Ei -e "s/CHECKSUM=CHECKSUM_x64/CHECKSUM=\"${checksum}\"/" "${dockerfile}-tmp"
       fi

@@ -8,10 +8,7 @@ ENV NODE_VERSION=25.9.0
 RUN ARCH= && dpkgArch="$(dpkg --print-architecture)" \
   && case "${dpkgArch##*-}" in \
     amd64) ARCH='x64';; \
-    ppc64el) ARCH='ppc64le';; \
-    s390x) ARCH='s390x';; \
     arm64) ARCH='arm64';; \
-    armhf) ARCH='armv7l';; \
     *) echo "unsupported architecture"; exit 1 ;; \
   esac \
   # use pre-existing gpg directory, see https://github.com/nodejs/docker-node/pull/1895#issuecomment-1550389150

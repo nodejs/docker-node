@@ -153,16 +153,26 @@ function update_node_version() {
         fi
       else
         sed -Ei -e "s/(alpine:)0.0/\\1${alpine_version}/" "${dockerfile}-tmp"
-        alpine_x64='x86_64) ARCH='"'"'x64'"'"' CHECKSUM=CHECKSUM_x64 OPENSSL_ARCH=linux-x86_64;; \\\n        '
-        alpine_x86='x86) OPENSSL_ARCH=linux-elf;; \\\n        '
-        alpine_aarch64='aarch64) OPENSSL_ARCH=linux-aarch64;; \\\n        '
-        alpine_armv4='arm*) OPENSSL_ARCH=linux-armv4;; \\\n        '
-        alpine_ppc64le='ppc64le) OPENSSL_ARCH=linux-ppc64le;; \\\n        '
-        alpine_x390='s390x) OPENSSL_ARCH=linux-s390x;; \\\n        '
-        alpine_other='*) ;; \\'
-        alpine_arch="${alpine_x64}${alpine_x86}${alpine_aarch64}${alpine_armv4}${alpine_ppc64le}${alpine_x390}${alpine_other}"
+
+        alpine_arch=''
+        arches=$(jq -r ".\"${version}\".variants.\"alpine${alpine_version}\" | @sh" "versions.json")
+        if [[ "${arches}" == *"amd64"* ]]; then
+          alpine_arch+='x86_64) ARCH='"'"'x64'"'"' CHECKSUM="'${checksum}'" OPENSSL_ARCH=linux-x86_64;; \\\n        '
+        fi
+        if [[ "$arches" == *"arm32"* ]]; then
+          alpine_arch+='arm*) OPENSSL_ARCH=linux-armv4;; \\\n        '
+        fi
+        if [[ "$arches" == *"arm64v8"* ]]; then
+          alpine_arch+='aarch64) OPENSSL_ARCH=linux-aarch64;; \\\n        '
+        fi
+        if [[ "$arches" == *"ppc64le"* ]]; then
+          alpine_arch+='ppc64le) OPENSSL_ARCH=linux-ppc64le;; \\\n        '
+        fi
+        if [[ "$arches" == *"s390x"* ]]; then
+          alpine_arch+='s390x) OPENSSL_ARCH=linux-s390x;; \\\n        '
+        fi
+        alpine_arch+='*) ;; \\'
         sed -Ei -e "s/\"\\$\{ALPINE_ARCH\[@\]\}\"/${alpine_arch}/" "${dockerfile}-tmp"
-        sed -Ei -e "s/CHECKSUM=CHECKSUM_x64/CHECKSUM=\"${checksum}\"/" "${dockerfile}-tmp"
       fi
     elif is_debian "${variant}"; then
       sed -Ei -e "s/(buildpack-deps:)name/\\1${variant}/" "${dockerfile}-tmp"

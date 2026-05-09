@@ -11,8 +11,8 @@ RUN addgroup -g 1000 node \
     && ARCH= OPENSSL_ARCH='linux*' && alpineArch="$(apk --print-arch)" \
       && case "${alpineArch##*-}" in \
         x86_64) ARCH='x64' CHECKSUM="c58109c8da448196f0d811df7a6079748678132067e3b53d01c8c8a4bcd86992" OPENSSL_ARCH=linux-x86_64;; \
-        arm*) OPENSSL_ARCH=linux-armv4;; \
         aarch64) OPENSSL_ARCH=linux-aarch64;; \
+        arm*) OPENSSL_ARCH=linux-armv4;; \
         s390x) OPENSSL_ARCH=linux-s390x;; \
         *) ;; \
       esac \

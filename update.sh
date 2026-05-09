@@ -159,11 +159,11 @@ function update_node_version() {
         if [[ "${arches}" == *"amd64"* ]]; then
           alpine_arch+='x86_64) ARCH='"'"'x64'"'"' CHECKSUM="'${checksum}'" OPENSSL_ARCH=linux-x86_64;; \\\n        '
         fi
-        if [[ "$arches" == *"arm32"* ]]; then
-          alpine_arch+='arm*) OPENSSL_ARCH=linux-armv4;; \\\n        '
-        fi
         if [[ "$arches" == *"arm64v8"* ]]; then
           alpine_arch+='aarch64) OPENSSL_ARCH=linux-aarch64;; \\\n        '
+        fi
+        if [[ "$arches" == *"arm32"* ]]; then
+          alpine_arch+='arm*) OPENSSL_ARCH=linux-armv4;; \\\n        '
         fi
         if [[ "$arches" == *"ppc64le"* ]]; then
           alpine_arch+='ppc64le) OPENSSL_ARCH=linux-ppc64le;; \\\n        '

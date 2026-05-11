@@ -153,12 +153,69 @@ function update_node_version() {
         fi
       else
         sed -Ei -e "s/(alpine:)0.0/\\1${alpine_version}/" "${dockerfile}-tmp"
-        sed -Ei -e "s/CHECKSUM=CHECKSUM_x64/CHECKSUM=\"${checksum}\"/" "${dockerfile}-tmp"
+
+        alpine_arch=''
+        arches=$(jq -r ".\"${version}\".variants.\"alpine${alpine_version}\" | @sh" "versions.json")
+        if [[ "${arches}" == *"amd64"* ]]; then
+          alpine_arch+='x86_64) ARCH='"'"'x64'"'"' CHECKSUM="'${checksum}'" OPENSSL_ARCH=linux-x86_64;; \\\n        '
+        fi
+        if [[ "$arches" == *"arm64v8"* ]]; then
+          alpine_arch+='aarch64) OPENSSL_ARCH=linux-aarch64;; \\\n        '
+        fi
+        if [[ "$arches" == *"arm32"* ]]; then
+          alpine_arch+='arm*) OPENSSL_ARCH=linux-armv4;; \\\n        '
+        fi
+        if [[ "$arches" == *"ppc64le"* ]]; then
+          alpine_arch+='ppc64le) OPENSSL_ARCH=linux-ppc64le;; \\\n        '
+        fi
+        if [[ "$arches" == *"s390x"* ]]; then
+          alpine_arch+='s390x) OPENSSL_ARCH=linux-s390x;; \\\n        '
+        fi
+        alpine_arch+='*) ;; \\'
+        sed -Ei -e "s/\"\\$\{ALPINE_ARCH\[@\]\}\"/${alpine_arch}/" "${dockerfile}-tmp"
       fi
     elif is_debian "${variant}"; then
       sed -Ei -e "s/(buildpack-deps:)name/\\1${variant}/" "${dockerfile}-tmp"
+      deb_arch=''
+      arches=$(jq -r ".\"${version}\".variants.\"${variant}\" | @sh" "versions.json")
+      if [[ "${arches}" == *"amd64"* ]]; then
+        deb_arch+='amd64) ARCH='"'"'x64'"'"';; \\\n    '
+      fi
+      if [[ "$arches" == *"ppc64le"* ]]; then
+        deb_arch+='ppc64el) ARCH='"'"'ppc64le'"'"';; \\\n    '
+      fi
+      if [[ "$arches" == *"s390x"* ]]; then
+        deb_arch+='s390x) ARCH='"'"'s390x'"'"';; \\\n    '
+      fi
+      if [[ "$arches" == *"arm64v8"* ]]; then
+        deb_arch+='arm64) ARCH='"'"'arm64'"'"';; \\\n    '
+      fi
+      if [[ "$arches" == *"arm32v7"* ]]; then
+        deb_arch+='armhf) ARCH='"'"'armv7l'"'"';; \\\n    '
+      fi
+      deb_arch+='*) echo "unsupported architecture"; exit 1 ;; \\'
+      sed -Ei -e "s/\"\\$\{DEB_ARCH\[@\]\}\"/${deb_arch}/" "${dockerfile}-tmp"
     elif is_debian_slim "${variant}"; then
       sed -Ei -e "s/(debian:)name-slim/\\1${variant}/" "${dockerfile}-tmp"
+      deb_arch=''
+      arches=$(jq -r ".\"${version}\".variants.\"${variant}\" | @sh" "versions.json")
+      if [[ "${arches}" == *"amd64"* ]]; then
+        deb_arch+='amd64) ARCH='"'"'x64'"'"' OPENSSL_ARCH='"'"'linux-x86_64'"'"';; \\\n      '
+      fi
+      if [[ "$arches" == *"ppc64le"* ]]; then
+        deb_arch+='ppc64el) ARCH='"'"'ppc64le'"'"' OPENSSL_ARCH='"'"'linux-ppc64le'"'"';; \\\n      '
+      fi
+      if [[ "$arches" == *"s390x"* ]]; then
+        deb_arch+='s390x) ARCH='"'"'s390x'"'"' OPENSSL_ARCH='"'"'linux*-s390x'"'"';; \\\n      '
+      fi
+      if [[ "$arches" == *"arm64v8"* ]]; then
+        deb_arch+='arm64) ARCH='"'"'arm64'"'"' OPENSSL_ARCH='"'"'linux-aarch64'"'"';; \\\n      '
+      fi
+      if [[ "$arches" == *"arm32v7"* ]]; then
+        deb_arch+='armhf) ARCH='"'"'armv7l'"'"' OPENSSL_ARCH='"'"'linux-armv4'"'"';; \\\n      '
+      fi
+      deb_arch+='*) echo "unsupported architecture"; exit 1 ;; \\'
+      sed -Ei -e "s/\"\\$\{DEB_ARCH\[@\]\}\"/${deb_arch}/" "${dockerfile}-tmp"
     fi
 
     # Strip out Yarn v1 from Node 26+ images https://github.com/nodejs/docker-node/issues/2407

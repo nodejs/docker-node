@@ -29,7 +29,8 @@ New **Node.js** releases are released as soon as possible.
 
 New **npm** releases are not tracked. We simply use the npm version bundled in the corresponding Node.js release.
 
-**[Yarn v1 Classic](https://classic.yarnpkg.com/)** is no longer maintained upstream, and will be removed starting with the Node 26 images.
+**[Yarn v1 Classic](https://classic.yarnpkg.com/)** is no longer maintained upstream, and it is removed when constructing Dockerfiles
+from templates starting with the Node 26 images.
 
 ### Image Creation Automation
 

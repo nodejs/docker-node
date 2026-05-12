@@ -173,14 +173,15 @@ need to install, thus reducing the overall size of all images on your system.
 
 ### `node:alpine`
 
-This image is based on the popular
-[Alpine Linux project](https://alpinelinux.org), available in
-[the `alpine` official image](https://hub.docker.com/_/alpine). Alpine Linux is
-much smaller than most distribution base images (~5MB), and thus leads to much
-slimmer images in general.
+This image is based on
+[Alpine Linux](https://alpinelinux.org). Because base
+[alpine](https://hub.docker.com/_/alpine) images are smaller
+than corresponding base
+[debian](https://hub.docker.com/_/debian) images, the resulting
+`node:alpine` Docker images are around 25% smaller than the
+Debian-based `node:slim` images.
 
-This variant is highly recommended when final image size being as small as
-possible is desired. The main caveat to note is that it does use
+The main caveat to note is that it does use
 [musl libc](https://musl.libc.org/) instead of
 [glibc and friends](https://www.etalabs.net/compare_libcs.html), so certain
 software might run into issues depending on the depth of their libc
@@ -197,13 +198,14 @@ One common issue that may arise is a missing shared library required for use of
 [`gcompat`](https://pkgs.alpinelinux.org/package/v3.19/main/x86/gcompat) package
 to add the missing shared libraries: `apk add --no-cache gcompat`
 
-To minimize image size, it's uncommon for additional related tools
-(such as `git` or `bash`) to be included in Alpine-based images. Using this
-image as a base, add the things you need in your own Dockerfile
-(see the [`alpine` image description](https://hub.docker.com/_/alpine/) for
-examples of how to install packages if you are unfamiliar).
+Tools such as `git` or `bash` are not included in `node:alpine*` based images. The
+[Alpine documentation](https://docs.alpinelinux.org/) describes how to find and
+install additional packages using `apk` (Alpine Package Keeper).
 
-To make the image size even smaller, you can [bundle without npm/yarn](./docs/BestPractices.md#smaller-images-without-npmyarn).
+The
+[Best Practices document](./docs/BestPractices.md), in the section
+[Smaller images without npm/yarn](./docs/BestPractices.md#smaller-images-without-npmyarn),
+shows how to produce a custom image by removing package managers in a multi-stage build.
 
 ### `node:bullseye`
 

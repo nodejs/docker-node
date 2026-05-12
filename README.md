@@ -179,23 +179,15 @@ This image is based on the popular
 much smaller than most distribution base images (~5MB), and thus leads to much
 slimmer images in general.
 
-This variant is highly recommended when final image size being as small as
-possible is desired. The main caveat to note is that it does use
-[musl libc](https://musl.libc.org/) instead of
-[glibc and friends](https://www.etalabs.net/compare_libcs.html), so certain
-software might run into issues depending on the depth of their libc
-requirements. However, most software doesn't have an issue with this, so this
-variant is usually a very safe choice. See
-[this Hacker News comment thread](https://news.ycombinator.com/item?id=10782897)
-for more discussion of the issues that might arise and some pro/con comparisons
-of using Alpine-based images.
+Alpine images use the C library
+[musl libc](https://musl.libc.org/), not the GNU C library
+[glibc](https://sourceware.org/glibc/) used by Debian.
 
-One common issue that may arise is a missing shared library required for use of
-`process.dlopen`. To add the missing shared libraries to your image:
-
-- Starting from Alpine v3.19, you can use the
-[`gcompat`](https://pkgs.alpinelinux.org/package/v3.19/main/x86/gcompat) package
-to add the missing shared libraries: `apk add --no-cache gcompat`
+Generally, applications written for Debian (`glibc`) will not run under Alpine (`musl`).
+Some compatibility issues may be resolvable by installing the Alpine
+[`gcompat`](https://pkgs.alpinelinux.org/package/v3.23/main/x86/gcompat)
+GNU C Library compatibility layer for musl package.
+Use `apk add --no-cache gcompat` to install.
 
 To minimize image size, it's uncommon for additional related tools
 (such as `git` or `bash`) to be included in Alpine-based images. Using this

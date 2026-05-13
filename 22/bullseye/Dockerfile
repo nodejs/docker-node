@@ -3,7 +3,7 @@ FROM buildpack-deps:bullseye
 RUN groupadd --gid 1000 node \
   && useradd --uid 1000 --gid node --shell /bin/bash --create-home node
 
-ENV NODE_VERSION=22.22.2
+ENV NODE_VERSION=22.22.3
 
 RUN ARCH= && dpkgArch="$(dpkg --print-architecture)" \
   && case "${dpkgArch##*-}" in \
@@ -12,7 +12,6 @@ RUN ARCH= && dpkgArch="$(dpkg --print-architecture)" \
     s390x) ARCH='s390x';; \
     arm64) ARCH='arm64';; \
     armhf) ARCH='armv7l';; \
-    i386) ARCH='x86';; \
     *) echo "unsupported architecture"; exit 1 ;; \
   esac \
   # use pre-existing gpg directory, see https://github.com/nodejs/docker-node/pull/1895#issuecomment-1550389150

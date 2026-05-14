@@ -175,11 +175,10 @@ need to install, thus reducing the overall size of all images on your system.
 
 This image is based on the popular
 [Alpine Linux project](https://alpinelinux.org), available in
-[the `alpine` official image](https://hub.docker.com/_/alpine). Alpine Linux is
-much smaller than most distribution base images (~5MB), and thus leads to much
-slimmer images in general.
+[the `alpine` official image](https://hub.docker.com/_/alpine). Alpine Linux is significantly smaller than most distribution base images (~5MB), 
+which helps reduce overall image size.
 
-This variant is highly recommended when final image size being as small as
+This variant is recommended when minimizing final image size is important.
 possible is desired. The main caveat to note is that it does use
 [musl libc](https://musl.libc.org/) instead of
 [glibc and friends](https://www.etalabs.net/compare_libcs.html), so certain

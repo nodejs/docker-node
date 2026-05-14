@@ -22,11 +22,13 @@ The official Node.js docker image, made with love by the node community.
     - [npm run](#npm-run)
 - [Image Variants](#image-variants)
   - [`node:<version>`](#nodeversion)
+  - [`node:lts`](#nodelts)
   - [`node:alpine`](#nodealpine)
   - [`node:bullseye`](#nodebullseye)
   - [`node:bookworm`](#nodebookworm)
   - [`node:trixie`](#nodetrixie)
   - [`node:slim`](#nodeslim)
+- [Long Term Support (LTS)](#long-term-support-lts)
 - [Release Availability](#release-availability)
 - [License](#license)
 - [Supported Docker versions](#supported-docker-versions)
@@ -159,6 +161,8 @@ The legacy package manager
 is included in `node` images with Node.js 25 and below. See
 [Yarn v1 Classic bundling](#yarn-v1-classic-bundling) for details.
 
+View the list of currently supported floating and pinned tags on [Docker Hub](https://hub.docker.com/_/node).
+
 ### `node:<version>`
 
 This is the defacto image. If you are unsure about what your needs are, you
@@ -170,6 +174,11 @@ well as the base to build other images off of. This tag is based off of
 on their system. It, by design, has a large number of extremely common Debian
 packages. This reduces the number of packages that images that derive from it
 need to install, thus reducing the overall size of all images on your system.
+
+### `node:lts`
+
+This is a special form of `node:<version>` that selects the
+Active Long Term Support version of Node.js. See also [Long Term Support](#long-term-support-lts) below for more detail.
 
 ### `node:alpine`
 
@@ -230,6 +239,20 @@ only contains the minimal packages needed to run `node`. Unless you are working
 in an environment where *only* the Node.js image will be deployed and you have
 space constraints, we highly recommend using the default image of this
 repository.
+
+## Long Term Support (LTS)
+
+Production applications should only use LTS releases.
+
+Refer to [Node.js Releases](https://github.com/nodejs/release#readme) for a description
+of release phases and schedule.
+
+If no version selection is made in a tag, for example, `node:slim`,
+then the Current release is selected.
+`node` images using the Active LTS release are published with an `lts` floating tag
+to aid their selection. `node:lts` can be used on its own, or in combination with other tags
+such as `node:lts-slim`. To select a `node` image based on a Maintenance LTS version
+use the literal node version in the tag.
 
 ## Release Availability
 

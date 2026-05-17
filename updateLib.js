@@ -5,7 +5,6 @@ const { readFileSync, writeFileSync } = require('fs');
 const { getAllDockerfiles, getDockerfileNodeVersion } = require('./utils');
 
 const releaseUrl = 'https://nodejs.org/dist/index.json';
-const yarnVersionUrl = 'https://classic.yarnpkg.com/latest-version';
 
 const templates = Object.freeze({
   alpine: 1,
@@ -121,25 +120,23 @@ const getBaseImage = ({ template, variant }) => {
 
 const formatKeys = (keys) => keys.map((key) => `$1${key} \\`).join('\n');
 
-const formatTemplate = (yarnVersion, nodeKeys, yarnKeys, muslChecksum, base, metadata) => {
+const formatTemplate = (nodeKeys, muslChecksum, base, metadata) => {
   const { latestVersion, template, nodeMajorVersion } = metadata;
   const baseImage = getBaseImage(metadata);
-  const initialFormat = base.replace(/^FROM.+$/m, `FROM ${baseImage}`)
-    .replace(/^ENV NODE_VERSION .+$/m, `ENV NODE_VERSION ${latestVersion}`)
-    .replace(/^ENV YARN_VERSION .+$/m, `ENV YARN_VERSION ${yarnVersion}`)
+  let initialFormat = base.replace(/^FROM.+$/m, `FROM ${baseImage}`)
+    .replace(/^ENV NODE_VERSION=.+$/m, `ENV NODE_VERSION=${latestVersion}`)
     .replace(/^(\s*)"\${NODE_KEYS\[@]}".*$/m, formatKeys(nodeKeys))
-    .replace(/^(\s*)"\${YARN_KEYS\[@]}".*$/m, formatKeys(yarnKeys));
+
+  if (parseInt(nodeMajorVersion, 10) >= 26) {
+    initialFormat = initialFormat.replace(/ENV YARN_VERSION.*\*\n/s, '');
+  }
 
   if (template !== templates.alpine) {
     return initialFormat;
   }
-
-  const pythonVersion = parseInt(nodeMajorVersion, 10) < 14
-    ? 'python2'
-    : 'python3';
-
-  return initialFormat.replace(/\${PYTHON_VERSION}/m, pythonVersion)
-    .replace(/CHECKSUM=CHECKSUM_x64/m, `CHECKSUM="${muslChecksum}"`);
+  else {
+    return initialFormat.replace(/CHECKSUM=CHECKSUM_x64/m, `CHECKSUM="${muslChecksum}"`);
+  }
 };
 
 const fetchMuslChecksum = async (nodeVersion) => {
@@ -149,22 +146,20 @@ const fetchMuslChecksum = async (nodeVersion) => {
   return checksums.match(/(\S+)\s+\S+-linux-x64-musl.tar.xz/m)[1];
 };
 
-const updateDockerfile = async (yarnVersion, nodeKeys, yarnKeys, metadata) => {
+const updateDockerfile = async (nodeKeys, metadata) => {
   const { file, template, latestVersion } = metadata;
   const base = readTemplate(template);
   const muslChecksum = await fetchMuslChecksum(latestVersion);
 
-  const formatted = formatTemplate(yarnVersion, nodeKeys, yarnKeys, muslChecksum, base, metadata);
+  const formatted = formatTemplate(nodeKeys, muslChecksum, base, metadata);
   writeFileSync(file, formatted);
 };
 
 const updateDockerfiles = async (outdated) => {
-  const yarnVersion = await fetchText(yarnVersionUrl);
   const nodeKeys = getKeys('node.keys');
-  const yarnKeys = getKeys('yarn.keys');
 
   await Promise.all(
-    outdated.map((metadata) => updateDockerfile(yarnVersion, nodeKeys, yarnKeys, metadata)),
+    outdated.map((metadata) => updateDockerfile(nodeKeys, metadata)),
   );
 };
 

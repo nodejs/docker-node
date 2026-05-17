@@ -5,6 +5,10 @@ const { getAllDockerfiles, getDockerfileNodeVersion } = require('./utils');
 const testFiles = [
   'genMatrix.js',
   '.github/workflows/build-test.yml',
+  'update.js',
+  'updateLib.js',
+  'utils.js',
+  'versions.json',
 ];
 
 const areTestFilesChanged = (changedFiles) => changedFiles

@@ -1,10 +1,7 @@
 'use strict';
-const https = require('https');
 const path = require('path');
 const { readFileSync, writeFileSync } = require('fs');
 const { getAllDockerfiles, getDockerfileNodeVersion } = require('./utils');
-
-const releaseUrl = 'https://nodejs.org/dist/index.json';
 
 const templates = Object.freeze({
   alpine: 1,
@@ -23,36 +20,6 @@ const templateRepoMap = Object.freeze({
   [templates.debian]: 'buildpack-deps',
   [templates.debianSlim]: 'debian',
 });
-
-const fetchText = (url) => new Promise((resolve, reject) => {
-  https.get(url, (res) => {
-    const { statusCode } = res;
-
-    if (statusCode < 200 || statusCode >= 300) {
-      // Consume response data to free up memory
-      res.resume();
-      reject(new Error(`Request Failed.\nStatus Code: ${statusCode}`));
-      return;
-    }
-
-    res.setEncoding('utf8');
-    let rawData = '';
-    res.on('data', (chunk) => {
-      rawData += chunk;
-    });
-
-    res.on('end', () => {
-      resolve(rawData);
-    });
-  }).on('error', (e) => {
-    reject(e);
-  }).end();
-});
-
-const fetchJson = async (url) => {
-  const text = await fetchText(url);
-  return JSON.parse(text);
-};
 
 // nodeVersions is sorted
 const getLatestNodeVersion = (nodeVersions, majorVersion) => nodeVersions
@@ -88,8 +55,9 @@ const isDockerfileOutdated = ({ fileNodeVersion, latestVersion }) => fileNodeVer
   !== latestVersion;
 
 const fetchLatestNodeVersions = async () => {
-  const nodeDist = await fetchJson(releaseUrl);
-  return nodeDist.map(({ version }) => version.substring(1));
+  const nodeDist = await fetch('https://nodejs.org/dist/index.json');
+  const content = await nodeDist.json();
+  return content.map(({ version }) => version.substring(1));
 };
 
 const findOutdated = async (updateAll) => {
@@ -140,10 +108,11 @@ const formatTemplate = (nodeKeys, muslChecksum, base, metadata) => {
 };
 
 const fetchMuslChecksum = async (nodeVersion) => {
-  const checksums = await fetchText(
+  const checksums = await fetch(
     `https://unofficial-builds.nodejs.org/download/release/v${nodeVersion}/SHASUMS256.txt`,
   );
-  return checksums.match(/(\S+)\s+\S+-linux-x64-musl.tar.xz/m)[1];
+  const content = await checksums.text();
+  return await content.match(/(\S+)\s+\S+-linux-x64-musl.tar.xz/m)[1];
 };
 
 const updateDockerfile = async (nodeKeys, metadata) => {

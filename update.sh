@@ -167,6 +167,12 @@ function update_node_version() {
       sed -Ei -e "/ENV YARN_VERSION/,/rm -rf \/tmp\/\*/d" "${dockerfile}-tmp"
     fi
 
+    # Strip out rust/cargo from Alpine images for Node < 26 since these versions don't need rust/cargo for Temporal
+    # See: https://github.com/nodejs/docker-node/pull/2488
+    if [ "${nodeVersion:0:2}" -lt "26" ]; then
+      sed -Ei -e "/rust/,/cargo/d" "${dockerfile}-tmp"
+    fi
+
     if diff -q "${dockerfile}-tmp" "${dockerfile}" > /dev/null; then
       echo "${dockerfile} is already up to date!"
     else

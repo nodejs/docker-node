@@ -286,7 +286,20 @@ for current Engine versions.
 
 ## Supported Node.js versions
 
-This project will support Node.js versions as still under active support as per the [Node.js release schedule](https://github.com/nodejs/Release).
+Support for `node` Docker images is limited to
+[Node.js active versions](https://github.com/nodejs/Release#release-schedule).
+
+Before opening an issue in this repo, please consider if the problem only occurs
+in a `node` Docker environment.
+
+If a problem can also be reproduced without using an image from this repo,
+for example in a non-Docker environment,
+then it should be reported to the corresponding component.
+
+Use the
+[Node.js issues](https://github.com/nodejs/node/issues) or the
+[npm issues](https://github.com/npm/cli/issues) list to check for known issues
+or to report new issues for these components.
 
 ## Supported architectures
 

@@ -324,7 +324,6 @@ for project roles and decision-making, and [CONTRIBUTING.md](CONTRIBUTING.md) fo
 
 ### Docker Maintainers
 
-- Laurent Goderre ([LaurentGoderre](https://github.com/LaurentGoderre))
 - Simen Bekkhus ([SimenB](https://github.com/SimenB))
 - Peter Dave Hello ([PeterDaveHello](https://github.com/PeterDaveHello))
 - Rafael Gonzaga ([rafaelgss](https://github.com/rafaelgss))
@@ -333,6 +332,7 @@ for project roles and decision-making, and [CONTRIBUTING.md](CONTRIBUTING.md) fo
 
 ### Collaborators
 
+- Laurent Goderre ([LaurentGoderre](https://github.com/LaurentGoderre))
 - Tianon Gravi ([tianon](https://github.com/tianon))
 - [yosifkit](https://github.com/yosifkit)
 - Stewart X Addison ([sxa](https://github.com/sxa))

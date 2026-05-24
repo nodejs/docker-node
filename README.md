@@ -40,7 +40,6 @@ The official Node.js docker image, made with love by the node community.
   - [Docker Maintainers](#docker-maintainers)
   - [Collaborators](#collaborators)
   - [Emeritus](#emeritus)
-    - [Former Maintainers](#former-maintainers)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -335,7 +334,6 @@ for project roles and decision-making, and [CONTRIBUTING.md](CONTRIBUTING.md) fo
 ### Collaborators
 
 - Tianon Gravi ([tianon](https://github.com/tianon))
-- ttshivers ([ttshivers](https://github.com/ttshivers))
 - [yosifkit](https://github.com/yosifkit)
 - Stewart X Addison ([sxa](https://github.com/sxa))
 - Mike McCready ([MikeMcC399](https://github.com/MikeMcC399))
@@ -345,11 +343,10 @@ Collaborators are managed via the
 
 ### Emeritus
 
-#### Former Maintainers
-
 - Hans Kristian Flaatten ([Starefossen](https://github.com/Starefossen))
 - Mikeal Rogers ([mikeal](https://github.com/mikeal))
 - Christopher Horrell ([chorrell](https://github.com/chorrell))
 - Peter Petrov ([pesho](https://github.com/pesho))
 - John Mitchell ([jlmitch5](https://github.com/jlmitch5))
 - Hugues Malphettes ([hmalphettes](https://github.com/hmalphettes))
+- ttshivers ([ttshivers](https://github.com/ttshivers))

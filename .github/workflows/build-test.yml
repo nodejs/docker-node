@@ -15,6 +15,9 @@ on:
       - genMatrix.js
       - ".github/workflows/build-test.yml"
 
+permissions:
+  contents: read
+
 jobs:
   gen-matrix:
     name: generate-matrix

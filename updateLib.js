@@ -99,12 +99,16 @@ const formatTemplate = (nodeKeys, muslChecksum, base, metadata) => {
     initialFormat = initialFormat.replace(/ENV YARN_VERSION.*\*\n/s, '');
   }
 
-  if (template !== templates.alpine) {
-    return initialFormat;
+  if (template === templates.alpine) {
+    initialFormat = initialFormat.replace(/CHECKSUM=CHECKSUM_x64/m, `CHECKSUM="${muslChecksum}"`);
+
+    // Strip out rust and cargo packages for Node.js < 26
+    if (parseInt(nodeMajorVersion, 10) < 26) {
+      initialFormat = initialFormat.replace(/    rust \\.*cargo \\\s*/s, '');
+    }
   }
-  else {
-    return initialFormat.replace(/CHECKSUM=CHECKSUM_x64/m, `CHECKSUM="${muslChecksum}"`);
-  }
+
+  return initialFormat;
 };
 
 const fetchMuslChecksum = async (nodeVersion) => {

@@ -71,9 +71,23 @@ const generateBuildMatrix = (filesAdded, filesModified, filesRenamed) => {
 
   const entries = dockerfiles.map(getDockerfileMatrixEntry);
 
+  let includes = [];
+
+  entries.forEach(entry => {
+    includes.push({
+      version: entry.version,
+      'variant': entry.variant,
+      os: 'ubuntu-24.04'
+    });
+    includes.push({
+      version: entry.version,
+      'variant': entry.variant,
+      os: 'ubuntu-24.04-arm'
+    });
+  });
   // Return null if there are no entries so we can skip the matrix step
-  return entries.length
-    ? { include: entries }
+  return includes.length
+    ? { include: includes }
     : null;
 };
 

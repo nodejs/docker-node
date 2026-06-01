@@ -141,10 +141,11 @@ function update_node_version() {
 
     if is_alpine "${variant}"; then
       alpine_version="${variant#*alpine}"
-      checksum=$(
-        curl -sSL --compressed "https://unofficial-builds.nodejs.org/download/release/v${nodeVersion}/SHASUMS256.txt" | grep "node-v${nodeVersion}-linux-x64-musl.tar.xz" | cut -d' ' -f1
-      )
-      if [ -z "$checksum" ]; then
+      SHASUMS256=$(curl -sSL --compressed "https://unofficial-builds.nodejs.org/download/release/v${nodeVersion}/SHASUMS256.txt")
+      CHECKSUM_x64=$(echo "$SHASUMS256" | grep "node-v${nodeVersion}-linux-x64-musl.tar.xz" | cut -d' ' -f1)
+      CHECKSUM_arm64=$(echo "$SHASUMS256" | grep "node-v${nodeVersion}-linux-arm64-musl.tar.xz" | cut -d' ' -f1)
+
+      if [ -z "$CHECKSUM_x64" ] || [ -z "$CHECKSUM_arm64" ]; then
         rm -f "${dockerfile}-tmp"
         if [ "${SKIP_ALPINE}" = true ]; then
           echo "${nodeVersion} is missing the musl build for ${variant}, but skipping for security release!"
@@ -153,7 +154,8 @@ function update_node_version() {
         fi
       else
         sed -Ei -e "s/(alpine:)0.0/\\1${alpine_version}/" "${dockerfile}-tmp"
-        sed -Ei -e "s/CHECKSUM=CHECKSUM_x64/CHECKSUM=\"${checksum}\"/" "${dockerfile}-tmp"
+        sed -Ei -e "s/CHECKSUM=CHECKSUM_x64/CHECKSUM=\"${CHECKSUM_x64}\"/" "${dockerfile}-tmp"
+        sed -Ei -e "s/CHECKSUM=CHECKSUM_arm64/CHECKSUM=\"${CHECKSUM_arm64}\"/" "${dockerfile}-tmp"
       fi
     elif is_debian "${variant}"; then
       sed -Ei -e "s/(buildpack-deps:)name/\\1${variant}/" "${dockerfile}-tmp"

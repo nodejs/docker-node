@@ -32,6 +32,8 @@ New **npm** releases are not tracked. We simply use the npm version bundled in t
 **[Yarn v1 Classic](https://classic.yarnpkg.com/)** is no longer maintained upstream, and it is removed when constructing Dockerfiles
 from templates starting with the Node 26 images.
 
+**[Alpine Linux](https://alpinelinux.org/releases/)** latest two releases are used.
+
 ### Image Creation Automation
 
 - Every 15 minutes, the [workflow](https://github.com/nodejs/docker-node/blob/main/.github/workflows/automatic-updates.yml) within the [nodejs/docker-node](https://github.com/nodejs/docker-node) repo [checks](https://github.com/nodejs/docker-node/blob/main/build-automation.mjs) for new versions of Node.js [published to the website's `index.json` file](https://nodejs.org/download/release/index.json).

@@ -34,6 +34,19 @@ from templates starting with the Node 26 images.
 
 **[Alpine Linux](https://alpinelinux.org/releases/)** latest two releases are used.
 
+### Node.js 27 Introduction
+
+The blog post [Evolving the Node.js Release Schedule](https://nodejs.org/en/blog/announcements/evolving-the-nodejs-release-schedule)
+announces the intention to change the structure of Node.js releases to include an Alpha phase before
+the Current phase of the next release which is Node.js 27.
+Refer to the [nodejs/release](https://github.com/nodejs/release#readme) repo regarding Node.js 27
+as more information becomes available.
+
+Node.js 27 Alpha versions are planned to be released as `node` Docker images.
+
+Docker update and build processes need to be adapted for this change.
+Readiness will be determined when further detailed planning and implementation has been addressed.
+
 ### Image Creation Automation
 
 - Every 15 minutes, the [workflow](https://github.com/nodejs/docker-node/blob/main/.github/workflows/automatic-updates.yml) within the [nodejs/docker-node](https://github.com/nodejs/docker-node) repo [checks](https://github.com/nodejs/docker-node/blob/main/build-automation.mjs) for new versions of Node.js [published to the website's `index.json` file](https://nodejs.org/download/release/index.json).

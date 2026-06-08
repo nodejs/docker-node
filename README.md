@@ -16,7 +16,7 @@ The official Node.js docker image, made with love by the node community.
   - [Create a `Dockerfile` in your Node.js app project](#create-a-dockerfile-in-your-nodejs-app-project)
   - [Best Practices](#best-practices)
   - [Run a single Node.js script](#run-a-single-nodejs-script)
-  - [Verbosity](#verbosity)
+  - [npm loglevel](#npm-loglevel)
     - [Dockerfile](#dockerfile)
     - [Docker Run](#docker-run)
     - [npm run](#npm-run)
@@ -111,21 +111,19 @@ Node.js Docker image directly:
 $ docker run -it --rm --name my-running-script -v "$PWD":/usr/src/app -w /usr/src/app node:24 node your-daemon-or-script.js
 ```
 
-### Verbosity
+### npm loglevel
 
-Prior to 8.7.0 and 6.11.4, the docker images overrode the default npm log
-level from `warn` to `info`. However, due to improvements to npm and new Docker
-patterns (e.g. multi-stage builds) the working group reached a [consensus](https://github.com/nodejs/docker-node/issues/528)
-to revert the log level to npm defaults. If you need more verbose output, please
-use one of the following methods to change the verbosity level.
+The default [npm loglevel](https://docs.npmjs.com/cli/using-npm/logging)
+is `notice`, which includes also the levels `warn` and `error`.
+If you need to set a different `loglevel` for npm, follow these example instructions:
 
 #### Dockerfile
 
 If you create your own `Dockerfile` which inherits from the `node` image, you can
-simply use `ENV` to override `NPM_CONFIG_LOGLEVEL`.
+use `ENV` to set the `NPM_CONFIG_LOGLEVEL` environment variable.
 
 ```dockerfile
-FROM node
+FROM node:lts
 ENV NPM_CONFIG_LOGLEVEL=info
 ...
 ```
@@ -133,19 +131,19 @@ ENV NPM_CONFIG_LOGLEVEL=info
 #### Docker Run
 
 If you run the node image using `docker run`, you can use the `-e` flag to
-override `NPM_CONFIG_LOGLEVEL`.
+set the `NPM_CONFIG_LOGLEVEL` environment variable.
 
 ```console
-$ docker run -e NPM_CONFIG_LOGLEVEL=info node ...
+$ docker run -e NPM_CONFIG_LOGLEVEL=info node:lts ...
 ```
 
 #### npm run
 
-If you are running npm commands, you can use `--loglevel` to control the
-verbosity of the output.
+If you are running npm commands, you can use the `--loglevel` command line flag
+to control the verbosity of the output.
 
 ```console
-$ docker run node npm --loglevel=warn ...
+$ docker run node:lts npm --loglevel=info ...
 ```
 
 ## Image Variants

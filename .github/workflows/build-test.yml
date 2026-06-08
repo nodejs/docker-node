@@ -22,17 +22,17 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
 
       - name: Calculate file differences
         id: diff
-        uses: tj-actions/changed-files@e0021407031f5be11a464abee9a0776171c79891 # v47.0.1
+        uses: tj-actions/changed-files@9426d40962ed5378910ee2e21d5f8c6fcbf2dd96 # v47.0.6
         with:
           json: true
           escape_json: false
 
       - name: Generate testing matrix
-        uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8.0.0
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
         id: generator
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -59,17 +59,17 @@ jobs:
 
     steps:
       - name: Get short node version
-        uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8.0.0
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
         id: short-version
         with:
           result-encoding: string
           script: return "${{ matrix.version }}".split('.')[0]
 
       - name: Checkout
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
 
       - name: Build image
-        uses: docker/build-push-action@263435318d21b8e681c14492fe198d362a7d2c83 # v6.18.0
+        uses: docker/build-push-action@f9f3042f7e2789586610d6e8b85c8f03e5195baf # v7.2.0
         with:
           push: false
           load: true
@@ -94,4 +94,5 @@ jobs:
         run: docker run --rm node:${{ matrix.version }}-${{ matrix.variant }} npm --version
 
       - name: Test for yarn
+        if: startsWith(matrix.version, '22') || startsWith(matrix.version, '24') || startsWith(matrix.version, '25')
         run: docker run --rm node:${{ matrix.version }}-${{ matrix.variant }} yarn --version

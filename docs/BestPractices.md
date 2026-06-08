@@ -6,9 +6,6 @@
 
 - [Environment Variables](#environment-variables)
 - [Global npm dependencies](#global-npm-dependencies)
-- [Upgrading/downgrading Yarn](#upgradingdowngrading-yarn)
-  - [Local](#local)
-  - [Global](#global)
 - [Handling Kernel Signals](#handling-kernel-signals)
 - [Non-root User](#non-root-user)
 - [Memory](#memory)
@@ -36,54 +33,6 @@ If you need to install global npm dependencies, it is recommended to place those
 ENV NPM_CONFIG_PREFIX=/home/node/.npm-global
 
 ENV PATH=$PATH:/home/node/.npm-global/bin # optionally if you want to run npm global bin without specifying path
-```
-
-## Upgrading/downgrading Yarn
-
-### Local
-
-If you need to upgrade/downgrade `yarn` for a local install, you can do so by issuing the following commands in your `Dockerfile`:
-
-> Note that if you create some other directory which is not a descendant one from where you ran the command, you will end up using the global (dated) version. If you wish to upgrade `yarn` globally, follow the instructions in the next section.
-
-> When following the local install instructions, due to duplicated yarn the image will end up being bigger.
-
-```Dockerfile
-FROM node:6
-
-ENV YARN_VERSION=1.16.0
-
-RUN yarn policies set-version $YARN_VERSION
-```
-
-### Global
-
-```Dockerfile
-FROM node:6
-
-ENV YARN_VERSION=1.16.0
-
-RUN curl -fSLO --compressed "https://yarnpkg.com/downloads/$YARN_VERSION/yarn-v$YARN_VERSION.tar.gz" \
-    && tar -xzf yarn-v$YARN_VERSION.tar.gz -C /opt/ \
-    && ln -snf /opt/yarn-v$YARN_VERSION/bin/yarn /usr/local/bin/yarn \
-    && ln -snf /opt/yarn-v$YARN_VERSION/bin/yarnpkg /usr/local/bin/yarnpkg \
-    && rm yarn-v$YARN_VERSION.tar.gz
-```
-
-If you're using an Alpine-based image, `curl` won't be present, so you'll need to make sure it's installed while using it:
-
-```Dockerfile
-FROM node:6-alpine
-
-ENV YARN_VERSION=1.5.1
-
-RUN apk add --no-cache --virtual .build-deps-yarn curl \
-    && curl -fSLO --compressed "https://yarnpkg.com/downloads/$YARN_VERSION/yarn-v$YARN_VERSION.tar.gz" \
-    && tar -xzf yarn-v$YARN_VERSION.tar.gz -C /opt/ \
-    && ln -snf /opt/yarn-v$YARN_VERSION/bin/yarn /usr/local/bin/yarn \
-    && ln -snf /opt/yarn-v$YARN_VERSION/bin/yarnpkg /usr/local/bin/yarnpkg \
-    && rm yarn-v$YARN_VERSION.tar.gz \
-    && apk del .build-deps-yarn
 ```
 
 ## Handling Kernel Signals
@@ -207,19 +156,28 @@ FROM node:alpine as app
 COPY --from=builder node_modules .
 ```
 
-
 ## Smaller images without npm/yarn
 
-If you want to achieve an even smaller image size than the `-alpine`, you can omit the npm/yarn like this:
+To remove npm and Yarn package managers, use a multi-stage build.
+In the first stage, the package manager builds the app.
+In the second stage, the `app` and the `node` directories are copied,
+without copying the npm & Yarn package managers.
+In Docker images based on Node.js&nbsp;>=26, Yarn is already removed.
+
+The result is a smaller and hardened final image with no package managers.
+
+The examples below build with npm.
+
+**Alpine example**
 
 ```Dockerfile
-ARG ALPINE_VERSION=3.16
+ARG ALPINE_VERSION=3.23
 
-FROM node:18-alpine${ALPINE_VERSION} AS builder
+FROM node:24-alpine${ALPINE_VERSION} AS builder
 WORKDIR /build-stage
 COPY package*.json ./
 RUN npm ci
-# Copy the the files you need
+# Copy the files you need
 COPY . ./
 RUN npm run build
 
@@ -241,4 +199,33 @@ COPY --from=builder /build-stage/dist ./dist
 CMD ["dumb-init", "node", "dist/index.js"]
 ```
 
+**Debian example**
 
+```Dockerfile
+FROM node:24-trixie-slim AS builder
+WORKDIR /build-stage
+COPY package*.json ./
+RUN npm ci
+# Copy the files you need
+COPY . ./
+RUN npm run build
+
+FROM debian:trixie-slim
+# Create app directory
+WORKDIR /usr/src/app
+# Add required binaries
+RUN apt-get update && apt-get install -y --no-install-recommends dumb-init \
+    && rm -rf /var/lib/apt/lists/* \
+    && groupadd --gid 1000 node \
+    && useradd --uid 1000 --gid node --shell /bin/bash --create-home node \
+    && chown node:node ./
+COPY --from=builder /usr/local/bin/node /usr/local/bin/
+COPY --from=builder /usr/local/bin/docker-entrypoint.sh /usr/local/bin/
+ENTRYPOINT ["docker-entrypoint.sh"]
+USER node
+# Update the following COPY lines based on your codebase
+COPY --from=builder /build-stage/node_modules ./node_modules
+COPY --from=builder /build-stage/dist ./dist
+# Run with dumb-init to not start node with PID=1, since Node.js was not designed to run as PID 1
+CMD ["dumb-init", "node", "dist/index.js"]
+```

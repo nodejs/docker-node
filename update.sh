@@ -11,27 +11,25 @@ function usage() {
     $0 [-s] [MAJOR_VERSION(S)] [VARIANT(S)]
 
   Examples:
-    - update.sh                      # Update all images
-    - update.sh -s                   # Update all images, skip updating Alpine and Yarn
-    - update.sh 8,10                 # Update all variants of version 8 and 10
-    - update.sh -s 8                 # Update version 8 and variants, skip updating Alpine and Yarn
-    - update.sh 8 alpine             # Update only alpine's variants for version 8
-    - update.sh -s 8 bullseye        # Update only bullseye variant for version 8, skip updating Alpine and Yarn
-    - update.sh . alpine             # Update the alpine variant for all versions
+    - update.sh                           # Update all images
+    - update.sh -s                        # Update all images, skip updating Alpine if the musl build is unavailable
+    - update.sh 22,24                     # Update all variants of version 22 and 24
+    - update.sh -s 24                     # Update all variants of version 24, except skip updating Alpine if the musl build is unavailable
+    - update.sh 24 alpine3.22,alpine3.23  # Update only alpine3.22 & alpine3.23 variants for version 24
+    - update.sh . trixie,trixie-slim      # Update only trixie & trixie-slim Debian variants for all versions
 
   OPTIONS:
-    -s Security update; skip updating the yarn and alpine versions.
-    -b CI config update only
+    -s Security update; allows Debian updates even if musl build for Alpine is unavailable
     -h Show this message
 
 EOF
 }
 
-SKIP=false
+SKIP_ALPINE=false
 while getopts "sh" opt; do
   case "${opt}" in
     s)
-      SKIP=true
+      SKIP_ALPINE=true
       shift
       ;;
     h)
@@ -60,14 +58,10 @@ if [ ${#versions[@]} -eq 0 ]; then
 fi
 
 # Global variables
-# Get architecure and use this as target architecture for docker image
+# Get architecture and use this as target architecture for docker image
 # See details in function.sh
 # TODO: Should be able to specify target architecture manually
 arch=$(get_arch)
-
-if [ "${SKIP}" != true ]; then
-  yarnVersion="$(curl -sSL --compressed https://yarnpkg.com/latest-version)"
-fi
 
 function in_versions_to_update() {
   local version=$1
@@ -139,13 +133,11 @@ function update_node_version() {
 '
 
     # Add GPG keys
-    for key_type in "node" "yarn"; do
-      while read -r line; do
-        pattern='"\$\{'$(echo "${key_type}" | tr '[:lower:]' '[:upper:]')'_KEYS\[@\]\}"'
-        sed -Ei -e "s/([ \\t]*)(${pattern})/\\1${line}${new_line}\\1\\2/" "${dockerfile}-tmp"
-      done < "keys/${key_type}.keys"
-      sed -Ei -e "/${pattern}/d" "${dockerfile}-tmp"
-    done
+    while read -r line; do
+      pattern='"\$\{'$(echo "node" | tr '[:lower:]' '[:upper:]')'_KEYS\[@\]\}"'
+      sed -Ei -e "s/([ \\t]*)(${pattern})/\\1${line}${new_line}\\1\\2/" "${dockerfile}-tmp"
+    done < "keys/node.keys"
+    sed -Ei -e "/${pattern}/d" "${dockerfile}-tmp"
 
     if is_alpine "${variant}"; then
       alpine_version="${variant#*alpine}"
@@ -154,27 +146,43 @@ function update_node_version() {
       )
       if [ -z "$checksum" ]; then
         rm -f "${dockerfile}-tmp"
-        fatal "Failed to fetch checksum for version ${nodeVersion}"
+        if [ "${SKIP_ALPINE}" = true ]; then
+          echo "${nodeVersion} is missing the musl build for ${variant}, but skipping for security release!"
+        else
+          fatal "Failed to fetch checksum for musl build version ${nodeVersion}"
+        fi
+      else
+        sed -Ei -e "s/(alpine:)0.0/\\1${alpine_version}/" "${dockerfile}-tmp"
+        sed -Ei -e "s/CHECKSUM=CHECKSUM_x64/CHECKSUM=\"${checksum}\"/" "${dockerfile}-tmp"
       fi
-      sed -Ei -e "s/(alpine:)0.0/\\1${alpine_version}/" "${dockerfile}-tmp"
-      sed -Ei -e "s/CHECKSUM=CHECKSUM_x64/CHECKSUM=\"${checksum}\"/" "${dockerfile}-tmp"
-
     elif is_debian "${variant}"; then
       sed -Ei -e "s/(buildpack-deps:)name/\\1${variant}/" "${dockerfile}-tmp"
     elif is_debian_slim "${variant}"; then
       sed -Ei -e "s/(debian:)name-slim/\\1${variant}/" "${dockerfile}-tmp"
     fi
 
+    # Strip out Yarn v1 from Node 26+ images https://github.com/nodejs/docker-node/issues/2407
+    # Can be removed from the image templates once Node 24 hits EOL on 2028-04-30
+    if [ "${nodeVersion:0:2}" -ge "26" ]; then
+      sed -Ei -e "/ENV YARN_VERSION/,/rm -rf \/tmp\/\*/d" "${dockerfile}-tmp"
+    fi
+
+    # Strip out rust/cargo from Alpine images for Node < 26 since these versions don't need rust/cargo for Temporal
+    # See: https://github.com/nodejs/docker-node/pull/2488
+    if [ "${nodeVersion:0:2}" -lt "26" ]; then
+      sed -Ei -e "/rust/,/cargo/d" "${dockerfile}-tmp"
+    fi
+
     if diff -q "${dockerfile}-tmp" "${dockerfile}" > /dev/null; then
       echo "${dockerfile} is already up to date!"
     else
-      if [ "${SKIP}" != true ]; then
-        sed -Ei -e 's/^(ENV YARN_VERSION)=.*/\1='"${yarnVersion}"'/' "${dockerfile}-tmp"
-      fi
       echo "${dockerfile} updated!"
     fi
 
-    mv -f "${dockerfile}-tmp" "${dockerfile}"
+    # Guard the move because Alpine sometimes will be missing
+    if [ -f "${dockerfile}-tmp" ]; then
+      mv -f "${dockerfile}-tmp" "${dockerfile}"
+    fi
   )
 }
 

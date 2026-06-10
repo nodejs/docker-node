@@ -15,7 +15,7 @@ function usage() {
     - update.sh -s                        # Update all images, skip updating Alpine if the musl build is unavailable
     - update.sh 22,24                     # Update all variants of version 22 and 24
     - update.sh -s 24                     # Update all variants of version 24, except skip updating Alpine if the musl build is unavailable
-    - update.sh 24 alpine3.22,alpine3.23  # Update only alpine3.22 & alpine3.23 variants for version 24
+    - update.sh 24 alpine3.23,alpine3.24  # Update only alpine3.23 & alpine3.24 variants for version 24
     - update.sh . trixie,trixie-slim      # Update only trixie & trixie-slim Debian variants for all versions
 
   OPTIONS:

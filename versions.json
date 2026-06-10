@@ -5,14 +5,14 @@
     "maintenance": "2027-10-20",
     "end": "2029-04-30",
     "codename": "",
-    "alpine-default": "alpine3.23",
+    "alpine-default": "alpine3.24",
     "debian-default": "trixie",
     "variants": {
-      "alpine3.22": [
+      "alpine3.23": [
         "amd64",
         "arm64v8"
       ],
-      "alpine3.23": [
+      "alpine3.24": [
         "amd64",
         "arm64v8"
       ],
@@ -56,15 +56,15 @@
     "maintenance": "2026-10-20",
     "end": "2028-04-30",
     "codename": "krypton",
-    "alpine-default": "alpine3.23",
+    "alpine-default": "alpine3.24",
     "debian-default": "bookworm",
     "variants": {
-      "alpine3.22": [
+      "alpine3.23": [
         "amd64",
         "arm64v8",
         "s390x"
       ],
-      "alpine3.23": [
+      "alpine3.24": [
         "amd64",
         "arm64v8",
         "s390x"
@@ -109,17 +109,17 @@
     "maintenance": "2025-10-21",
     "end": "2027-04-30",
     "codename": "jod",
-    "alpine-default": "alpine3.23",
+    "alpine-default": "alpine3.24",
     "debian-default": "bookworm",
     "variants": {
-      "alpine3.22": [
+      "alpine3.23": [
         "amd64",
         "arm32v6",
         "arm32v7",
         "arm64v8",
         "s390x"
       ],
-      "alpine3.23": [
+      "alpine3.24": [
         "amd64",
         "arm32v6",
         "arm32v7",

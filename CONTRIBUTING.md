@@ -33,6 +33,11 @@ New **npm** releases are not tracked. We simply use the npm version bundled in t
 from templates starting with the Node 26 images.
 
 **[Alpine Linux](https://alpinelinux.org/releases/)** latest two releases are used.
+When Alpine Linux makes a new branch available, which is planned for May and November each year,
+this branch is adopted as a new base image and it becomes the default
+for each supported Node.js release line.
+The lowest previously used Alpine Linux release is dropped for future image builds,
+so that only the two latest releases are maintained.
 
 ### Image Creation Automation
 

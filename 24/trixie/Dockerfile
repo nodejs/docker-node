@@ -3,7 +3,7 @@ FROM buildpack-deps:trixie
 RUN groupadd --gid 1000 node \
   && useradd --uid 1000 --gid node --shell /bin/bash --create-home node
 
-ENV NODE_VERSION=24.14.1
+ENV NODE_VERSION=24.18.0
 
 RUN ARCH= && dpkgArch="$(dpkg --print-architecture)" \
   && case "${dpkgArch##*-}" in \
@@ -12,7 +12,6 @@ RUN ARCH= && dpkgArch="$(dpkg --print-architecture)" \
     s390x) ARCH='s390x';; \
     arm64) ARCH='arm64';; \
     armhf) ARCH='armv7l';; \
-    i386) ARCH='x86';; \
     *) echo "unsupported architecture"; exit 1 ;; \
   esac \
   && export GNUPGHOME="$(mktemp -d)" \

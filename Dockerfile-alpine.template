@@ -38,6 +38,9 @@ RUN addgroup -g 1000 node \
         make \
         python3 \
         py-setuptools \
+        rust \
+        cargo \
+    # use pre-existing gpg directory, see https://github.com/nodejs/docker-node/pull/1895#issuecomment-1550389150
     && export GNUPGHOME="$(mktemp -d)" \
     && (cd "$GNUPGHOME" && curl -fsSLO --compressed "${NODEJS_KEYRING_URL}" && echo "${NODEJS_KEYRING_HASH}" | sha256sum -c) \
     && [ "$(gpg --no-default-keyring --keyring "$GNUPGHOME/pubring.kbx" --list-keys --with-colons | awk -F: '{ if (print_next_line) { print $10; print_next_line=0; } else if ($1=="pub") print_next_line=1; }')" = "${NODEJS_KEYRING_EXPECTED_CONTENT}" ] \

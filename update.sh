@@ -11,16 +11,15 @@ function usage() {
     $0 [-s] [MAJOR_VERSION(S)] [VARIANT(S)]
 
   Examples:
-    - update.sh                      # Update all images
-    - update.sh -s                   # Update all images, skip updating Alpine if the musl build isn't available
-    - update.sh 8,10                 # Update all variants of version 8 and 10
-    - update.sh -s 8                 # Update version 8 and variants, skip updating Alpine if the musl build isn't available
-    - update.sh 8 alpine             # Update only alpine's variants for version 8
-    - update.sh -s 8 bullseye        # Update only bullseye variant for version 8, skip updating Alpine if the musl build isn't available
-    - update.sh . alpine             # Update the alpine variant for all versions
+    - update.sh                           # Update all images
+    - update.sh -s                        # Update all images, skip updating Alpine if the musl build is unavailable
+    - update.sh 22,24                     # Update all variants of version 22 and 24
+    - update.sh -s 24                     # Update all variants of version 24, except skip updating Alpine if the musl build is unavailable
+    - update.sh 24 alpine3.23,alpine3.24  # Update only alpine3.23 & alpine3.24 variants for version 24
+    - update.sh . trixie,trixie-slim      # Update only trixie & trixie-slim Debian variants for all versions
 
   OPTIONS:
-    -s Security update; skip updating the Alpine versions.
+    -s Security update; allows Debian updates even if musl build for Alpine is unavailable
     -h Show this message
 
 EOF
@@ -162,6 +161,12 @@ function update_node_version() {
     # Can be removed from the image templates once Node 24 hits EOL on 2028-04-30
     if [ "${nodeVersion:0:2}" -ge "26" ]; then
       sed -Ei -e "/ENV YARN_VERSION/,/rm -rf \/tmp\/\*/d" "${dockerfile}-tmp"
+    fi
+
+    # Strip out rust/cargo from Alpine images for Node < 26 since these versions don't need rust/cargo for Temporal
+    # See: https://github.com/nodejs/docker-node/pull/2488
+    if [ "${nodeVersion:0:2}" -lt "26" ]; then
+      sed -Ei -e "/rust/,/cargo/d" "${dockerfile}-tmp"
     fi
 
     if diff -q "${dockerfile}-tmp" "${dockerfile}" > /dev/null; then

@@ -20,7 +20,7 @@ Anyone who proposes changes, reports issues, reviews code, or helps users.
 
 ### Collaborators
 
-Collaborators have write access and help with day-to-day maintenance:
+[Collaborators](README.md#collaborators) have write access and help with day-to-day maintenance:
 
 - review and merge pull requests
 - triage issues
@@ -31,20 +31,12 @@ consensus.
 
 ### Maintainers
 
-Maintainers are responsible for long-term stewardship of the project:
+[Maintainers](README.md#docker-maintainers) are responsible for long-term stewardship of the project:
 
 - facilitate consensus and escalate unresolved final decisions to the Node.js TSC
 - governance and membership updates
 - release/publishing policy and automation oversight
 - security and incident handling for this repository
-
-Current maintainers:
-
-- Laurent Goderre ([LaurentGoderre](https://github.com/LaurentGoderre))
-- Simen Bekkhus ([SimenB](https://github.com/SimenB))
-- Peter Dave Hello ([PeterDaveHello](https://github.com/PeterDaveHello))
-- Rafael Gonzaga ([rafaelgss](https://github.com/rafaelgss))
-- Matteo Collina ([mcollina](https://github.com/mcollina))
 
 ## Decision making
 
@@ -78,8 +70,9 @@ publicly in this repository.
 
 ## Membership changes
 
-Collaborator and maintainer changes are proposed via pull request to `README.md`
-and/or this file, with rationale included in the PR description.
+Collaborator and maintainer changes are proposed via pull request to
+[`README.md`](README.md), with rationale included in the PR
+description.
 
 Project access should be managed via the
 [@nodejs/docker team](https://github.com/orgs/nodejs/teams/docker) and kept in

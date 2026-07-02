@@ -179,11 +179,6 @@ function update_node_version() {
       echo "${dockerfile} updated!"
     fi
 
-    # Required for POSIX sed
-    if [ -f "${dockerfile}-tmp-e" ]; then
-      rm "${dockerfile}-tmp-e"
-    fi
-
     # Guard the move because Alpine sometimes will be missing
     if [ -f "${dockerfile}-tmp" ]; then
       mv -f "${dockerfile}-tmp" "${dockerfile}"

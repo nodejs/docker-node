@@ -88,13 +88,17 @@ export default async function(github) {
     const newVersions = await checkForMuslVersionsAndSecurityReleases(github, versions);
     let updatedVersions = [];
     for (const [version, newVersion] of Object.entries(newVersions)) {
-      if (newVersion.muslBuildExists) {
-        const { stdout } = await exec(`./update.sh ${newVersion.isSecurityRelease ? "-s " : ""}${version}`);
+      if (newVersion.isSecurityRelease) {
+        console.log(`Processing security release ${newVersion.fullVersion}`);
+        const { stdout } = await exec(`./update.sh -s ${version}`);
+        console.log(stdout);
+        updatedVersions.push(newVersion.fullVersion);
+      } else if (newVersion.muslBuildExists) {
+        const { stdout } = await exec(`./update.sh ${version}`);
         console.log(stdout);
         updatedVersions.push(newVersion.fullVersion);
       } else {
-        console.log(`There's no musl build for version ${newVersion.fullVersion} yet.`);
-        process.exit(0);
+        console.log(`There's no musl build for version ${newVersion.fullVersion} yet. Skipping non-security release.`);
       }
     }
     const { stdout } = (await exec(`git diff`));

@@ -128,16 +128,12 @@ function update_node_version() {
     sed -Ei -e 's/^FROM (.*)/FROM '"$fromprefix"'\1/' "${dockerfile}-tmp"
     sed -Ei -e 's/^(ENV NODE_VERSION)=.*/\1='"${nodeVersion}"'/' "${dockerfile}-tmp"
 
-    # shellcheck disable=SC1004
-    new_line=' \\\
-'
-
-    # Add GPG keys
-    while read -r line; do
-      pattern='"\$\{'$(echo "node" | tr '[:lower:]' '[:upper:]')'_KEYS\[@\]\}"'
-      sed -Ei -e "s/([ \\t]*)(${pattern})/\\1${line}${new_line}\\1\\2/" "${dockerfile}-tmp"
-    done < "keys/node.keys"
-    sed -Ei -e "/${pattern}/d" "${dockerfile}-tmp"
+    # Add Node.js keyring URL and hash
+    sed -i \
+      -e "s#\${NODEJS_KEYRING_URL}#$(< keys/nodejs.url)#" \
+      -e "s/\${NODEJS_KEYRING_HASH}/$(< keys/nodejs.shasum)/" \
+      -e "s/\${NODEJS_KEYRING_EXPECTED_CONTENT}/\$(printf '$(sed ':a;N;$!ba;s/\n/\\\\n/g' keys/nodejs.keys)\\\\n')/" \
+      "${dockerfile}-tmp"
 
     if is_alpine "${variant}"; then
       alpine_version="${variant#*alpine}"

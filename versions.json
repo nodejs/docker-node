@@ -19,14 +19,12 @@
       "bookworm": [
         "amd64",
         "arm64v8",
-        "ppc64le",
-        "s390x"
+        "ppc64le"
       ],
       "bookworm-slim": [
         "amd64",
         "arm64v8",
-        "ppc64le",
-        "s390x"
+        "ppc64le"
       ],
       "bullseye": [
         "amd64",
@@ -72,14 +70,12 @@
       "bookworm": [
         "amd64",
         "arm64v8",
-        "ppc64le",
-        "s390x"
+        "ppc64le"
       ],
       "bookworm-slim": [
         "amd64",
         "arm64v8",
-        "ppc64le",
-        "s390x"
+        "ppc64le"
       ],
       "bullseye": [
         "amd64",
@@ -130,15 +126,13 @@
         "amd64",
         "arm32v7",
         "arm64v8",
-        "ppc64le",
-        "s390x"
+        "ppc64le"
       ],
       "bookworm-slim": [
         "amd64",
         "arm32v7",
         "arm64v8",
-        "ppc64le",
-        "s390x"
+        "ppc64le"
       ],
       "bullseye": [
         "amd64",

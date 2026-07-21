@@ -3,9 +3,9 @@ name: Check generated TOCs
 on:
   pull_request:
     paths:
-      - "README.md"
-      - "docs/BestPractices.md"
-      - ".github/workflows/doctoc.yml"
+      - 'README.md'
+      - 'docs/BestPractices.md'
+      - '.github/workflows/doctoc.yml'
 
 permissions:
   contents: read

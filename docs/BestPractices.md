@@ -1,5 +1,6 @@
 # Docker and Node.js Best Practices
 
+<!-- prettier-ignore-start -->
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 ## Table of Contents
@@ -16,6 +17,7 @@
 - [Smaller images without npm/yarn](#smaller-images-without-npmyarn)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
+<!-- prettier-ignore-end -->
 
 ## Environment Variables
 

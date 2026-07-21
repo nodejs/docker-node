@@ -1,0 +1,11 @@
+{
+  "singleQuote": true,
+  "overrides": [
+    {
+      "files": "versions.json",
+      "options": {
+        "printWidth": 38
+      }
+    }
+  ]
+}

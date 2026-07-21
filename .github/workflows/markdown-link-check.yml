@@ -3,9 +3,9 @@ name: Check Markdown links
 on:
   pull_request:
     paths:
-      - "**/*.md"
-      - "markdown_link_check_config.json"
-      - ".github/workflows/markdown-link-check.yml"
+      - '**/*.md'
+      - 'markdown_link_check_config.json'
+      - '.github/workflows/markdown-link-check.yml'
 
 permissions:
   contents: read

@@ -16,6 +16,7 @@ the Node.js TSC as final arbiter.
 ## Discussion Areas
 
 <!-- markdown-link-check-disable -->
+
 You can use Node.js channels (prefixed by `#nodejs-`) in the [OpenJSF Slack](https://slack-invite.openjsf.org/) workspace for discussions.
 <!-- markdown-link-check-enable -->
 
@@ -73,4 +74,4 @@ This task is undertaken by members of the repo team above.
 
 ## Adding dependencies to the base images
 
-NodeJS is a big ecosystem with a variety of different use cases. The docker images for node are designed to provide the minimum for running core node.  Additional dependencies (including dependencies for npm or yarn such as git) will not be included in these base images and will need to be included in descendent image.
+NodeJS is a big ecosystem with a variety of different use cases. The docker images for node are designed to provide the minimum for running core node. Additional dependencies (including dependencies for npm or yarn such as git) will not be included in these base images and will need to be included in descendent image.

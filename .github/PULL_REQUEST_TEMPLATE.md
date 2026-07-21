@@ -51,4 +51,3 @@ If you're unsure about any of these, don't hesitate to ask. We're here to help!
 - [ ] I have updated the documentation accordingly.
 - [ ] I have read the **CONTRIBUTING.md** document.
 - [ ] All new and existing tests passed.
-

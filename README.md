@@ -2,11 +2,12 @@
 
 [**node - Docker Official Images on Docker Hub**](https://hub.docker.com/_/node)
 
-[![GitHub issues](https://img.shields.io/github/issues/nodejs/docker-node.svg "GitHub issues")](https://github.com/nodejs/docker-node)
-[![GitHub stars](https://img.shields.io/github/stars/nodejs/docker-node.svg "GitHub stars")](https://github.com/nodejs/docker-node)
+[![GitHub issues](https://img.shields.io/github/issues/nodejs/docker-node.svg 'GitHub issues')](https://github.com/nodejs/docker-node)
+[![GitHub stars](https://img.shields.io/github/stars/nodejs/docker-node.svg 'GitHub stars')](https://github.com/nodejs/docker-node)
 
 The official Node.js docker image, made with love by the node community.
 
+<!-- prettier-ignore-start -->
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 ## Table of Contents
@@ -42,6 +43,7 @@ The official Node.js docker image, made with love by the node community.
   - [Emeritus](#emeritus)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
+<!-- prettier-ignore-end -->
 
 ## What is Node.js?
 
@@ -75,16 +77,16 @@ If you prefer Docker Compose:
 ```yml
 services:
   node:
-    image: "node:24"
-    user: "node"
+    image: 'node:24'
+    user: 'node'
     working_dir: /home/node/app
     environment:
       - NODE_ENV=production
     volumes:
       - ./:/home/node/app
     ports: # use if it is necessary to expose the container to the host machine
-      - "8888:8888"
-    command: ["npm", "start"]
+      - '8888:8888'
+    command: ['npm', 'start']
 ```
 
 You can then run using Docker Compose:
@@ -230,7 +232,7 @@ This image is based on version 13 of
 
 This image does not contain the common packages contained in the default tag and
 only contains the minimal packages needed to run `node`. Unless you are working
-in an environment where *only* the Node.js image will be deployed and you have
+in an environment where _only_ the Node.js image will be deployed and you have
 space constraints, we highly recommend using the default image of this
 repository.
 

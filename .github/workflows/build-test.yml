@@ -3,17 +3,17 @@ name: build-test
 on:
   push:
     paths:
-      - "**/Dockerfile"
-      - "**/docker-entrypoint.sh"
+      - '**/Dockerfile'
+      - '**/docker-entrypoint.sh'
       - genMatrix.js
-      - ".github/workflows/build-test.yml"
+      - '.github/workflows/build-test.yml'
 
   pull_request:
     paths:
-      - "**/Dockerfile"
-      - "**/docker-entrypoint.sh"
+      - '**/Dockerfile'
+      - '**/docker-entrypoint.sh'
       - genMatrix.js
-      - ".github/workflows/build-test.yml"
+      - '.github/workflows/build-test.yml'
 
 jobs:
   gen-matrix:

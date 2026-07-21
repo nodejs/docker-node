@@ -3,8 +3,8 @@ name: Check Shell scripts
 on:
   pull_request:
     paths:
-      - "**/*.sh"
-      - ".github/workflows/shfmt.yml"
+      - '**/*.sh'
+      - '.github/workflows/shfmt.yml'
 
 permissions:
   contents: read

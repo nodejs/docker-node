@@ -3,8 +3,8 @@ name: Check Alpine CHECKSUM
 on:
   pull_request:
     paths:
-      - ".github/workflows/missing-checksum.yml"
-      - "**/alpine*/Dockerfile"
+      - '.github/workflows/missing-checksum.yml'
+      - '**/alpine*/Dockerfile'
 
 permissions:
   contents: read

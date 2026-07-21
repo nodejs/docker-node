@@ -11,10 +11,10 @@ Please fill in as much of the template below as you're able.
 
 ## Environment
 
-* **Platform**:
-* **Docker Version**:
-* **Node.js Version**:
-* **Image Tag**:
+- **Platform**:
+- **Docker Version**:
+- **Node.js Version**:
+- **Image Tag**:
 
 ## Expected Behavior
 
@@ -45,4 +45,3 @@ Tell us about the steps you took to encounter this bug with the image.
 <!--
 Tell us anything else you think we should know.
 -->
-

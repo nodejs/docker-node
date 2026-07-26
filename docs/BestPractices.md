@@ -6,6 +6,7 @@
 ## Table of Contents
 
 - [Environment Variables](#environment-variables)
+- [Upgrading npm](#upgrading-npm)
 - [Global npm dependencies](#global-npm-dependencies)
 - [Handling Kernel Signals](#handling-kernel-signals)
 - [Non-root User](#non-root-user)
@@ -27,6 +28,25 @@ Run with `NODE_ENV` set to `production`. This is the way you would pass in secre
 -e "NODE_ENV=production"
 ```
 
+## Upgrading npm
+
+Each `node` Docker image includes npm, bundled with Node.js.
+You can check the version from the CLI, for example:
+
+```shell
+docker run --rm --entrypoint npm node:lts --version
+```
+
+The bundled npm version is also listed in the detail information on the
+[Node.js Releases](https://nodejs.org/en/about/previous-releases) page.
+If you need to upgrade (or downgrade) the version of npm,
+add the following to your `Dockerfile`, replacing `<version>` with the desired value.
+View the [npm registry listing](https://www.npmjs.com/package/npm?activeTab=versions) for available versions and tags.
+
+```Dockerfile
+RUN npm install --global npm@<version>
+```
+
 ## Global npm dependencies
 
 If you need to install global npm dependencies, it is recommended to place those dependencies in the [non-root user](#non-root-user) directory. To achieve this, add the following line to your `Dockerfile`
@@ -36,6 +56,8 @@ ENV NPM_CONFIG_PREFIX=/home/node/.npm-global
 
 ENV PATH=$PATH:/home/node/.npm-global/bin # optionally if you want to run npm global bin without specifying path
 ```
+
+This recommendation does not apply to npm itself, which is installed in `/usr/local/bin/npm`.
 
 ## Handling Kernel Signals
 

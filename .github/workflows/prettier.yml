@@ -1,6 +1,6 @@
 name: Check Prettier formatting
 
-on: [pull_request]
+on: [pull_request, workflow_dispatch]
 
 permissions:
   contents: read
@@ -9,8 +9,14 @@ jobs:
   prettier:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+      - name: Check out repo
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Set up Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
-          node-version: 'lts/*'
-      - run: npx prettier@3.9.5 --check .
+          node-version-file: .node-version
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Run Prettier
+        run: npm run format:prettier:check

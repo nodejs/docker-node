@@ -4,8 +4,10 @@ on:
   pull_request:
     paths:
       - '**/*.md'
-      - 'markdown_link_check_config.json'
-      - '.github/workflows/markdown-link-check.yml'
+      - markdown_link_check_config.json
+      - .github/workflows/markdown-link-check.yml
+      - 'package*.json'
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -14,11 +16,14 @@ jobs:
   markdown-link-check:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+      - name: Check out repo
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Set up Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
-          node-version: 'lts/*'
-      - name: Install markdown-link-check
-        run: npm i -g markdown-link-check@3.14.2
+          node-version-file: .node-version
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
       - name: Run markdown-link-check on MD files
-        run: find . -name "*.md" | xargs -n 1 markdown-link-check -c markdown_link_check_config.json -q
+        run: npm run check:markdown-links

@@ -22,7 +22,7 @@ jobs:
           result-encoding: string
           script: |
             const { default: script } = await import(`${process.env.GITHUB_WORKSPACE}/build-automation.mjs`);
-            return script(github);
+            return script();
 
       - name: Create update PR
         id: cpr

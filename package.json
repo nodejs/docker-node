@@ -1,0 +1,21 @@
+{
+  "name": "docker-node",
+  "description": "Build official Docker images for Node.js",
+  "private": true,
+  "type": "commonjs",
+  "scripts": {
+    "format:toc": "doctoc --update-only .",
+    "format:toc:check": "doctoc --update-only --dryrun .",
+    "format:prettier": "prettier --write .",
+    "format:prettier:check": "prettier --check .",
+    "lint": "run-s format:toc:check format:prettier:check",
+    "lint:fix": "run-s format:toc format:prettier",
+    "check:markdown-links": "find *.md docs/*.md -print0 | xargs -0 -n1 markdown-link-check -c markdown_link_check_config.json"
+  },
+  "devDependencies": {
+    "doctoc": "2.5.0",
+    "markdown-link-check": "3.14.2",
+    "npm-run-all2": "9.0.2",
+    "prettier": "3.9.6"
+  }
+}

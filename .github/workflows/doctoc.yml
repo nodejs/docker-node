@@ -3,9 +3,12 @@ name: Check generated TOCs
 on:
   pull_request:
     paths:
-      - 'README.md'
-      - 'docs/BestPractices.md'
-      - '.github/workflows/doctoc.yml'
+      - README.md
+      - CONTRIBUTING.md
+      - docs/BestPractices.md
+      - .github/workflows/doctoc.yml
+      - 'package*.json'
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -15,17 +18,14 @@ jobs:
     name: Doc TOC Check
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+      - name: Check out repo
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Set up Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
-          node-version: 'lts/*'
-      - name: Install doctoc
-        run: npm i -g doctoc
-      - name: Create README copy and diff with doctoc
-        run: cp README.md README.md.tmp &&
-          doctoc --title='## Table of Contents' --github README.md &&
-          diff -q README.md README.md.tmp
-      - name: Create "docs/BestPractices.md" copy and diff with doctoc
-        run: cp docs/BestPractices.md docs/BestPractices.md.tmp &&
-          doctoc --title='## Table of Contents' --github docs/BestPractices.md &&
-          diff -q docs/BestPractices.md docs/BestPractices.md.tmp
+          node-version-file: .node-version
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Run doctoc
+        run: npm run format:toc:check

@@ -4,7 +4,8 @@ on:
   pull_request:
     paths:
       - '**/*.sh'
-      - '.github/workflows/shfmt.yml'
+      - .github/workflows/shfmt.yml
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -14,8 +15,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - run: docker run -v "$(pwd)":/sh -w /sh peterdavehello/shfmt:2.6.3 shfmt -sr -i 2 -l -w -ci .
-      - run: git diff --color --exit-code
+      - name: Install shfmt
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y shfmt
+      - name: Run shfmt
+        run: shfmt -sr -i 2 -l -w -ci -d .
 
   shellcheck:
     runs-on: ubuntu-latest

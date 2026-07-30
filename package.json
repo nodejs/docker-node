@@ -8,12 +8,17 @@
     "format:toc:check": "doctoc --update-only --dryrun .",
     "format:prettier": "prettier --write .",
     "format:prettier:check": "prettier --check .",
-    "lint": "run-s format:toc:check format:prettier:check",
-    "lint:fix": "run-s format:toc format:prettier",
+    "format:javascript": "eslint --fix",
+    "format:javascript:check": "eslint",
+    "lint": "run-s format:toc:check format:prettier:check format:javascript:check",
+    "lint:fix": "run-s format:toc format:prettier format:javascript",
     "check:markdown-links": "find *.md docs/*.md -print0 | xargs -0 -n1 markdown-link-check -c markdown_link_check_config.json"
   },
   "devDependencies": {
+    "@eslint/js": "10.0.1",
     "doctoc": "2.5.0",
+    "eslint": "10.8.1",
+    "globals": "17.9.0",
     "markdown-link-check": "3.15.0",
     "npm-run-all2": "9.0.3",
     "prettier": "3.9.6"

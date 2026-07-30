@@ -91,12 +91,14 @@ npm run lint:fix
 
 Alternatively use any of the following commands to call one of the underlying linting utilities:
 
-| Command                         | Purpose                                 |
-| ------------------------------- | --------------------------------------- |
-| `npm run format:toc`            | Reformats any Table of Contents         |
-| `npm run format:toc:check`      | Read-only Table of Contents check       |
-| `npm run format:prettier`       | Reformats multiple types of source code |
-| `npm run format:prettier:check` | Read-only prettier check                |
+| Command                           | Purpose                                 |
+| --------------------------------- | --------------------------------------- |
+| `npm run format:toc`              | Reformats any Table of Contents         |
+| `npm run format:toc:check`        | Read-only Table of Contents check       |
+| `npm run format:prettier`         | Reformats multiple types of source code |
+| `npm run format:prettier:check`   | Read-only prettier check                |
+| `npm run format:javascript`       | Reformats JavaScript source code        |
+| `npm run format:javascript:check` | Read-only ESLint check                  |
 
 ## Link checks
 

@@ -50,6 +50,7 @@ const checkIfThereAreNewVersions = async (github) => {
       if (latestSupportedVersions[availableMajor] == null) {
         continue;
       }
+      // eslint-disable-next-line no-unused-vars
       const [_latestMajor, latestMinor, latestPatch] =
         latestSupportedVersions[availableMajor].fullVersion.split('.');
       if (

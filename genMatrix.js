@@ -11,8 +11,8 @@ const testFiles = [
   'versions.json',
 ];
 
-const areTestFilesChanged = (changedFiles) => changedFiles
-  .some((file) => testFiles.includes(file));
+const areTestFilesChanged = (changedFiles) =>
+  changedFiles.some((file) => testFiles.includes(file));
 
 const getAffectedDockerfiles = (filesAdded, filesModified, filesRenamed) => {
   const files = [...filesAdded, ...filesModified, ...filesRenamed];

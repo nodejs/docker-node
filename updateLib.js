@@ -23,8 +23,8 @@ const templateRepoMap = Object.freeze({
 });
 
 // nodeVersions is sorted
-const getLatestNodeVersion = (nodeVersions, majorVersion) => nodeVersions
-  .find((version) => version.startsWith(`${majorVersion}.`));
+const getLatestNodeVersion = (nodeVersions, majorVersion) =>
+  nodeVersions.find((version) => version.startsWith(`${majorVersion}.`));
 
 const getTemplate = (variant) => {
   if (variant.startsWith('alpine')) {
@@ -39,7 +39,10 @@ const getTemplate = (variant) => {
 };
 
 const getDockerfileMetadata = (nodeVersions, file) => {
-  const [nodeMajorVersion, variant] = path.dirname(file).split(path.sep).slice(-2);
+  const [nodeMajorVersion, variant] = path
+    .dirname(file)
+    .split(path.sep)
+    .slice(-2);
   const fileNodeVersion = getDockerfileNodeVersion(file);
 
   return {
@@ -52,8 +55,8 @@ const getDockerfileMetadata = (nodeVersions, file) => {
   };
 };
 
-const isDockerfileOutdated = ({ fileNodeVersion, latestVersion }) => fileNodeVersion
-  !== latestVersion;
+const isDockerfileOutdated = ({ fileNodeVersion, latestVersion }) =>
+  fileNodeVersion !== latestVersion;
 
 const fetchLatestNodeVersions = async () => {
   const nodeDist = await fetch('https://nodejs.org/dist/index.json');
@@ -64,25 +67,27 @@ const fetchLatestNodeVersions = async () => {
 const findOutdated = async (updateAll) => {
   const nodeVersions = await fetchLatestNodeVersions();
 
-  const dockerfileMetadatas = getAllDockerfiles(__dirname)
-    .map((file) => getDockerfileMetadata(nodeVersions, file));
+  const dockerfileMetadatas = getAllDockerfiles(__dirname).map((file) =>
+    getDockerfileMetadata(nodeVersions, file),
+  );
 
   return updateAll
     ? dockerfileMetadatas
     : dockerfileMetadatas.filter(isDockerfileOutdated);
 };
 
-const getKeys = (basename) => readFileSync(path.resolve(__dirname, 'keys', basename))
-  .toString().trim().split('\n');
+const getKeys = (basename) =>
+  readFileSync(path.resolve(__dirname, 'keys', basename))
+    .toString()
+    .trim()
+    .split('\n');
 
-const readTemplate = (template) => readFileSync(
-  path.resolve(__dirname, templateFileMap[template]),
-).toString();
+const readTemplate = (template) =>
+  readFileSync(path.resolve(__dirname, templateFileMap[template])).toString();
 
 const getBaseImage = ({ template, variant }) => {
-  const tag = template === templates.alpine
-    ? variant.replace(/alpine/, '')
-    : variant;
+  const tag =
+    template === templates.alpine ? variant.replace(/alpine/, '') : variant;
 
   return `${templateRepoMap[template]}:${tag}`;
 };
@@ -93,9 +98,10 @@ const formatTemplate = (nodeKeys, muslChecksum, base, metadata) => {
   const { latestVersion, template, nodeMajorVersion } = metadata;
   const baseImage = getBaseImage(metadata);
   const arches = versionJson[nodeMajorVersion].variants[metadata.variant];
-  let initialFormat = base.replace(/^FROM.+$/m, `FROM ${baseImage}`)
+  let initialFormat = base
+    .replace(/^FROM.+$/m, `FROM ${baseImage}`)
     .replace(/^ENV NODE_VERSION=.+$/m, `ENV NODE_VERSION=${latestVersion}`)
-    .replace(/^(\s*)"\${NODE_KEYS\[@]}".*$/m, formatKeys(nodeKeys))
+    .replace(/^(\s*)"\${NODE_KEYS\[@]}".*$/m, formatKeys(nodeKeys));
 
   if (parseInt(nodeMajorVersion, 10) >= 26) {
     initialFormat = initialFormat.replace(/ENV YARN_VERSION.*\*\n/s, '');
@@ -103,14 +109,22 @@ const formatTemplate = (nodeKeys, muslChecksum, base, metadata) => {
 
   if (template === templates.alpine) {
     let archString = '';
-    if (arches.includes('amd64')) archString += `x86_64) ARCH='x64' CHECKSUM="${muslChecksum}" OPENSSL_ARCH=linux-x86_64;; \\\n        `
-    if (arches.includes('arm64v8')) archString += `aarch64) OPENSSL_ARCH=linux-aarch64;; \\\n        `
-    if (arches.includes('arm32v6') || arches.includes('arm32v7')) archString += `arm*) OPENSSL_ARCH=linux-armv4;; \\\n        `
-    if (arches.includes('ppc64le')) archString += `ppc64le) OPENSSL_ARCH=linux-ppc64le;; \\\n        `
-    if (arches.includes('s390x')) archString += `s390x) OPENSSL_ARCH=linux-s390x;; \\\n        `
-    archString += '*) ;; \\'
+    if (arches.includes('amd64'))
+      archString += `x86_64) ARCH='x64' CHECKSUM="${muslChecksum}" OPENSSL_ARCH=linux-x86_64;; \\\n        `;
+    if (arches.includes('arm64v8'))
+      archString += `aarch64) OPENSSL_ARCH=linux-aarch64;; \\\n        `;
+    if (arches.includes('arm32v6') || arches.includes('arm32v7'))
+      archString += `arm*) OPENSSL_ARCH=linux-armv4;; \\\n        `;
+    if (arches.includes('ppc64le'))
+      archString += `ppc64le) OPENSSL_ARCH=linux-ppc64le;; \\\n        `;
+    if (arches.includes('s390x'))
+      archString += `s390x) OPENSSL_ARCH=linux-s390x;; \\\n        `;
+    archString += '*) ;; \\';
 
-    initialFormat = initialFormat.replace(/"\$\{ALPINE_ARCH\[@\]\}"/s, archString);
+    initialFormat = initialFormat.replace(
+      /"\$\{ALPINE_ARCH\[@\]\}"/s,
+      archString,
+    );
 
     // Strip out rust and cargo packages for Node.js < 26
     if (parseInt(nodeMajorVersion, 10) < 26) {
@@ -118,22 +132,31 @@ const formatTemplate = (nodeKeys, muslChecksum, base, metadata) => {
     }
   } else if (template === templates.debianSlim) {
     let archString = '';
-    if (arches.includes('amd64')) archString += `amd64) ARCH='x64' OPENSSL_ARCH='linux-x86_64';; \\\n      `
-    if (arches.includes('ppc64le')) archString += `ppc64el) ARCH='ppc64le' OPENSSL_ARCH='linux-ppc64le';; \\\n      `
-    if (arches.includes('s390x')) archString += `s390x) ARCH='s390x' OPENSSL_ARCH='linux*-s390x';; \\\n      `
-    if (arches.includes('arm64v8')) archString += `arm64) ARCH='arm64' OPENSSL_ARCH='linux-aarch64';; \\\n      `
-    if (arches.includes('arm32v7')) archString += `armhf) ARCH='armv7l' OPENSSL_ARCH='linux-armv4';; \\\n      `
-    archString += '*) echo "unsupported architecture"; exit 1 ;; \\'
+    if (arches.includes('amd64'))
+      archString += `amd64) ARCH='x64' OPENSSL_ARCH='linux-x86_64';; \\\n      `;
+    if (arches.includes('ppc64le'))
+      archString += `ppc64el) ARCH='ppc64le' OPENSSL_ARCH='linux-ppc64le';; \\\n      `;
+    if (arches.includes('s390x'))
+      archString += `s390x) ARCH='s390x' OPENSSL_ARCH='linux*-s390x';; \\\n      `;
+    if (arches.includes('arm64v8'))
+      archString += `arm64) ARCH='arm64' OPENSSL_ARCH='linux-aarch64';; \\\n      `;
+    if (arches.includes('arm32v7'))
+      archString += `armhf) ARCH='armv7l' OPENSSL_ARCH='linux-armv4';; \\\n      `;
+    archString += '*) echo "unsupported architecture"; exit 1 ;; \\';
 
     initialFormat = initialFormat.replace(/"\$\{DEB_ARCH\[@\]\}"/s, archString);
   } else if (template === templates.debian) {
     let archString = '';
-    if (arches.includes('amd64')) archString += `amd64) ARCH='x64';; \\\n    `
-    if (arches.includes('ppc64le')) archString += `ppc64el) ARCH='ppc64le';; \\\n    `
-    if (arches.includes('s390x')) archString += `s390x) ARCH='s390x';; \\\n    `
-    if (arches.includes('arm64v8')) archString += `arm64) ARCH='arm64';; \\\n    `
-    if (arches.includes('arm32v7')) archString += `armhf) ARCH='armv7l';; \\\n    `
-    archString += '*) echo "unsupported architecture"; exit 1 ;; \\'
+    if (arches.includes('amd64')) archString += `amd64) ARCH='x64';; \\\n    `;
+    if (arches.includes('ppc64le'))
+      archString += `ppc64el) ARCH='ppc64le';; \\\n    `;
+    if (arches.includes('s390x'))
+      archString += `s390x) ARCH='s390x';; \\\n    `;
+    if (arches.includes('arm64v8'))
+      archString += `arm64) ARCH='arm64';; \\\n    `;
+    if (arches.includes('arm32v7'))
+      archString += `armhf) ARCH='armv7l';; \\\n    `;
+    archString += '*) echo "unsupported architecture"; exit 1 ;; \\';
 
     initialFormat = initialFormat.replace(/"\$\{DEB_ARCH\[@\]\}"/s, archString);
   }

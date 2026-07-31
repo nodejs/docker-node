@@ -2,6 +2,7 @@
 const path = require('path');
 const { readFileSync, writeFileSync } = require('fs');
 const { getAllDockerfiles, getDockerfileNodeVersion } = require('./utils');
+const versionJson = require('./versions.json');
 
 const templates = Object.freeze({
   alpine: 1,
@@ -91,6 +92,7 @@ const formatKeys = (keys) => keys.map((key) => `$1${key} \\`).join('\n');
 const formatTemplate = (nodeKeys, muslChecksum, base, metadata) => {
   const { latestVersion, template, nodeMajorVersion } = metadata;
   const baseImage = getBaseImage(metadata);
+  const arches = versionJson[nodeMajorVersion].variants[metadata.variant];
   let initialFormat = base.replace(/^FROM.+$/m, `FROM ${baseImage}`)
     .replace(/^ENV NODE_VERSION=.+$/m, `ENV NODE_VERSION=${latestVersion}`)
     .replace(/^(\s*)"\${NODE_KEYS\[@]}".*$/m, formatKeys(nodeKeys))
@@ -100,12 +102,40 @@ const formatTemplate = (nodeKeys, muslChecksum, base, metadata) => {
   }
 
   if (template === templates.alpine) {
-    initialFormat = initialFormat.replace(/CHECKSUM=CHECKSUM_x64/m, `CHECKSUM="${muslChecksum}"`);
+    let archString = '';
+    if (arches.includes('amd64')) archString += `x86_64) ARCH='x64' CHECKSUM="${muslChecksum}" OPENSSL_ARCH=linux-x86_64;; \\\n        `
+    if (arches.includes('arm64v8')) archString += `aarch64) OPENSSL_ARCH=linux-aarch64;; \\\n        `
+    if (arches.includes('arm32v6') || arches.includes('arm32v7')) archString += `arm*) OPENSSL_ARCH=linux-armv4;; \\\n        `
+    if (arches.includes('ppc64le')) archString += `ppc64le) OPENSSL_ARCH=linux-ppc64le;; \\\n        `
+    if (arches.includes('s390x')) archString += `s390x) OPENSSL_ARCH=linux-s390x;; \\\n        `
+    archString += '*) ;; \\'
+
+    initialFormat = initialFormat.replace(/"\$\{ALPINE_ARCH\[@\]\}"/s, archString);
 
     // Strip out rust and cargo packages for Node.js < 26
     if (parseInt(nodeMajorVersion, 10) < 26) {
       initialFormat = initialFormat.replace(/    rust \\.*cargo \\\s*/s, '');
     }
+  } else if (template === templates.debianSlim) {
+    let archString = '';
+    if (arches.includes('amd64')) archString += `amd64) ARCH='x64' OPENSSL_ARCH='linux-x86_64';; \\\n      `
+    if (arches.includes('ppc64le')) archString += `ppc64el) ARCH='ppc64le' OPENSSL_ARCH='linux-ppc64le';; \\\n      `
+    if (arches.includes('s390x')) archString += `s390x) ARCH='s390x' OPENSSL_ARCH='linux*-s390x';; \\\n      `
+    if (arches.includes('arm64v8')) archString += `arm64) ARCH='arm64' OPENSSL_ARCH='linux-aarch64';; \\\n      `
+    if (arches.includes('arm32v7')) archString += `armhf) ARCH='armv7l' OPENSSL_ARCH='linux-armv4';; \\\n      `
+    archString += '*) echo "unsupported architecture"; exit 1 ;; \\'
+
+    initialFormat = initialFormat.replace(/"\$\{DEB_ARCH\[@\]\}"/s, archString);
+  } else if (template === templates.debian) {
+    let archString = '';
+    if (arches.includes('amd64')) archString += `amd64) ARCH='x64';; \\\n    `
+    if (arches.includes('ppc64le')) archString += `ppc64el) ARCH='ppc64le';; \\\n    `
+    if (arches.includes('s390x')) archString += `s390x) ARCH='s390x';; \\\n    `
+    if (arches.includes('arm64v8')) archString += `arm64) ARCH='arm64';; \\\n    `
+    if (arches.includes('arm32v7')) archString += `armhf) ARCH='armv7l';; \\\n    `
+    archString += '*) echo "unsupported architecture"; exit 1 ;; \\'
+
+    initialFormat = initialFormat.replace(/"\$\{DEB_ARCH\[@\]\}"/s, archString);
   }
 
   return initialFormat;

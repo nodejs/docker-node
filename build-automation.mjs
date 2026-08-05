@@ -1,4 +1,6 @@
 import { promisify } from 'util';
+import { readdirSync, readFileSync } from 'node:fs';
+import { join } from 'node:path';
 
 import child_process from 'child_process';
 
@@ -7,40 +9,38 @@ const exec = promisify(child_process.exec);
 // a function that queries the Node.js release website for new versions,
 // compare the available ones with the ones we use in this repo
 // and returns whether we should update or not
-const checkIfThereAreNewVersions = async (github) => {
+const checkIfThereAreNewVersions = async () => {
   try {
-    const { stdout: versionsOutput } = await exec(
-      '. ./functions.sh && get_versions',
-      { shell: 'bash' },
-    );
-
-    const supportedVersions = versionsOutput.trim().split(' ');
+    let files = readdirSync('./');
+    // get the folders with a digit, assuming they're the Node.js major versions
+    const supportedVersions = files.filter((file) => {
+      return file.match(/\d/);
+    });
 
     let latestSupportedVersions = {};
 
     for (let supportedVersion of supportedVersions) {
-      const { stdout } = await exec(`ls ${supportedVersion}`);
-
-      const { stdout: fullVersionOutput } = await exec(
-        `. ./functions.sh && get_full_version ./${supportedVersion}/${stdout.trim().split('\n')[0]}`,
-        { shell: 'bash' },
+      // Grab the Alpine folder, to assume it is more likely to be behind after a Security release
+      const alpinefolder = readdirSync(join('.', supportedVersion)).find(
+        (folder) => folder.startsWith('alpine'),
       );
 
-      console.log(fullVersionOutput);
+      const fullVersionOutput = readFileSync(
+        join('.', supportedVersion, alpinefolder, 'Dockerfile'),
+        'utf-8',
+      );
 
       latestSupportedVersions[supportedVersion] = {
-        fullVersion: fullVersionOutput.trim(),
+        fullVersion: fullVersionOutput.match(
+          /NODE_VERSION=(?<version>\d*\.\d*\.\d)/,
+        ).groups['version'],
       };
     }
 
-    const { data: availableVersionsJson } = await github.request(
+    const availableVersions = await fetch(
       'https://nodejs.org/download/release/index.json',
     );
-
-    // filter only more recent versions of availableVersionsJson for each major version in latestSupportedVersions' keys
-    // e.g. if latestSupportedVersions = { "12": "12.22.10", "14": "14.19.0", "16": "16.14.0", "17": "17.5.0" }
-    // and availableVersions = ["Node.js 12.22.10", "Node.js 12.24.0", "Node.js 14.19.0", "Node.js 14.22.0", "Node.js 16.14.0", "Node.js 16.16.0", "Node.js 17.5.0", "Node.js 17.8.0"]
-    // return { "12": "12.24.0", "14": "14.22.0", "16": "16.16.0", "17": "17.8.0" }
+    const availableVersionsJson = await availableVersions.json();
 
     let filteredNewerVersions = {};
 
@@ -60,6 +60,7 @@ const checkIfThereAreNewVersions = async (github) => {
       ) {
         filteredNewerVersions[availableMajor] = {
           fullVersion: `${availableMajor}.${availableMinor}.${availablePatch}`,
+          isSecurityRelease: availableVersion.security,
         };
       }
     }
@@ -79,11 +80,12 @@ const checkIfThereAreNewVersions = async (github) => {
 
 // a function that queries the Node.js unofficial release website for new musl versions and security releases,
 // and returns relevant information
-const checkForMuslVersionsAndSecurityReleases = async (github, versions) => {
+const checkForMuslVersionsAndSecurityReleases = async (versions) => {
   try {
-    const { data: unofficialBuildsIndexText } = await github.request(
+    const unofficialBuildsIndex = await fetch(
       'https://unofficial-builds.nodejs.org/download/release/index.json',
     );
+    const unofficialBuildsIndexText = await unofficialBuildsIndex.json();
 
     for (let version of Object.keys(versions)) {
       const buildVersion = unofficialBuildsIndexText.find(
@@ -93,7 +95,6 @@ const checkForMuslVersionsAndSecurityReleases = async (github, versions) => {
 
       versions[version].muslBuildExists =
         buildVersion?.files.includes('linux-x64-musl') ?? false;
-      versions[version].isSecurityRelease = buildVersion?.security ?? false;
     }
     return versions;
   } catch (error) {
@@ -102,24 +103,22 @@ const checkForMuslVersionsAndSecurityReleases = async (github, versions) => {
   }
 };
 
-export default async function (github) {
+export default async function () {
   // if there are no new versions, exit gracefully
   // if there are new versions,
   // check for musl builds
   // then run update.sh
-  const { shouldUpdate, versions } = await checkIfThereAreNewVersions(github);
+  const { shouldUpdate, versions } = await checkIfThereAreNewVersions();
 
   if (!shouldUpdate) {
     console.log('No new versions found. No update required.');
     process.exit(0);
   } else {
-    const newVersions = await checkForMuslVersionsAndSecurityReleases(
-      github,
-      versions,
-    );
+    const newVersions = await checkForMuslVersionsAndSecurityReleases(versions);
     let updatedVersions = [];
     for (const [version, newVersion] of Object.entries(newVersions)) {
-      if (newVersion.muslBuildExists) {
+      if (newVersion.muslBuildExists || newVersion.isSecurityRelease) {
+        console.log(`Updating ${newVersion.fullVersion}.`);
         const { stdout } = await exec(
           `./update.sh ${newVersion.isSecurityRelease ? '-s ' : ''}${version}`,
         );
@@ -132,9 +131,6 @@ export default async function (github) {
         process.exit(0);
       }
     }
-    const { stdout } = await exec(`git diff`);
-    console.log(stdout);
-
     return updatedVersions.join(', ');
   }
 }

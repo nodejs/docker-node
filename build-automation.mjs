@@ -1,136 +1,102 @@
-import { promisify } from 'util';
 import { readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
-import child_process from 'child_process';
+import shell from 'shelljs';
 
-const exec = promisify(child_process.exec);
+// Track the built versions to output for the GitHub PR
+const updatedVersions = [];
 
-// a function that queries the Node.js release website for new versions,
-// compare the available ones with the ones we use in this repo
-// and returns whether we should update or not
-const checkIfThereAreNewVersions = async () => {
-  try {
-    let files = readdirSync('./');
-    // get the folders with a digit, assuming they're the Node.js major versions
-    const supportedVersions = files.filter((file) => {
-      return file.match(/\d/);
-    });
-
-    let latestSupportedVersions = {};
-
-    for (let supportedVersion of supportedVersions) {
-      // Grab the Alpine folder, to assume it is more likely to be behind after a Security release
-      const alpinefolder = readdirSync(join('.', supportedVersion)).find(
-        (folder) => folder.startsWith('alpine'),
-      );
-
-      const fullVersionOutput = readFileSync(
-        join('.', supportedVersion, alpinefolder, 'Dockerfile'),
-        'utf-8',
-      );
-
-      latestSupportedVersions[supportedVersion] = {
-        fullVersion: fullVersionOutput.match(
-          /NODE_VERSION=(?<version>\d*\.\d*\.\d)/,
-        ).groups['version'],
-      };
-    }
-
-    const availableVersions = await fetch(
-      'https://nodejs.org/download/release/index.json',
-    );
-    const availableVersionsJson = await availableVersions.json();
-
-    let filteredNewerVersions = {};
-
-    for (let availableVersion of availableVersionsJson) {
-      const [availableMajor, availableMinor, availablePatch] =
-        availableVersion.version.split('v')[1].split('.');
-      if (latestSupportedVersions[availableMajor] == null) {
-        continue;
-      }
-      const [_latestMajor, latestMinor, latestPatch] =
-        latestSupportedVersions[availableMajor].fullVersion.split('.');
-      if (
-        latestSupportedVersions[availableMajor] &&
-        (Number(availableMinor) > Number(latestMinor) ||
-          (availableMinor === latestMinor &&
-            Number(availablePatch) > Number(latestPatch)))
-      ) {
-        filteredNewerVersions[availableMajor] = {
-          fullVersion: `${availableMajor}.${availableMinor}.${availablePatch}`,
-          isSecurityRelease: availableVersion.security,
-        };
-      }
-    }
-
-    return {
-      shouldUpdate:
-        Object.keys(filteredNewerVersions).length > 0 &&
-        JSON.stringify(filteredNewerVersions) !==
-          JSON.stringify(latestSupportedVersions),
-      versions: filteredNewerVersions,
-    };
-  } catch (error) {
-    console.error(error);
-    process.exit(1);
-  }
-};
-
-// a function that queries the Node.js unofficial release website for new musl versions and security releases,
-// and returns relevant information
-const checkForMuslVersionsAndSecurityReleases = async (versions) => {
-  try {
-    const unofficialBuildsIndex = await fetch(
-      'https://unofficial-builds.nodejs.org/download/release/index.json',
-    );
-    const unofficialBuildsIndexText = await unofficialBuildsIndex.json();
-
-    for (let version of Object.keys(versions)) {
-      const buildVersion = unofficialBuildsIndexText.find(
-        (indexVersion) =>
-          indexVersion.version === `v${versions[version].fullVersion}`,
-      );
-
-      versions[version].muslBuildExists =
-        buildVersion?.files.includes('linux-x64-musl') ?? false;
-    }
-    return versions;
-  } catch (error) {
-    console.error(error);
-    process.exit(1);
-  }
-};
-
-export default async function () {
-  // if there are no new versions, exit gracefully
-  // if there are new versions,
-  // check for musl builds
-  // then run update.sh
-  const { shouldUpdate, versions } = await checkIfThereAreNewVersions();
-
-  if (!shouldUpdate) {
-    console.log('No new versions found. No update required.');
-    process.exit(0);
+// TODO: since we have the full version, and could pass the CHECKSUM value (till
+//       it goes Tier 2), the update.sh script shouldn't have to look it all up again
+async function runUpdate(fullVersion, isSecurityRelease, hasMusl) {
+  let majorVersion = fullVersion.split('v')[1].split('.')[0];
+  if (hasMusl || isSecurityRelease) {
+    let updateStatement = `bash update.sh ${isSecurityRelease ? '-s ' : ''}${majorVersion}`;
+    console.log(`Updating ${fullVersion} with '${updateStatement}'.`);
+    shell.exec(updateStatement);
+    updatedVersions.push(fullVersion);
   } else {
-    const newVersions = await checkForMuslVersionsAndSecurityReleases(versions);
-    let updatedVersions = [];
-    for (const [version, newVersion] of Object.entries(newVersions)) {
-      if (newVersion.muslBuildExists || newVersion.isSecurityRelease) {
-        console.log(`Updating ${newVersion.fullVersion}.`);
-        const { stdout } = await exec(
-          `./update.sh ${newVersion.isSecurityRelease ? '-s ' : ''}${version}`,
-        );
-        console.log(stdout);
-        updatedVersions.push(newVersion.fullVersion);
-      } else {
-        console.log(
-          `There's no musl build for version ${newVersion.fullVersion} yet.`,
-        );
-        process.exit(0);
-      }
-    }
-    return updatedVersions.join(', ');
+    console.error(`There's no musl build for version ${fullVersion} yet.`);
   }
+}
+
+try {
+  // get the folders with a digit, assuming they're the Node.js major versions
+  const supportedVersions = readdirSync('./').filter((file) => {
+    return file.match(/\d/);
+  });
+
+  console.log(`Found major versions in repo: ${supportedVersions}`);
+
+  console.log('Grabbing Index.json files');
+  const availableVersions = await fetch(
+    'https://nodejs.org/download/release/index.json',
+  );
+  const officialIndexJson = await availableVersions.json();
+
+  const unofficialVersions = await fetch(
+    'https://unofficial-builds.nodejs.org/download/release/index.json',
+  );
+  const unofficialBuildsIndexJson = await unofficialVersions.json();
+
+  for (let supportedVersion of supportedVersions) {
+    console.log(`Checking for updates for ${supportedVersion}`);
+    const folders = readdirSync(join('.', supportedVersion));
+
+    const alpineFolder = folders[0];
+
+    const alpineDockerFile = readFileSync(
+      join('.', supportedVersion, alpineFolder, 'Dockerfile'),
+      'utf-8',
+    );
+    const alpineVersion =
+      'v' +
+      alpineDockerFile.match(/NODE_VERSION=(?<version>\d*\.\d*\.\d)/).groups[
+        'version'
+      ];
+    console.log(`Read Alpine version ${alpineVersion} from ${alpineFolder}`);
+
+    const debianFolder = folders.at(-1);
+    const debianDockerFile = readFileSync(
+      join('.', supportedVersion, debianFolder, 'Dockerfile'),
+      'utf-8',
+    );
+
+    const debianVersion =
+      'v' +
+      debianDockerFile.match(/NODE_VERSION=(?<version>\d*\.\d*\.\d)/).groups[
+        'version'
+      ];
+    console.log(`Read Debian version ${alpineVersion} from ${debianFolder}`);
+
+    let latestDebian = officialIndexJson.find((indexVersion) =>
+      indexVersion.version.startsWith(`v${supportedVersion}`),
+    );
+
+    let hasMusl =
+      unofficialBuildsIndexJson.find(
+        (indexVersion) => indexVersion.version === latestDebian,
+      ) !== null;
+
+    if (latestDebian.version !== debianVersion) {
+      console.warn(
+        `Found new version ${latestDebian.version}, released on ${latestDebian.date}!`,
+      );
+      await runUpdate(latestDebian.version, latestDebian.security, hasMusl);
+      console.warn(`Alpine and Debian versions do not match!`);
+    } else if (debianVersion !== alpineVersion) {
+      console.warn(`Alpine ${alpineVersion} ${latestDebian.version}!`);
+      await runUpdate(latestDebian.version, latestDebian.security, hasMusl);
+    } else {
+      console.log(`Everything up to date for ${latestDebian.version}!
+Released: ${latestDebian.date}
+Security release: ${latestDebian.security}
+Has musl: ${hasMusl}`);
+    }
+  }
+  console.log('Finish the run.');
+  updatedVersions.join(', ');
+} catch (error) {
+  console.error(error);
+  process.exit(1);
 }

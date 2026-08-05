@@ -4,6 +4,7 @@
   "private": true,
   "type": "commonjs",
   "scripts": {
+    "build": "node build-automation.mjs",
     "format:toc": "doctoc --update-only .",
     "format:toc:check": "doctoc --update-only --dryrun .",
     "format:prettier": "prettier --write .",
@@ -16,6 +17,7 @@
     "doctoc": "2.5.0",
     "markdown-link-check": "3.14.2",
     "npm-run-all2": "9.0.2",
-    "prettier": "3.9.6"
+    "prettier": "3.9.6",
+    "shelljs": "0.10.0"
   }
 }

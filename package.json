@@ -15,7 +15,7 @@
   "devDependencies": {
     "doctoc": "2.5.0",
     "markdown-link-check": "3.15.0",
-    "npm-run-all2": "9.0.2",
+    "npm-run-all2": "9.0.3",
     "prettier": "3.9.6"
   }
 }

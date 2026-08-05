@@ -3,7 +3,7 @@ FROM buildpack-deps:trixie
 RUN groupadd --gid 1000 node \
   && useradd --uid 1000 --gid node --shell /bin/bash --create-home node
 
-ENV NODE_VERSION=26.5.1
+ENV NODE_VERSION=26.6.0
 
 RUN ARCH= && dpkgArch="$(dpkg --print-architecture)" \
   && case "${dpkgArch##*-}" in \
@@ -11,7 +11,6 @@ RUN ARCH= && dpkgArch="$(dpkg --print-architecture)" \
     ppc64el) ARCH='ppc64le';; \
     s390x) ARCH='s390x';; \
     arm64) ARCH='arm64';; \
-    armhf) ARCH='armv7l';; \
     *) echo "unsupported architecture"; exit 1 ;; \
   esac \
   # use pre-existing gpg directory, see https://github.com/nodejs/docker-node/pull/1895#issuecomment-1550389150

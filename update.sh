@@ -253,11 +253,18 @@ function update_node_version() {
 }
 
 pids=()
+baseuri_checked=""
 
 for version in "${versions[@]}"; do
   parentpath=$(dirname "${version}")
   versionnum=$(basename "${version}")
   baseuri=$(get_config "${parentpath}" "baseuri")
+  if [ "${baseuri_checked}" != "${baseuri}" ]; then
+    if ! curl -sS --fail --compressed --max-time 15 "${baseuri}/index.json" > /dev/null; then
+      fatal "Unable to reach ${baseuri}; please check network connectivity or the baseuri configuration."
+    fi
+    baseuri_checked="${baseuri}"
+  fi
   update_version=$(in_versions_to_update "${version}")
 
   [ "${update_version}" -eq 0 ] && info "Updating version ${version}..."

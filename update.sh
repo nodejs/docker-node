@@ -115,15 +115,13 @@ function update_node_version() {
     shift
   fi
 
-  fullVersion="$(curl -sSL --compressed "${baseuri}" | grep '<a href="v'"${version}." | sed -E 's!.*<a href="v([^"/]+)/?".*!\1!' | cut -d'.' -f2,3 | sort -V | tail -1)"
+  nodeVersion="$(curl -sSL --compressed "${baseuri}/index.json" | jq -r '[.[] | select(.version | startswith("v'"${version}"'."))] | first | .version | ltrimstr("v")')"
   (
     cp "${template}" "${dockerfile}-tmp"
     local fromprefix=""
     if [ "${arch}" != "amd64" ] && [ "${arch}" != "arm64" ]; then
       fromprefix="${arch}\\/"
     fi
-
-    nodeVersion="${version}.${fullVersion:-0}"
 
     sed -Ei -e 's/^FROM (.*)/FROM '"$fromprefix"'\1/' "${dockerfile}-tmp"
     sed -Ei -e 's/^(ENV NODE_VERSION)=.*/\1='"${nodeVersion}"'/' "${dockerfile}-tmp"

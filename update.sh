@@ -43,6 +43,12 @@ while getopts "sh" opt; do
   esac
 done
 
+if ! command -v jq > /dev/null; then
+  echo "**jq not installed**" >&2
+  echo "Follow the instructions in https://jqlang.org/download/ to install" >&2
+  exit 1
+fi
+
 . functions.sh
 
 cd "$(cd "${0%/*}" && pwd -P)"

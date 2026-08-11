@@ -1,0 +1,24 @@
+name: Node.js Release Key Check
+
+on:
+  pull_request:
+    paths:
+      - keys/node.keys
+      - .github/workflows/node-keys.yml
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    if: github.repository_owner == 'nodejs'
+
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Run automation script
+        run: ./update-keys.sh
+
+      - name: Ensure no git changes
+        run: git diff --exit-code

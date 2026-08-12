@@ -31,3 +31,4 @@ jobs:
           delete-branch: true
           team-reviewers: |
             nodejs/docker
+            nodejs/releasers

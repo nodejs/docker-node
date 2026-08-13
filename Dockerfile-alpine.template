@@ -4,6 +4,8 @@ ENV NODE_VERSION=0.0.0
 
 RUN addgroup -g 1000 node \
     && adduser -u 1000 -G node -s /bin/sh -D node \
+    && mkdir -p /home/node/node_modules \
+    && chown -R node:node /home/node/node_modules \
     && apk add --no-cache \
         libstdc++ \
     && apk add --no-cache --virtual .build-deps \

@@ -177,7 +177,7 @@ function update_node_version() {
           alpine_arch+='s390x) OPENSSL_ARCH=linux-s390x;; \\\n        '
         fi
         # shellcheck disable=SC1003
-        alpine_arch+='*) ;; \\'
+        alpine_arch+='*) echo "unsupported architecture"; exit 1 ;; \\'
         sed -Ei -e "s/\"\\$\{ALPINE_ARCH\[@\]\}\"/${alpine_arch}/" "${dockerfile}-tmp"
       fi
     elif is_debian "${variant}"; then

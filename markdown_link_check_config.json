@@ -17,6 +17,9 @@
     },
     {
       "pattern": "^https://sourceware\\.org/"
+    },
+    {
+      "pattern": "^https://openjs-foundation\\.slack\\.com/"
     }
   ]
 }

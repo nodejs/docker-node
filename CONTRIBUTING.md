@@ -127,6 +127,19 @@ for each supported Node.js release line.
 The lowest previously used Alpine Linux release is dropped for future image builds,
 so that only the two latest releases are maintained.
 
+**[Debian](https://www.debian.org/releases/)** provides a new stable release every two years:
+
+> The Debian release life cycle encompasses five years: the first three years of full support
+> followed by two years of Long Term Support (LTS).
+
+If a [Debian LTS](https://wiki.debian.org/LTS) transition causes any architectures used in Docker builds to be dropped,
+they are also dropped from future builds after waiting for the next Node.js release
+following the Debian release transition into LTS support.
+The wait is advised to prevent an architecture being prematurely removed due to the automatic rebuild process
+in [docker-library/official-images](https://github.com/docker-library/official-images).
+
+After the end of Debian LTS support, the corresponding Debian release is dropped for future image builds.
+
 ### Image Creation Automation
 
 - Every 15 minutes, the [workflow](https://github.com/nodejs/docker-node/blob/main/.github/workflows/automatic-updates.yml) within the [nodejs/docker-node](https://github.com/nodejs/docker-node) repo [checks](https://github.com/nodejs/docker-node/blob/main/build-automation.mjs) for new versions of Node.js [published to the website's `index.json` file](https://nodejs.org/download/release/index.json).

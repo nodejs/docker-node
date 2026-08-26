@@ -18,7 +18,7 @@
     "@eslint/js": "10.0.1",
     "doctoc": "2.5.0",
     "eslint": "10.8.1",
-    "globals": "17.9.0",
+    "globals": "17.11.0",
     "markdown-link-check": "3.15.0",
     "npm-run-all2": "9.0.3",
     "prettier": "3.9.6"

@@ -3,7 +3,7 @@ FROM buildpack-deps:trixie
 RUN groupadd --gid 1000 node \
   && useradd --uid 1000 --gid node --shell /bin/bash --create-home node
 
-ENV NODE_VERSION=26.7.0
+ENV NODE_VERSION=26.8.1
 
 RUN ARCH= && dpkgArch="$(dpkg --print-architecture)" \
   && case "${dpkgArch##*-}" in \
@@ -25,8 +25,8 @@ RUN ARCH= && dpkgArch="$(dpkg --print-architecture)" \
     890C08DB8579162FEE0DF9DB8BEAB4DFCF555EF4 \
     C82FA3AE1CBEDC6BE46B9360C43CEC45C17AB93C \
     108F52B48DB57BB0CC439B2997B01419BD92F80A \
-    A363A499291CBBC940DD62E41F10027AF002F8B0 \
     655F3B5C1FB3FA8D1A0CA6BDE4A7D232B936D2FD \
+    A363A499291CBBC940DD62E41F10027AF002F8B0 \
   ; do \
       { gpg --batch --keyserver hkps://keys.openpgp.org --recv-keys "$key" && gpg --batch --fingerprint "$key"; } || \
       { gpg --batch --keyserver keyserver.ubuntu.com --recv-keys "$key" && gpg --batch --fingerprint "$key"; } ; \

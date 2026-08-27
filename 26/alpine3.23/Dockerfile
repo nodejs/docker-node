@@ -1,6 +1,6 @@
 FROM alpine:3.23
 
-ENV NODE_VERSION=26.7.0
+ENV NODE_VERSION=26.8.1
 
 RUN addgroup -g 1000 node \
     && adduser -u 1000 -G node -s /bin/sh -D node \
@@ -10,9 +10,9 @@ RUN addgroup -g 1000 node \
         curl \
     && ARCH= OPENSSL_ARCH='linux*' && alpineArch="$(apk --print-arch)" \
       && case "${alpineArch##*-}" in \
-        x86_64) ARCH='x64' CHECKSUM="0608f9dcffe4daeef082255f5cba6047c7b82eb57a7ab168a0e9bd459823f74b" OPENSSL_ARCH=linux-x86_64;; \
+        x86_64) ARCH='x64' CHECKSUM="cc6a960576eeebf62d51d25ce0d138a3ca50a57e3f8f4a8bc10a3e37b15e2f63" OPENSSL_ARCH=linux-x86_64;; \
         aarch64) OPENSSL_ARCH=linux-aarch64;; \
-        *) ;; \
+        *) echo "unsupported architecture"; exit 1 ;; \
       esac \
   && if [ -n "${CHECKSUM}" ]; then \
     set -eu; \
@@ -46,8 +46,8 @@ RUN addgroup -g 1000 node \
       890C08DB8579162FEE0DF9DB8BEAB4DFCF555EF4 \
       C82FA3AE1CBEDC6BE46B9360C43CEC45C17AB93C \
       108F52B48DB57BB0CC439B2997B01419BD92F80A \
-      A363A499291CBBC940DD62E41F10027AF002F8B0 \
       655F3B5C1FB3FA8D1A0CA6BDE4A7D232B936D2FD \
+      A363A499291CBBC940DD62E41F10027AF002F8B0 \
     ; do \
       { gpg --batch --keyserver hkps://keys.openpgp.org --recv-keys "$key" && gpg --batch --fingerprint "$key"; } || \
       { gpg --batch --keyserver keyserver.ubuntu.com --recv-keys "$key" && gpg --batch --fingerprint "$key"; } ; \

@@ -25,7 +25,6 @@ The official Node.js docker image, made with love by the node community.
   - [`node:<version>`](#nodeversion)
   - [`node:lts`](#nodelts)
   - [`node:alpine`](#nodealpine)
-  - [`node:bullseye`](#nodebullseye)
   - [`node:bookworm`](#nodebookworm)
   - [`node:trixie`](#nodetrixie)
   - [`node:slim`](#nodeslim)
@@ -209,12 +208,6 @@ The
 [Best Practices document](./docs/BestPractices.md), in the section
 [Smaller images without npm/yarn](./docs/BestPractices.md#smaller-images-without-npmyarn),
 shows how to produce a custom image by removing package managers in a multi-stage build.
-
-### `node:bullseye`
-
-This image is based on version 11 of
-[Debian](https://debian.org), available in
-[the `debian` official image](https://hub.docker.com/_/debian).
 
 ### `node:bookworm`
 

@@ -26,14 +26,6 @@
         "arm64v8",
         "ppc64le"
       ],
-      "bullseye": [
-        "amd64",
-        "arm64v8"
-      ],
-      "bullseye-slim": [
-        "amd64",
-        "arm64v8"
-      ],
       "trixie": [
         "amd64",
         "arm64v8",
@@ -76,14 +68,6 @@
         "amd64",
         "arm64v8",
         "ppc64le"
-      ],
-      "bullseye": [
-        "amd64",
-        "arm64v8"
-      ],
-      "bullseye-slim": [
-        "amd64",
-        "arm64v8"
       ],
       "trixie": [
         "amd64",
@@ -133,16 +117,6 @@
         "arm32v7",
         "arm64v8",
         "ppc64le"
-      ],
-      "bullseye": [
-        "amd64",
-        "arm32v7",
-        "arm64v8"
-      ],
-      "bullseye-slim": [
-        "amd64",
-        "arm32v7",
-        "arm64v8"
       ],
       "trixie": [
         "amd64",

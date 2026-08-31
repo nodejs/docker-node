@@ -9,7 +9,7 @@ Common Vulnerabilities and Exposures (CVE) reports that relate to Node.js or its
 CVEs for the base operating system image packages should be reported to those repositories. Nothing to address those CVEs is in the hands of this repo.
 
 - [Alpine](https://github.com/alpinelinux/docker-alpine)
-- [Debian (bullseye, bookworm, trixie)](https://github.com/debuerreotype/docker-debian-artifacts)
+- [Debian (bookworm, trixie)](https://github.com/debuerreotype/docker-debian-artifacts)
 
 When base images are patched, the images are rebuilt and rolled out to the Docker hub without intervention by this repo. This process is explained in <https://github.com/docker-library/faq/#why-does-my-security-scanner-show-that-an-image-has-cves>.
 

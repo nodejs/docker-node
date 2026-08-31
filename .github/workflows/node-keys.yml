@@ -4,6 +4,7 @@ on:
   pull_request:
     paths:
       - keys/node.keys
+      - update-keys.sh
       - .github/workflows/node-keys.yml
 
 permissions:

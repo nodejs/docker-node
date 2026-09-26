@@ -5,38 +5,22 @@ ENV NODE_VERSION=24.21.0
 RUN addgroup -g 1000 node \
     && adduser -u 1000 -G node -s /bin/sh -D node \
     && apk add --no-cache \
+        libatomic \
         libstdc++ \
     && apk add --no-cache --virtual .build-deps \
+        gnupg \
         curl \
     && ARCH= OPENSSL_ARCH='linux*' && alpineArch="$(apk --print-arch)" \
       && case "${alpineArch##*-}" in \
-        x86_64) ARCH='x64' CHECKSUM="dd5ca647e656c8200c873f45098a16623129c47f2387829f0a15a6de1dac1220" OPENSSL_ARCH=linux-x86_64;; \
+        x86_64) ARCH='x64' OPENSSL_ARCH=linux-x86_64;; \
         aarch64) OPENSSL_ARCH=linux-aarch64;; \
         s390x) OPENSSL_ARCH=linux-s390x;; \
         *) echo "unsupported architecture"; exit 1 ;; \
       esac \
-  && if [ -n "${CHECKSUM}" ]; then \
-    set -eu; \
-    curl -fsSLO --compressed "https://unofficial-builds.nodejs.org/download/release/v$NODE_VERSION/node-v$NODE_VERSION-linux-$ARCH-musl.tar.xz"; \
-    echo "$CHECKSUM  node-v$NODE_VERSION-linux-$ARCH-musl.tar.xz" | sha256sum -c - \
-      && tar -xJf "node-v$NODE_VERSION-linux-$ARCH-musl.tar.xz" -C /usr/local --strip-components=1 --no-same-owner \
-      && ln -s /usr/local/bin/node /usr/local/bin/nodejs; \
-  else \
-    echo "Building from source" \
-    # backup build
-    && apk add --no-cache --virtual .build-deps-full \
-        binutils-gold \
-        g++ \
-        gcc \
-        gnupg \
-        libgcc \
-        linux-headers \
-        make \
-        python3 \
-        py-setuptools \
     # use pre-existing gpg directory, see https://github.com/nodejs/docker-node/pull/1895#issuecomment-1550389150
     && export GNUPGHOME="$(mktemp -d)" \
     # gpg keys listed at https://github.com/nodejs/node#release-keys
+    && set -ex \
     && for key in \
       5BE8A3F6C8A5C01D106C0AD820B1A390B168D356 \
       DD792F5973C6DE52C432CBDAC77ABFA00DDBF2B7 \
@@ -47,9 +31,30 @@ RUN addgroup -g 1000 node \
       655F3B5C1FB3FA8D1A0CA6BDE4A7D232B936D2FD \
       A363A499291CBBC940DD62E41F10027AF002F8B0 \
     ; do \
-      { gpg --batch --keyserver hkps://keys.openpgp.org --recv-keys "$key" && gpg --batch --fingerprint "$key"; } || \
-      { gpg --batch --keyserver keyserver.ubuntu.com --recv-keys "$key" && gpg --batch --fingerprint "$key"; } ; \
+        { gpg --batch --keyserver hkps://keys.openpgp.org --recv-keys "$key" && gpg --batch --fingerprint "$key"; } || \
+        { gpg --batch --keyserver keyserver.ubuntu.com --recv-keys "$key" && gpg --batch --fingerprint "$key"; } ; \
     done \
+  && if [ "$ARCH" = "x64" ]; then \
+    curl -fsSLO --compressed "https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION-linux-$ARCH-musl.tar.xz" \
+    && curl -fsSLO --compressed "https://nodejs.org/dist/v$NODE_VERSION/SHASUMS256.txt.asc" \
+    && gpg --batch --decrypt --output SHASUMS256.txt SHASUMS256.txt.asc \
+    && gpgconf --kill all \
+    && rm -rf "$GNUPGHOME" \
+    && grep " node-v$NODE_VERSION-linux-$ARCH-musl.tar.xz\$" SHASUMS256.txt | sha256sum -c - \
+    && tar -xJf "node-v$NODE_VERSION-linux-$ARCH-musl.tar.xz" -C /usr/local --strip-components=1 --no-same-owner \
+    && rm "node-v$NODE_VERSION-linux-$ARCH-musl.tar.xz" SHASUMS256.txt.asc SHASUMS256.txt \
+    && ln -s /usr/local/bin/node /usr/local/bin/nodejs; \
+  else \
+    echo "Building from source" \
+    && apk add --no-cache --virtual .build-deps-full \
+        binutils-gold \
+        g++ \
+        gcc \
+        libgcc \
+        linux-headers \
+        make \
+        python3 \
+        py-setuptools \
     && curl -fsSLO --compressed "https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION.tar.xz" \
     && curl -fsSLO --compressed "https://nodejs.org/dist/v$NODE_VERSION/SHASUMS256.txt.asc" \
     && gpg --batch --decrypt --output SHASUMS256.txt SHASUMS256.txt.asc \
@@ -66,7 +71,6 @@ RUN addgroup -g 1000 node \
     && rm -Rf "node-v$NODE_VERSION" \
     && rm "node-v$NODE_VERSION.tar.xz" SHASUMS256.txt.asc SHASUMS256.txt; \
   fi \
-  && rm -f "node-v$NODE_VERSION-linux-$ARCH-musl.tar.xz" \
   # Remove unused OpenSSL headers to save ~34MB. See this NodeJS issue: https://github.com/nodejs/node/issues/46451
   && find /usr/local/include/node/openssl/archs -mindepth 1 -maxdepth 1 ! -name "$OPENSSL_ARCH" -exec rm -rf {} \; \
   && apk del .build-deps \

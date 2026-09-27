@@ -25,11 +25,9 @@ function usage() {
 EOF
 }
 
-SKIP_ALPINE=false
 while getopts "sh" opt; do
   case "${opt}" in
     s)
-      SKIP_ALPINE=true
       shift
       ;;
     h)
@@ -145,41 +143,29 @@ function update_node_version() {
 
     if is_alpine "${variant}"; then
       alpine_version="${variant#*alpine}"
-      checksum=$(
-        curl -sSL --compressed "https://unofficial-builds.nodejs.org/download/release/v${nodeVersion}/SHASUMS256.txt" | grep "node-v${nodeVersion}-linux-x64-musl.tar.xz" | cut -d' ' -f1
-      )
-      if [ -z "$checksum" ]; then
-        rm -f "${dockerfile}-tmp"
-        if [ "${SKIP_ALPINE}" = true ]; then
-          echo "${nodeVersion} is missing the musl build for ${variant}, but skipping for security release!"
-        else
-          fatal "Failed to fetch checksum for musl build version ${nodeVersion}"
-        fi
-      else
-        sed -Ei -e "s/(alpine:)0.0/\\1${alpine_version}/" "${dockerfile}-tmp"
+      sed -Ei -e "s/(alpine:)0.0/\\1${alpine_version}/" "${dockerfile}-tmp"
 
-        alpine_arch=''
-        local -a arches
-        arches=$(jq -r ".\"${version}\".variants.\"alpine${alpine_version}\" | @sh" "versions.json")
-        if [[ "${arches[0]}" == *"amd64"* ]]; then
-          alpine_arch+='x86_64) ARCH='"'"'x64'"'"' CHECKSUM="'${checksum}'" OPENSSL_ARCH=linux-x86_64;; \\\n        '
-        fi
-        if [[ "${arches[0]}" == *"arm64v8"* ]]; then
-          alpine_arch+='aarch64) OPENSSL_ARCH=linux-aarch64;; \\\n        '
-        fi
-        if [[ "${arches[0]}" == *"arm32"* ]]; then
-          alpine_arch+='arm*) OPENSSL_ARCH=linux-armv4;; \\\n        '
-        fi
-        if [[ "${arches[0]}" == *"ppc64le"* ]]; then
-          alpine_arch+='ppc64le) OPENSSL_ARCH=linux-ppc64le;; \\\n        '
-        fi
-        if [[ "${arches[0]}" == *"s390x"* ]]; then
-          alpine_arch+='s390x) OPENSSL_ARCH=linux-s390x;; \\\n        '
-        fi
-        # shellcheck disable=SC1003
-        alpine_arch+='*) echo "unsupported architecture"; exit 1 ;; \\'
-        sed -Ei -e "s/\"\\$\{ALPINE_ARCH\[@\]\}\"/${alpine_arch}/" "${dockerfile}-tmp"
+      alpine_arch=''
+      local -a arches
+      arches=$(jq -r ".\"${version}\".variants.\"alpine${alpine_version}\" | @sh" "versions.json")
+      if [[ "${arches[0]}" == *"amd64"* ]]; then
+        alpine_arch+='x86_64) ARCH='"'"'x64'"'"' OPENSSL_ARCH=linux-x86_64;; \\\n        '
       fi
+      if [[ "${arches[0]}" == *"arm64v8"* ]]; then
+        alpine_arch+='aarch64) OPENSSL_ARCH=linux-aarch64;; \\\n        '
+      fi
+      if [[ "${arches[0]}" == *"arm32"* ]]; then
+        alpine_arch+='arm*) OPENSSL_ARCH=linux-armv4;; \\\n        '
+      fi
+      if [[ "${arches[0]}" == *"ppc64le"* ]]; then
+        alpine_arch+='ppc64le) OPENSSL_ARCH=linux-ppc64le;; \\\n        '
+      fi
+      if [[ "${arches[0]}" == *"s390x"* ]]; then
+        alpine_arch+='s390x) OPENSSL_ARCH=linux-s390x;; \\\n        '
+      fi
+      # shellcheck disable=SC1003
+      alpine_arch+='*) echo "unsupported architecture"; exit 1 ;; \\'
+      sed -Ei -e "s/\"\\$\{ALPINE_ARCH\[@\]\}\"/${alpine_arch}/" "${dockerfile}-tmp"
     elif is_debian "${variant}"; then
       sed -Ei -e "s/(buildpack-deps:)name/\\1${variant}/" "${dockerfile}-tmp"
       deb_arch=''

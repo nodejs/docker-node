@@ -15,6 +15,7 @@
 - [Docker Run](#docker-run)
 - [Security](#security)
 - [node-gyp alpine](#node-gyp-alpine)
+- [Multi-architecture images](#multi-architecture-images)
 - [Smaller images without npm/yarn](#smaller-images-without-npmyarn)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -179,6 +180,25 @@ FROM node:alpine as app
 ## Copy built node modules and binaries without including the toolchain
 COPY --from=builder node_modules .
 ```
+
+## Multi-architecture images
+
+A dependency tree installed once cannot serve two architectures. `docker buildx build` with
+`--platform linux/amd64,linux/arm64` builds each stage natively per platform, but if one stage runs
+`npm ci` on the build host and a later stage copies the result with
+`COPY --from=builder node_modules .`, that same tree - carrying the build host's prebuilt native
+addons - ends up inside every platform tag. The manifest still advertises both architectures, so nothing
+looks wrong until an arm64 host loads an x86-64 binary:
+
+```console
+Error: /app/node_modules/better-sqlite3/build/Release/better_sqlite3.node: invalid ELF header
+```
+
+Install dependencies inside each platform's stage (or rebuild them there with `npm rebuild`), and
+publish only the architectures actually built. To check an image that is already published, without a
+Docker engine: fetch its manifest from the registry, decompress the layer tarballs, and read the
+`e_machine` field of any `.node` file - two bytes at offset 18, `0x3e` for x86-64 and `0xb7` for
+AArch64.
 
 ## Smaller images without npm/yarn
 

@@ -1,7 +1,9 @@
 FROM debian:name-slim
 
 RUN groupadd --gid 1000 node \
-  && useradd --uid 1000 --gid node --shell /bin/bash --create-home node
+  && useradd --uid 1000 --gid node --shell /bin/bash --create-home node \
+  && mkdir -p /home/node/node_modules \
+  && chown -R node:node /home/node/node_modules
 
 ENV NODE_VERSION=0.0.0
 

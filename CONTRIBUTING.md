@@ -7,6 +7,7 @@ Thank you for your contribution. Here are guidelines for contributing to the doc
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 ## Table of Contents
 
+- [Code of Conduct](#code-of-conduct)
 - [Governance and decision making](#governance-and-decision-making)
 - [Discussion Areas](#discussion-areas)
 - [Prerequisites](#prerequisites)
@@ -17,9 +18,14 @@ Thank you for your contribution. Here are guidelines for contributing to the doc
   - [Image Creation Automation](#image-creation-automation)
   - [Image Creation Manually](#image-creation-manually)
 - [Adding dependencies to the base images](#adding-dependencies-to-the-base-images)
+- [Developer's Certificate of Origin 1.1](#developers-certificate-of-origin-11)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 <!-- prettier-ignore-end -->
+
+## Code of Conduct
+
+The Node.js [Code of Conduct](https://github.com/nodejs/admin/blob/HEAD/CODE_OF_CONDUCT.md) applies to this project.
 
 ## Governance and decision making
 
@@ -173,3 +179,31 @@ This task is undertaken by members of the repo team above.
 ## Adding dependencies to the base images
 
 NodeJS is a big ecosystem with a variety of different use cases. The docker images for node are designed to provide the minimum for running core node. Additional dependencies (including dependencies for npm or yarn such as git) will not be included in these base images and will need to be included in descendent image.
+
+## Developer's Certificate of Origin 1.1
+
+```text
+By making a contribution to this project, I certify that:
+
+- (a) The contribution was created in whole or in part by me and I
+  have the right to submit it under the open source license
+  indicated in the file; or
+
+- (b) The contribution is based upon previous work that, to the best
+  of my knowledge, is covered under an appropriate open source
+  license and I have the right under that license to submit that
+  work with modifications, whether created wholly or in part
+  by me, under the same open source license (unless I am
+  permitted to submit under a different license), as indicated
+  in the file; or
+
+- (c) The contribution was provided directly to me by some other
+  person who certified (a), (b), or (c) and I have not modified
+  it.
+
+- (d) I understand and agree that this project and the contribution
+  are public and that a record of the contribution (including all
+  personal information I submit with it, including my sign-off) is
+  maintained indefinitely and may be redistributed consistent with
+  this project or the open source license(s) involved.
+```

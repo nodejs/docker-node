@@ -78,59 +78,20 @@ const checkIfThereAreNewVersions = async (github) => {
   }
 };
 
-// a function that queries the Node.js unofficial release website for new musl versions and security releases,
-// and returns relevant information
-const checkForMuslVersionsAndSecurityReleases = async (github, versions) => {
-  try {
-    const { data: unofficialBuildsIndexText } = await github.request(
-      'https://unofficial-builds.nodejs.org/download/release/index.json',
-    );
-
-    for (let version of Object.keys(versions)) {
-      const buildVersion = unofficialBuildsIndexText.find(
-        (indexVersion) =>
-          indexVersion.version === `v${versions[version].fullVersion}`,
-      );
-
-      versions[version].muslBuildExists =
-        buildVersion?.files.includes('linux-x64-musl') ?? false;
-      versions[version].isSecurityRelease = buildVersion?.security ?? false;
-    }
-    return versions;
-  } catch (error) {
-    console.error(error);
-    process.exit(1);
-  }
-};
-
 export default async function (github) {
   // if there are no new versions, exit gracefully
-  // if there are new versions,
-  // check for musl builds
-  // then run update.sh
+  // if there are new versions, run update.sh
   const { shouldUpdate, versions } = await checkIfThereAreNewVersions(github);
 
   if (!shouldUpdate) {
     console.log('No new versions found. No update required.');
     process.exit(0);
   } else {
-    const newVersions = await checkForMuslVersionsAndSecurityReleases(
-      github,
-      versions,
-    );
     let updatedVersions = [];
-    for (const [version, newVersion] of Object.entries(newVersions)) {
-      if (newVersion.muslBuildExists) {
-        const { stdout } = await exec(
-          `./update.sh ${newVersion.isSecurityRelease ? '-s ' : ''}${version}`,
-        );
-        console.log(stdout);
-        updatedVersions.push(newVersion.fullVersion);
-      } else {
-        console.log(
-          `Skipping version ${newVersion.fullVersion} - no musl build available yet.`,
-        );
-      }
+    for (const [version, newVersion] of Object.entries(versions)) {
+      const { stdout } = await exec(`./update.sh ${version}`);
+      console.log(stdout);
+      updatedVersions.push(newVersion.fullVersion);
     }
 
     if (updatedVersions.length === 0) {

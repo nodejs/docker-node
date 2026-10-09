@@ -256,12 +256,6 @@ message "no matching manifest". In this case, check back later.
 (See [Docker Library FAQs](https://github.com/docker-library/faq#an-images-source-changed-in-git-now-what)
 for a detailed description of the complex build process.)
 
-For Node.js security releases, Debian-based `node` images may be published in advance
-of Alpine-based images. To build an Alpine-based `node` image requires
-a `musl` build. This may not initially be ready at Node.js release time.
-When processing non-security Node.js releases, the build process will wait for
-the `musl` build before proceeding with Debian- and Alpine-based images.
-
 ## License
 
 [License information](https://github.com/nodejs/node/blob/main/LICENSE) for

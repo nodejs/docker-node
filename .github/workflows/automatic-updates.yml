@@ -15,26 +15,27 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
-      - name: Run automation script
-        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
-        id: updt
+      - name: Set up Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
-          result-encoding: string
-          script: |
-            const { default: script } = await import(`${process.env.GITHUB_WORKSPACE}/build-automation.mjs`);
-            return script(github);
+          node-version-file: .node-version
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run automation script
+        run: npm run build
 
       - name: Create update PR
-        id: cpr
-        if: steps.updt.outputs.result != ''
+        if: env.NODE_PR_TITLE != ''
         uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8.1.1
         with:
           token: ${{ secrets.GH_API_TOKEN }}
           author: 'Node.js GitHub Bot <nodejs-github-bot@users.noreply.github.com>'
           branch: update-branch
           base: main
-          commit-message: 'feat: Node.js ${{ steps.updt.outputs.result }}'
-          title: 'feat: Node.js ${{ steps.updt.outputs.result }}'
+          commit-message: '${{ env.NODE_PR_TITLE }}'
+          title: '${{ env.NODE_PR_TITLE }}'
           delete-branch: true
           team-reviewers: |
             nodejs/docker

@@ -1,107 +1,73 @@
-import { promisify } from 'util';
+import { readdirSync, readFileSync } from 'node:fs';
+import { join } from 'node:path';
+import { env } from 'node:process';
+import { exportVariable } from '@actions/core';
 
-import child_process from 'child_process';
+import shell from 'shelljs';
 
-const exec = promisify(child_process.exec);
+const updatedVersions = [];
 
-// a function that queries the Node.js release website for new versions,
-// compare the available ones with the ones we use in this repo
-// and returns whether we should update or not
-const checkIfThereAreNewVersions = async (github) => {
-  try {
-    const { stdout: versionsOutput } = await exec(
-      '. ./functions.sh && get_versions',
-      { shell: 'bash' },
+try {
+  // get the folders with a digit, assuming they're the Node.js major versions
+  const supportedVersions = readdirSync('./').filter((file) => {
+    return file.match(/\d/);
+  });
+
+  console.log(`Found major versions in repo: ${supportedVersions}`);
+
+  console.log('Grabbing Index.json files');
+  const availableVersions = await fetch(
+    'https://nodejs.org/download/release/index.json',
+  );
+  const officialIndexJson = await availableVersions.json();
+
+  for (let supportedVersion of supportedVersions) {
+    console.log(`Checking for updates for ${supportedVersion}`);
+    const folders = readdirSync(join('.', supportedVersion));
+    let latestVersion = officialIndexJson.find((indexVersion) =>
+      indexVersion.version.startsWith(`v${supportedVersion}`),
     );
 
-    const supportedVersions = versionsOutput.trim().split(' ');
+    const lastFolder = folders.at(-1);
+    const dockerFile = readFileSync(
+      join('.', supportedVersion, lastFolder, 'Dockerfile'),
+      'utf-8',
+    );
 
-    let latestSupportedVersions = {};
+    const localVersion =
+      'v' +
+      dockerFile.match(/NODE_VERSION=(?<version>\d*\.\d*\.\d)/).groups[
+        'version'
+      ];
+    console.log(`\tRead version ${localVersion} from ${lastFolder}`);
 
-    for (let supportedVersion of supportedVersions) {
-      const { stdout } = await exec(`ls ${supportedVersion}`);
-
-      const { stdout: fullVersionOutput } = await exec(
-        `. ./functions.sh && get_full_version ./${supportedVersion}/${stdout.trim().split('\n')[0]}`,
-        { shell: 'bash' },
+    if (latestVersion.version !== localVersion) {
+      console.warn(
+        `\tFound new version ${latestVersion.version}, released on ${latestVersion.date}!`,
       );
-
-      console.log(fullVersionOutput);
-
-      latestSupportedVersions[supportedVersion] = {
-        fullVersion: fullVersionOutput.trim(),
-      };
+      let updateStatement = `bash update.sh ${supportedVersion}`;
+      console.log(`\tRunning '${updateStatement}'.`);
+      shell.exec(updateStatement);
+      updatedVersions.push(latestVersion.version);
+    } else {
+      console.log(`\tEverything up to date for ${latestVersion.version}!
+\tReleased: ${latestVersion.date}
+\tSecurity release: ${latestVersion.security}`);
     }
-
-    const { data: availableVersionsJson } = await github.request(
-      'https://nodejs.org/download/release/index.json',
-    );
-
-    // filter only more recent versions of availableVersionsJson for each major version in latestSupportedVersions' keys
-    // e.g. if latestSupportedVersions = { "12": "12.22.10", "14": "14.19.0", "16": "16.14.0", "17": "17.5.0" }
-    // and availableVersions = ["Node.js 12.22.10", "Node.js 12.24.0", "Node.js 14.19.0", "Node.js 14.22.0", "Node.js 16.14.0", "Node.js 16.16.0", "Node.js 17.5.0", "Node.js 17.8.0"]
-    // return { "12": "12.24.0", "14": "14.22.0", "16": "16.16.0", "17": "17.8.0" }
-
-    let filteredNewerVersions = {};
-
-    for (let availableVersion of availableVersionsJson) {
-      const [availableMajor, availableMinor, availablePatch] =
-        availableVersion.version.split('v')[1].split('.');
-      if (latestSupportedVersions[availableMajor] == null) {
-        continue;
-      }
-      // eslint-disable-next-line no-unused-vars
-      const [_latestMajor, latestMinor, latestPatch] =
-        latestSupportedVersions[availableMajor].fullVersion.split('.');
-      if (
-        latestSupportedVersions[availableMajor] &&
-        (Number(availableMinor) > Number(latestMinor) ||
-          (availableMinor === latestMinor &&
-            Number(availablePatch) > Number(latestPatch)))
-      ) {
-        filteredNewerVersions[availableMajor] = {
-          fullVersion: `${availableMajor}.${availableMinor}.${availablePatch}`,
-        };
-      }
-    }
-
-    return {
-      shouldUpdate:
-        Object.keys(filteredNewerVersions).length > 0 &&
-        JSON.stringify(filteredNewerVersions) !==
-          JSON.stringify(latestSupportedVersions),
-      versions: filteredNewerVersions,
-    };
-  } catch (error) {
-    console.error(error);
-    process.exit(1);
   }
-};
 
-export default async function (github) {
-  // if there are no new versions, exit gracefully
-  // if there are new versions, run update.sh
-  const { shouldUpdate, versions } = await checkIfThereAreNewVersions(github);
-
-  if (!shouldUpdate) {
-    console.log('No new versions found. No update required.');
-    process.exit(0);
+  if (updatedVersions.length !== 0) {
+    env.NODE_PR_TITLE = `feat: Node.js ${updatedVersions.join(', ')}`;
+    // Let the GitHub Action library set the GITHUB_ENV file rather than manually handling it
+    exportVariable('NODE_PR_TITLE', env.NODE_PR_TITLE);
+  }
+} catch (error) {
+  console.error(error);
+  process.exit(1);
+} finally {
+  if (env.NODE_PR_TITLE) {
+    console.log(`PR will be created with title '${env.NODE_PR_TITLE}'`);
   } else {
-    let updatedVersions = [];
-    for (const [version, newVersion] of Object.entries(versions)) {
-      const { stdout } = await exec(`./update.sh ${version}`);
-      console.log(stdout);
-      updatedVersions.push(newVersion.fullVersion);
-    }
-
-    if (updatedVersions.length === 0) {
-      console.log('No versions with musl builds were updated.');
-      process.exit(0);
-    }
-
-    const { stdout } = await exec(`git diff`);
-    console.log(stdout);
-
-    return updatedVersions.join(', ');
+    console.log('No Pull Request will be created.');
   }
 }

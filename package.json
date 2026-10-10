@@ -4,6 +4,7 @@
   "private": true,
   "type": "commonjs",
   "scripts": {
+    "build": "node build-automation.mjs",
     "format:toc": "doctoc --update-only .",
     "format:toc:check": "doctoc --update-only --dryrun .",
     "format:prettier": "prettier --write .",
@@ -15,12 +16,14 @@
     "check:markdown-links": "find *.md docs/*.md -print0 | xargs -0 -n1 markdown-link-check -c markdown_link_check_config.json"
   },
   "devDependencies": {
+    "@actions/core": "3.0.1",
     "@eslint/js": "10.0.1",
     "doctoc": "2.5.0",
     "eslint": "10.11.0",
     "globals": "17.13.0",
     "markdown-link-check": "3.15.0",
     "npm-run-all2": "9.0.3",
-    "prettier": "3.9.9"
+    "prettier": "3.9.9",
+    "shelljs": "0.10.0"
   }
 }

@@ -7,7 +7,7 @@ ENV NODE_VERSION=0.0.0
 
 RUN ARCH= && dpkgArch="$(dpkg --print-architecture)" \
   && case "${dpkgArch##*-}" in \
-    "${DEB_ARCH[@]}"
+    "${SUPPORTED_ARCH[@]}"
   esac \
   # use pre-existing gpg directory, see https://github.com/nodejs/docker-node/pull/1895#issuecomment-1550389150
   && export GNUPGHOME="$(mktemp -d)" \

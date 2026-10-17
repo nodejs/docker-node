@@ -7,7 +7,7 @@ ENV NODE_VERSION=0.0.0
 
 RUN ARCH= OPENSSL_ARCH= && dpkgArch="$(dpkg --print-architecture)" \
     && case "${dpkgArch##*-}" in \
-      "${DEB_ARCH[@]}"
+      "${SUPPORTED_ARCH[@]}"
     esac \
     && set -ex \
     && apt-get update && apt-get install -y ca-certificates curl wget gnupg dirmngr xz-utils libatomic1 --no-install-recommends \

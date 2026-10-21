@@ -36,6 +36,7 @@ jobs:
           base: main
           commit-message: '${{ env.NODE_PR_TITLE }}'
           title: '${{ env.NODE_PR_TITLE }}'
+          body: 'If you are reading this PR soon after it has been merged, you may find that new Docker images are missing or appear broken. Check back later and see the [README](https://github.com/nodejs/docker-node#release-availability) for background information.'
           delete-branch: true
           team-reviewers: |
             nodejs/docker

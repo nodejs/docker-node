@@ -51,6 +51,7 @@ jobs:
           body: |
             Pull Request: ${{ github.event.pull_request.html_url }}
             @PeterDaveHello @SimenB @nschonni @rafaelgss @mcollina
+            Please read https://github.com/docker-library/faq#an-images-source-changed-in-git-now-what before commenting on these pull requests.
 
       - name: PR details
         run: |

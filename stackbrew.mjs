@@ -1,17 +1,15 @@
 #!/usr/bin/env node
 
-const fs = require('fs');
-const path = require('path');
+import { readFileSync } from 'node:fs';
+import { basename, join } from 'node:path';
+import { execSync } from 'node:child_process';
 
 // Grab last git commit
 function getCommitHasForPath(path) {
-  return require('child_process')
-    .execSync(`git log -1 --format=%H HEAD -- ${path}`)
-    .toString()
-    .trim();
+  return execSync(`git log -1 --format=%H HEAD -- ${path}`).toString().trim();
 }
 
-const stackbrewPath = path.basename(__filename);
+const stackbrewPath = basename(import.meta.filename);
 
 // Header
 let stackbrew = `# this file is generated via https://github.com/nodejs/docker-node/blob/${getCommitHasForPath(stackbrewPath)}/${stackbrewPath}
@@ -21,8 +19,7 @@ GitRepo: https://github.com/nodejs/docker-node.git
 GitFetch: refs/heads/main\n`;
 
 // Loop versions
-
-const config = require('./versions.json');
+const config = JSON.parse(readFileSync('versions.json'));
 
 const versions = Object.keys(config).reverse();
 
@@ -45,13 +42,13 @@ for (const version of versions) {
   let defaultDebian = config[version]['debian-default'];
   let variants = config[version].variants;
   for (const variant in variants) {
-    let dockerfilePath = path.join(version, variant, 'Dockerfile');
+    let dockerfilePath = join(version, variant, 'Dockerfile');
     let isAlpine = alpineRE.test(variant);
     let isSlim = slimRE.test(variant);
     let isDefaultSlim = new RegExp(`${defaultDebian}-slim`).test(variant);
 
     // Get full version from the Dockerfile
-    let dockerfile = fs.readFileSync(dockerfilePath, 'utf-8');
+    let dockerfile = readFileSync(dockerfilePath, 'utf-8');
     let fullVersion = dockerfile.match(
       /ENV NODE_VERSION=(?<major>\d+)\.(?<minor>\d+)\.(?<patch>\d+)/,
     );
@@ -157,14 +154,14 @@ for (const version of versions) {
       }
     }
 
-    // remove duplicates
-    tags = tags.filter((x, i, a) => a.indexOf(x) == i);
-    tags = tags.sort();
-    let directory = `${version}/${variant}`;
-    stackbrew += `\nTags: ${tags.join(', ')}\n`;
-    stackbrew += `Architectures: ${config[version].variants[variant].join(', ')}\n`;
-    stackbrew += `GitCommit: ${getCommitHasForPath(directory)}\n`;
-    stackbrew += `Directory: ${directory}\n`;
+    stackbrew += `
+Tags: ${tags
+      .filter((x, i, a) => a.indexOf(x) == i)
+      .sort()
+      .join(', ')}
+Architectures: ${config[version].variants[variant].join(', ')}
+GitCommit: ${getCommitHasForPath(`${version}/${variant}`)}
+Directory: ${`${version}/${variant}`}\n`;
   }
 }
 

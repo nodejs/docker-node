@@ -10,7 +10,7 @@ on:
       - '**/Dockerfile'
       - '**/docker-entrypoint.sh'
       - 'versions.json'
-      - 'stackbrew.js'
+      - 'stackbrew.mjs'
 
 jobs:
   pr:
@@ -36,7 +36,7 @@ jobs:
       - name: Generate Stackbrew for diff
         run: |
           cd docker-node
-          ./stackbrew.js > ../official-images/library/node
+          ./stackbrew.mjs > ../official-images/library/node
 
       - name: Create PR in official-images
         id: create-pr

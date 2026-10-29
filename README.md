@@ -59,7 +59,7 @@ See: https://nodejs.org
 
 ```dockerfile
 # specify the node base image with your desired version node:<version>
-FROM node:24
+FROM node:26
 # replace this with your application's default port
 EXPOSE 8888
 ```
@@ -76,7 +76,7 @@ If you prefer Docker Compose:
 ```yml
 services:
   node:
-    image: 'node:24'
+    image: 'node:26'
     user: 'node'
     working_dir: /home/node/app
     environment:
@@ -91,8 +91,16 @@ services:
 You can then run using Docker Compose:
 
 ```console
+$ docker compose up -d
+```
+
+Note: For older Docker installations where Docker Compose V2 is not integrated fully or Docker Compose V1 is used, you may still need to use:
+
+```
 $ docker-compose up -d
 ```
+
+
 
 Docker Compose example mounts your current directory (including node_modules) to the container.
 It assumes that your application has a file named [`package.json`](https://docs.npmjs.com/files/package.json)

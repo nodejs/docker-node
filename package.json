@@ -5,6 +5,7 @@
   "type": "commonjs",
   "scripts": {
     "build": "node build-automation.mjs",
+    "stackbrew": "node stackbrew.mjs",
     "format:toc": "doctoc --update-only .",
     "format:toc:check": "doctoc --update-only --dryrun .",
     "format:prettier": "prettier --write .",

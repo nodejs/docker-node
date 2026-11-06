@@ -55,7 +55,7 @@ To contribute to this repo, install:
 
 - [git](https://git-scm.com/)
 - [Docker](https://docs.docker.com/get-started/get-docker/)
-- [Node.js](https://nodejs.org/en/download) LTS version as specified in [.node-version](./.node-version)
+- [Node.js](https://nodejs.org/en/download) LTS version as specified in [.nvmrc](./.nvmrc)
 - [jq](https://jqlang.org/download/)
 
 [fork](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/fork-a-repo) and [clone](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository) this repo, then install npm dependencies.

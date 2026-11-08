@@ -314,7 +314,7 @@ This version of the Yarn package manager has been declared as [frozen](https://g
 
 Users with legacy requirements for Yarn v1 under Node.js 26 and above may be able
 to follow [Yarn v1 installation instructions](https://classic.yarnpkg.com/en/docs/install)
-and install using `npm install --global yarn`.
+and install using `npm install --global yarn@1`.
 
 ## Governance and Current Members
 

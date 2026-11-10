@@ -195,9 +195,9 @@ The examples below build with npm.
 **Alpine example**
 
 ```Dockerfile
-ARG ALPINE_VERSION=3.23
+ARG ALPINE_VERSION=3.24
 
-FROM node:24-alpine${ALPINE_VERSION} AS builder
+FROM node:26-alpine${ALPINE_VERSION} AS builder
 WORKDIR /build-stage
 COPY package*.json ./
 RUN npm ci
@@ -209,7 +209,7 @@ FROM alpine:${ALPINE_VERSION}
 # Create app directory
 WORKDIR /usr/src/app
 # Add required binaries
-RUN apk add --no-cache libstdc++ dumb-init \
+RUN apk add --no-cache libstdc++ libatomic dumb-init \
   && addgroup -g 1000 node && adduser -u 1000 -G node -s /bin/sh -D node \
   && chown node:node ./
 COPY --from=builder /usr/local/bin/node /usr/local/bin/
@@ -226,7 +226,7 @@ CMD ["dumb-init", "node", "dist/index.js"]
 **Debian example**
 
 ```Dockerfile
-FROM node:24-trixie-slim AS builder
+FROM node:26-trixie-slim AS builder
 WORKDIR /build-stage
 COPY package*.json ./
 RUN npm ci
@@ -238,7 +238,7 @@ FROM debian:trixie-slim
 # Create app directory
 WORKDIR /usr/src/app
 # Add required binaries
-RUN apt-get update && apt-get install -y --no-install-recommends dumb-init \
+RUN apt-get update && apt-get install -y --no-install-recommends libatomic1 dumb-init \
     && rm -rf /var/lib/apt/lists/* \
     && groupadd --gid 1000 node \
     && useradd --uid 1000 --gid node --shell /bin/bash --create-home node \

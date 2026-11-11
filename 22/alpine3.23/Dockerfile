@@ -89,11 +89,14 @@ RUN apk add --no-cache --virtual .build-deps-yarn curl gnupg tar \
     6A010C5166006599AA17F08146C2130DFD2497F5 \
   ; do \
     { gpg --batch --keyserver hkps://keys.openpgp.org --recv-keys "$key" && gpg --batch --fingerprint "$key"; } || \
-    { gpg --batch --keyserver keyserver.ubuntu.com --recv-keys "$key" && gpg --batch --fingerprint "$key"; } ; \
+    { gpg --batch --keyserver keyserver.ubuntu.com --recv-keys "$key" && gpg --batch --fingerprint "$key"; } || \
+    # fall back to the key published by Yarn if no keyserver is reachable; the signer is pinned by fingerprint below
+    { curl -fsSL https://dl.yarnpkg.com/debian/pubkey.gpg | gpg --batch --import; } ; \
   done \
   && curl -fsSLO --compressed "https://yarnpkg.com/downloads/$YARN_VERSION/yarn-v$YARN_VERSION.tar.gz" \
   && curl -fsSLO --compressed "https://yarnpkg.com/downloads/$YARN_VERSION/yarn-v$YARN_VERSION.tar.gz.asc" \
-  && gpg --batch --verify yarn-v$YARN_VERSION.tar.gz.asc yarn-v$YARN_VERSION.tar.gz \
+  && gpg --batch --status-fd 1 --verify yarn-v$YARN_VERSION.tar.gz.asc yarn-v$YARN_VERSION.tar.gz \
+    | grep -q "^\[GNUPG:\] VALIDSIG .* 72ECF46A56B4AD39C907BBB71646B01B86E50310\$" \
   && gpgconf --kill all \
   && rm -rf "$GNUPGHOME" \
   && mkdir -p /opt \

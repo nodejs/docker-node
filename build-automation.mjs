@@ -11,6 +11,8 @@ const nodeKeys = readFileSync(resolve(import.meta.dirname, 'keys', 'node.keys'))
 
 const updatedVersions = [];
 
+let isSecurity = true;
+
 try {
   console.log(
     `Found major versions in versions.json: ${Object.keys(supportedVersions).join(', ')}`,
@@ -127,6 +129,7 @@ try {
       } else if (latestVersion.version !== localVersion) {
         console.log(`\t${variant}: updating to ${latestVersion.version}`);
         updatedVersions.push(latestVersion.version);
+        isSecurity &= latestVersion.security;
         writeFileSync(dockerfilePath, dockerfileOutput);
       } else {
         console.warn(
@@ -139,7 +142,7 @@ try {
     // Let the GitHub Action library set the GITHUB_ENV file rather than manually handling it
     exportVariable(
       'NODE_PR_TITLE',
-      `feat: Node.js ${[...new Set(updatedVersions)].join(', ')}`,
+      `feat${isSecurity ? '[security]' : ''}: Node.js ${[...new Set(updatedVersions)].join(', ')}`,
     );
   } else {
     console.log('No Pull Request will be created.');

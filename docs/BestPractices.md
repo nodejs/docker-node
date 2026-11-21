@@ -10,6 +10,7 @@
 - [Global npm dependencies](#global-npm-dependencies)
 - [Handling Kernel Signals](#handling-kernel-signals)
 - [Non-root User](#non-root-user)
+- [npm cache](#npm-cache)
 - [Memory](#memory)
 - [CMD](#cmd)
 - [Docker Run](#docker-run)
@@ -117,6 +118,18 @@ RUN deluser --remove-home node \
   && addgroup -S node -g 999 \
   && adduser -S -G node -u 999 node
 ```
+
+## npm cache
+
+The images set `NPM_CONFIG_CACHE=/tmp/.npm` so that npm works when the container runs as a user without a writable home directory — for example an arbitrary `--user` uid on a CI runner, or a Kubernetes pod with `readOnlyRootFilesystem: true` and a writable `/tmp` mounted.
+
+Because the cache lives under `/tmp`, it does not survive container restarts. If you want a persistent cache, point the variable somewhere you control and mount it:
+
+```
+docker run -e NPM_CONFIG_CACHE=/usr/src/app/.npm -v npm-cache:/usr/src/app/.npm node npm install
+```
+
+Any value you set for `NPM_CONFIG_CACHE` overrides the image default.
 
 ## Memory
 

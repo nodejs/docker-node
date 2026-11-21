@@ -93,6 +93,20 @@ jobs:
       - name: Test for npm
         run: docker run --rm node:${{ matrix.version }}-${{ matrix.variant }} npm --version
 
+      - name: Test npm install as a non-root user with an arbitrary UID
+        run: |
+          tmp_dir=$(mktemp -d)
+          chmod 777 "${tmp_dir}"
+          echo '{"name":"test","version":"1.0.0"}' > "${tmp_dir}/package.json"
+          docker run --rm --user 1002:1002 -v "${tmp_dir}:/app" -w /app node:${{ matrix.version }}-${{ matrix.variant }} npm install ms@2.1.3
+
+      - name: Test npm install with a read-only root filesystem
+        run: |
+          tmp_dir=$(mktemp -d)
+          chmod 777 "${tmp_dir}"
+          echo '{"name":"test","version":"1.0.0"}' > "${tmp_dir}/package.json"
+          docker run --rm --user 1002:1002 --read-only --tmpfs /tmp -v "${tmp_dir}:/app" -w /app node:${{ matrix.version }}-${{ matrix.variant }} npm install ms@2.1.3
+
       - name: Test for yarn
         if: startsWith(matrix.version, '22') || startsWith(matrix.version, '24') || startsWith(matrix.version, '25')
         run: docker run --rm node:${{ matrix.version }}-${{ matrix.variant }} yarn --version

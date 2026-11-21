@@ -45,6 +45,11 @@ RUN ARCH= && dpkgArch="$(dpkg --print-architecture)" \
   && rm -rf /tmp/*
 
 
+# npm's cache defaults to $HOME/.npm, which is not writable when the image
+# is run as a user that has no home directory (e.g. an arbitrary --user UID
+# on CI runners), see https://github.com/nodejs/docker-node/issues/2495
+ENV NPM_CONFIG_CACHE=/tmp/.npm
+
 COPY docker-entrypoint.sh /usr/local/bin/
 ENTRYPOINT ["docker-entrypoint.sh"]
 
